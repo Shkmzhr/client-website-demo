@@ -1,0 +1,25 @@
+/* This file is for global imports and utility overrides.
+Since we are loading Tailwind via CDN in index.html, 
+we mainly use this file to ensure basic typography reset.
+*/
+
+@layer base {
+    /* Ensure smooth scrolling for navigation links */
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  
+  /* Base Utility Classes used across the app */
+  /* .section-container {
+      @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24;
+  }
+  
+  .heading-primary {
+      @apply text-4xl sm:text-5xl font-extrabold text-arm-blue tracking-tight;
+  }
+  
+  .heading-secondary {
+      @apply text-2xl sm:text-3xl font-bold text-arm-blue mb-6;
+  } */
+  

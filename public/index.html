@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARM Group | Manpower Solutions</title>
+    <!-- Load Tailwind CSS (via CDN for simplicity in this single file environment) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Set up Tailwind configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'arm-blue': '#1a3a6f',
+                        'arm-gold': '#fdb813',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons for React (will be used in components) -->
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- This is the 'root' element where your React app gets injected by index.js -->
+    <div id="root"></div>
+</body>
+</html>
