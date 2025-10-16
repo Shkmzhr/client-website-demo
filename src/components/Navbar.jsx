@@ -1,93 +1,81 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
-const NavLink = ({ href, children }) => (
+const NavLink = ({ to, children, setIsOpen }) => (
     <a 
-        href={href} 
-        className="text-white hover:text-arm-gold transition duration-300 px-3 py-2 rounded-md text-sm font-medium"
+        href={`#${to}`} 
+        onClick={() => setIsOpen && setIsOpen(false)} // Close menu on mobile click
+        className="text-gray-700 hover:text-[#D4A74B] transition duration-200 block py-2 lg:py-0 lg:inline-block"
     >
         {children}
     </a>
 );
 
-const Navbar = () => {
+const Navbar = ({ toggleView, currentView }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const navItems = [
-        { name: 'Home', href: '#hero' },
-        { name: 'About Us', href: '#about' },
-        { name: 'Services', href: '#services' },
-        { name: 'Directors', href: '#directors' },
-        { name: 'Contact', href: '#footer' },
-    ];
+    const isPublicView = currentView === 'public';
 
     return (
-        <nav className="sticky top-0 z-50 bg-arm-blue shadow-lg">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
-                    {/* Logo/Brand Section */}
-                    <div className="flex items-center">
-                        <a href="#hero" className="flex-shrink-0 flex items-center">
-                            <span className="text-white text-2xl font-black tracking-wider">ARM</span>
-                            <span className="text-arm-gold text-xl font-light ml-1">Group</span>
-                        </a>
-                    </div>
-
-                    {/* Desktop Navigation */}
-                    <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
-                        {navItems.map((item) => (
-                            <NavLink key={item.name} href={item.href}>{item.name}</NavLink>
-                        ))}
-                        <a 
-                            href="#footer"
-                            className="ml-4 px-4 py-2 text-sm font-semibold rounded-full bg-arm-gold text-arm-blue hover:bg-yellow-500 transition duration-300 shadow-md"
-                        >
-                            Get Quote
-                        </a>
-                    </div>
-
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden flex items-center">
-                        <button
-                            onClick={toggleMenu}
-                            type="button"
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white hover:bg-arm-gold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-arm-blue focus:ring-white transition duration-300"
-                            aria-controls="mobile-menu"
-                            aria-expanded="false"
-                        >
-                            <span className="sr-only">Open main menu</span>
-                            {isOpen ? (
-                                <X className="block h-6 w-6" aria-hidden="true" />
-                            ) : (
-                                <Menu className="block h-6 w-6" aria-hidden="true" />
-                            )}
-                        </button>
-                    </div>
+        <header className="sticky top-0 z-50 bg-white shadow-md">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+                {/* Logo */}
+                <div className="text-2xl font-bold text-[#1F3B66]">
+                    ARM <span className="text-[#D4A74B]">Group</span>
                 </div>
+
+                {/* Desktop Navigation & Toggle Button */}
+                <nav className="hidden lg:flex items-center space-x-8">
+                    {isPublicView && (
+                        <>
+                            <NavLink to="hero">Home</NavLink>
+                            <NavLink to="about">About Us</NavLink>
+                            <NavLink to="services">Services</NavLink>
+                            <NavLink to="directors">Leadership</NavLink>
+                            <NavLink to="footer">Contact</NavLink>
+                        </>
+                    )}
+                    
+                    <button 
+                        // Added defensive check: toggleView && 
+                        onClick={() => toggleView && toggleView(isPublicView ? 'admin' : 'public')}
+                        className="px-4 py-2 bg-[#1F3B66] text-white text-sm font-semibold rounded-full shadow-md hover:bg-[#D4A74B] hover:text-[#1F3B66] transition duration-300 transform hover:scale-105"
+                    >
+                        {isPublicView ? 'Admin Login' : 'Back to Site'}
+                    </button>
+                </nav>
+
+                {/* Mobile Menu Button */}
+                <button 
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="lg:hidden text-gray-700 p-2 rounded-md hover:bg-gray-100 transition duration-200"
+                >
+                    {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
             </div>
 
-            {/* Mobile Menu Panel */}
+            {/* Mobile Menu Dropdown */}
             {isOpen && (
-                <div className="md:hidden" id="mobile-menu">
-                    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-arm-blue/95">
-                        {navItems.map((item) => (
-                            <a
-                                key={item.name}
-                                href={item.href}
-                                onClick={() => setIsOpen(false)}
-                                className="text-white hover:bg-arm-gold hover:text-arm-blue block px-3 py-2 rounded-md text-base font-medium transition duration-300"
-                            >
-                                {item.name}
-                            </a>
-                        ))}
-                    </div>
+                <div className="lg:hidden px-4 pt-2 pb-4 space-y-2 bg-white border-t">
+                    {isPublicView && (
+                        <>
+                            <NavLink to="hero" setIsOpen={setIsOpen}>Home</NavLink>
+                            <NavLink to="about" setIsOpen={setIsOpen}>About Us</NavLink>
+                            <NavLink to="services" setIsOpen={setIsOpen}>Services</NavLink>
+                            <NavLink to="directors" setIsOpen={setIsOpen}>Leadership</NavLink>
+                            <NavLink to="footer" setIsOpen={setIsOpen}>Contact</NavLink>
+                        </>
+                    )}
+                    <button 
+                        // Added defensive check: toggleView && 
+                        onClick={() => { toggleView && toggleView(isPublicView ? 'admin' : 'public'); setIsOpen(false); }}
+                        className="w-full text-left px-4 py-2 bg-[#1F3B66] text-white text-sm font-semibold rounded-md shadow-md hover:bg-[#D4A74B] hover:text-[#1F3B66] transition duration-300 mt-2"
+                    >
+                        {isPublicView ? 'Admin Login' : 'Back to Site'}
+                    </button>
                 </div>
             )}
-        </nav>
+        </header>
     );
 };
 
