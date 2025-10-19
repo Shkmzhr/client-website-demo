@@ -56,7 +56,7 @@ const Navbar = ({ toggleView, currentView }) => {
 
             {/* Mobile Menu Dropdown */}
             {isOpen && (
-                <div className="lg:hidden px-4 pt-2 pb-4 space-y-2 bg-white border-t">
+                <div className="lg:hidden fixed inset-0 backdrop-blur-sm px-4 pt-2 pb-4 space-y-2 bg-white border-t">
                     {isPublicView && (
                         <>
                             <NavLink to="hero" setIsOpen={setIsOpen}>Home</NavLink>
