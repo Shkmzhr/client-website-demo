@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter } from 'lucide-react';
-
+import nccLogo from './assets/clientimages/NCC.jpeg';
 // ===================================
 // 0. Color Definitions & Utilities
 // ===================================
@@ -191,6 +191,14 @@ const Navbar = ({ toggleView, currentView }) => {
 
     const isPublicView = currentView === 'public';
 
+    // Handler for the new full-page Company Profile link
+    const handleCompanyProfileClick = (e) => {
+        e.preventDefault();
+        setIsOpen(false);
+        // Calls the new toggleView function which handles the fade and routing
+        toggleView('company-profile'); 
+    };
+
     return (
         <header 
             className={`sticky top-0 z-50 border-b border-gray-100 transition-all duration-300`}
@@ -210,7 +218,15 @@ const Navbar = ({ toggleView, currentView }) => {
                     {isPublicView && (
                         <>
                             <NavLink to="hero">Home</NavLink>
-                            <NavLink to="about">About Us</NavLink>
+                            {/* UPDATED: Links to the new full-page route */}
+                            <a 
+                                href="#company-profile"
+                                onClick={handleCompanyProfileClick}
+                                className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
+                                style={{ color: DEEP_BROWN, '--tw-text-hover-opacity': 1, ':hover': { color: ACCENT_SAND } }}
+                            >
+                                Company Profile
+                            </a>
                             <NavLink to="services">Services</NavLink>
                             <NavLink to="directors">Leadership</NavLink>
                             <NavLink to="contact">Contact</NavLink> 
@@ -246,7 +262,15 @@ const Navbar = ({ toggleView, currentView }) => {
                     {isPublicView && (
                         <>
                             <NavLink to="hero" setIsOpen={setIsOpen}>Home</NavLink>
-                            <NavLink to="about" setIsOpen={setIsOpen}>About Us</NavLink>
+                            {/* UPDATED: Links to the new full-page route for mobile */}
+                            <a 
+                                href="#company-profile"
+                                onClick={handleCompanyProfileClick}
+                                className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
+                                style={{ color: DEEP_BROWN, '--tw-text-hover-opacity': 1, ':hover': { color: ACCENT_SAND } }}
+                            >
+                                Company Profile
+                            </a>
                             <NavLink to="services" setIsOpen={setIsOpen}>Services</NavLink>
                             <NavLink to="directors" setIsOpen={setIsOpen}>Leadership</NavLink>
                             <NavLink to="contact" setIsOpen={setIsOpen}>Contact</NavLink>
@@ -314,7 +338,7 @@ const Hero = () => {
 };
 
 // ===================================
-// 3. About Component
+// 3. About Component (REMOVED from render, but kept here for reference or future use)
 // ===================================
 
 const FeatureCard = ({ icon: Icon, title, description }) => (
@@ -758,83 +782,192 @@ const AdminDashboard = ({ toggleView }) => {
 };
 
 // ===================================
-// 9. Public View Component (Container for all public elements)
+// 9. NEW CompanyProfile Page Component (Renamed and Updated)
 // ===================================
-const PublicView = ({ toggleView, view }) => (
-    <div className="flex flex-col min-h-screen">
-        <Navbar toggleView={toggleView} currentView={view} /> 
+
+const CompanyProfile = ({ toggleView }) => {
+    return (
+        <div className="min-h-screen p-8" style={{ backgroundColor: SOFT_CREAM }}>
+            <div className="container mx-auto max-w-5xl pt-24 pb-12">
+                <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-center" style={{ color: DEEP_BROWN }}>
+                    <ScrambleText text="ARM SOLUTIONS - Company Profile" />
+                </h1>
+{/* Images section */}
+<div className="grid md:grid-cols-3 gap-10 mb-10">
+                    {/* Image 1: NCC Logo (using the imported image) */}
+                    <div className="md:col-span-1 p-6 rounded-xl shadow-xl flex flex-col items-center justify-center" style={{ backgroundColor: 'white', border: `1px solid ${ACCENT_SAND}` }}>
+                        <h3 className="text-xl font-bold mb-3" style={{ color: DEEP_BROWN }}>Client Logo Example</h3>
+                        <img 
+                            // Using the imported variable here
+                            src={nccLogo} 
+                            alt="Client Logo (NCC)" 
+                            className="w-3/4 h-auto object-contain rounded-md shadow-inner"
+                        />
+                    </div>
+                    </div>
+{/* Images section */}
+
+
+
+                {/* Company Overview */}
+                <div className="mb-10 p-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white', borderLeft: `5px solid ${ACCENT_SAND}` }}>
+                    <h2 className="text-3xl font-bold mb-4" style={{ color: DEEP_BROWN }}>Overview</h2>
+                    <p className="text-gray-700 mb-4">
+                        ARM Group specializes in providing **skilled manpower** on a rental and local transfer basis, as well as recruiting from overseas to meet diverse client requirements across multiple industries.pdf]. Our services ensure that clients have access to qualified professionals whenever needed—helping them maintain efficiency, reduce operational costs, and achieve long-term success].
+                    </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-10">
+                    {/* Vision & Mission */}
+                    <div className="p-8 rounded-xl shadow-xl border-t-4" style={{ backgroundColor: 'white', borderColor: DEEP_BROWN }}>
+                        <h2 className="text-2xl font-bold mb-4" style={{ color: ACCENT_SAND }}>Vision & Mission</h2>
+                        <ul className="space-y-4 text-gray-700">
+                            <li>
+                                <span className="font-bold" style={{ color: DEEP_BROWN }}>Vision:</span> To be the leading manpower solutions provider recognized for **excellence, reliability, and innovation** in workforce management.pdf].
+                            </li>
+                            <li>
+                                <span className="font-bold" style={{ color: DEEP_BROWN }}>Mission:</span> To deliver qualified, trained, and motivated manpower that drives our clients' success while fostering growth, safety, and satisfaction among our workforce.pdf].
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Core Values */}
+                    <div className="p-8 rounded-xl shadow-xl border-b-4" style={{ backgroundColor: 'white', borderColor: ACCENT_SAND }}>
+                        <h2 className="text-2xl font-bold mb-4" style={{ color: DEEP_BROWN }}>Core Values</h2>
+                        <ul className="space-y-2 text-gray-700 list-disc list-inside">
+                            <li><b>Integrity: We operate with transparency and honesty in all business dealings.].</b></li>
+                            <li><b>Excellence:We strive to deliver top-quality services that exceed expectations.].</b></li>
+                            <li><b>Commitment:Dedicated to client satisfaction and continuous improvement.].</b></li>
+                            <li><b>Teamwork:Collaboration is key to achieving collective goal].</b></li>
+                            <li><b>Innovation: We continuously improve processes and training for better service delivery.].</b></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div className="mt-12 text-center">
+                    <button 
+                        onClick={() => { toggleView('public'); window.location.hash = ''; }}
+                        className="px-6 py-3 text-base font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
+                        style={{ 
+                            backgroundColor: ACCENT_SAND, 
+                            color: DEEP_BROWN,
+                            border: `2px solid ${DEEP_BROWN}`
+                        }}
+                    >
+                        &larr; Back to Main Site
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+// ===================================
+// 10. Public View Wrapper
+// ===================================
+const PublicView = ({ toggleView }) => (
+    <>
         <main className="flex-grow">
             <Hero /> {/* No FadeInSection - always visible on load */}
-            <About />
+            {/* The old <About /> component is removed to prevent duplicate content, since the link now goes to the full Company Profile page. */}
             <Services />
             <Directors />
             <Contact />
         </main>
         <Footer />
-    </div>
+    </>
 );
 
 
 // ===================================
-// 10. Main App Component
+// 11. Main App Component & Routing (Updated)
 // ===================================
 
-const App = () => {
-    const getInitialView = () => {
-        const path = window.location.hash;
-        if (path === '#admin-key-123') {
-            return 'admin';
-        }
-        return 'public';
-    };
+const ADMIN_HASH = '#admin-key-123';
+// RENAMED HASH: SAMPLE_HASH -> COMPANY_PROFILE_HASH
+const COMPANY_PROFILE_HASH = '#company-profile';
 
-    const [view, setView] = useState(getInitialView);
+const getInitialView = () => {
+    if (window.location.hash.includes(ADMIN_HASH)) return 'admin';
+    // UPDATED CHECK
+    if (window.location.hash.includes(COMPANY_PROFILE_HASH)) return 'company-profile';
+    return 'public';
+};
 
+export default function App() {
+    // The view state can be 'public', 'admin', 'company-profile', or 'fading-out'
+    const [view, setView] = useState(getInitialView());
+
+    // Toggle view function: used by Navbar and AdminDashboard buttons
     const toggleView = (targetView) => {
-        // Handle fade-out transition when leaving public view
-        if (view === 'public' && targetView === 'admin') {
+        if (targetView !== 'public' && targetView !== 'admin' && targetView !== 'company-profile') {
+            return; 
+        }
+
+        // Determine the hash for the target view
+        let targetHash = '';
+        if (targetView === 'admin') targetHash = ADMIN_HASH;
+        // UPDATED HASH ASSIGNMENT
+        if (targetView === 'company-profile') targetHash = COMPANY_PROFILE_HASH;
+
+        // Apply fade-out effect when leaving the main public view
+        if (view === 'public' && (targetView === 'admin' || targetView === 'company-profile')) {
             setView('fading-out'); 
             setTimeout(() => {
-                window.location.hash = 'admin-key-123';
-                setView('admin');
-            }, 500); 
+                window.location.hash = targetHash;
+                setView(targetView);
+            }, 500); // Wait for PageTransitionWrapper to fade out
         } else {
-            if (targetView === 'admin') {
-                 window.location.hash = 'admin-key-123';
-            } else {
-                 window.location.hash = '';
-            }
+            // Instant switch (e.g., admin to public, or public to section scroll)
+            window.location.hash = targetHash;
             setView(targetView);
         }
     };
 
+    // Listen for browser back/forward buttons or manual URL hash changes
     useEffect(() => {
         const handleHashChange = () => {
             const newView = getInitialView();
-            // This is only for external hash changes, internal navigation uses handleNavigation
-            if (view !== newView && view !== 'fading-out') {
+            // Ignore hash changes triggered by internal smooth-scrolling NavLinks
+            // Only update view if the main route has changed.
+            if (newView !== 'public' && view !== newView && view !== 'fading-out') {
                 setView(newView);
+            } else if (newView === 'public' && view !== 'public' && view !== 'fading-out') {
+                 // Check if we are returning from a special route
+                 setView(newView);
             }
         };
         window.addEventListener('hashchange', handleHashChange);
         return () => window.removeEventListener('hashchange', handleHashChange);
     }, [view]);
 
+    // Determine the component to render
     const currentView = view === 'fading-out' ? 'public' : view;
 
     return (
-        <div className="font-sans">
-            {/* The PageTransitionWrapper handles the full fade when toggling Admin/Public */}
-            {(currentView === 'public' || view === 'fading-out') ? (
-                <PageTransitionWrapper isPublic={view === 'public'}>
-                    <PublicView toggleView={toggleView} view={currentView} />
-                </PageTransitionWrapper>
-            ) : (
-                // The Admin Dashboard remains static
-                <AdminDashboard toggleView={toggleView} />
-            )}
+        <div className="font-sans min-h-screen flex flex-col" style={{ backgroundColor: SOFT_CREAM }}>
+            {/* Navbar is rendered for public and company-profile views */}
+            {currentView !== 'admin' && <Navbar toggleView={toggleView} currentView={currentView} />}
+            
+            <div className="flex-grow">
+                {currentView === 'admin' && (
+                    // The Admin Dashboard remains static
+                    <AdminDashboard toggleView={toggleView} />
+                )}
+                
+                {/* RENAMED: Render the CompanyProfile page */}
+                {currentView === 'company-profile' && (
+                    <CompanyProfile toggleView={toggleView} />
+                )}
+
+                {(currentView === 'public' || view === 'fading-out') && (
+                    // The Public View is wrapped in the transition logic
+                    <PageTransitionWrapper isPublic={view === 'public'}>
+                        <PublicView toggleView={toggleView} />
+                    </PageTransitionWrapper>
+                )}
+            </div>
         </div>
     );
-};
-
-export default App;
+}
