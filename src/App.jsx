@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter } from 'lucide-react';
-
+// NEW ICON IMPORTS: Ensure this line includes all 9 icons
+import {  Factory, Hotel, Truck, Building, HeartPulse, ShoppingCart, Mic } from 'lucide-react';
 // ===================================
 // IMAGE IMPORTS (UPDATED PATHS and all client images)
 // ===================================
@@ -16,7 +17,7 @@ import clientImage7 from './assets/clientimages/alrajhi.jpeg';
 import clientImage8 from './assets/clientimages/annasban.jpeg';
 import clientImage9 from './assets/clientimages/flashdiamond.jpeg';
 import clientImage10 from './assets/clientimages/gulfaar.jpeg';
-import clientImage11 from './assets/clientimages/gulfaar.jpeg';
+import clientImage11 from './assets/clientimages/ARM-Group-screenshot.jpg';
 import clientImage12 from './assets/clientimages/gulfaar.jpeg';
 import clientImage13 from './assets/clientimages/integratedhr.jpeg';
 import clientImage14 from './assets/clientimages/kamps.jpeg';
@@ -32,9 +33,35 @@ import clientImage23 from './assets/clientimages/rezyatgroup.jpeg';
 import clientImage24 from './assets/clientimages/samayagroup.jpeg';
 import clientImage25 from './assets/clientimages/saudieleccomp.jpeg';
 import armGroupPhoto from './assets/clientimages/ARM-group-photo.jpeg';
-import arm2GroupPhoto from './assets/clientimages/ARM-2Group.jpeg';
-// ===================================
+import arm2GroupPhoto from './assets/clientimages/ARM-group-photo.jpeg';
+import MrRizwan from './assets/clientimages/mohammedrizwanahmed.jpg';
+import MrMujeeb from './assets/clientimages/mujeebullah.jpg';
+import MohammedHamid from './assets/clientimages/mohammedhamidansari.jpg';
+import dummyServiceBg from './assets/clientimages/womenwashingdish.jpeg';
+import ConstructionBg from './assets/clientimages/Construction.jpg';
+import HvacBg from './assets/clientimages/HVAC.jpg';
+import SupportstaffBg from './assets/clientimages/Support-staff.jpg';
+import Maintenance from './assets/clientimages/Maintenance.jpg';
+import OilGasBg from './assets/clientimages/OilandGas.jpg';
+import HospitalityBg from './assets/clientimages/Hospitality.jpg';
+import LogisticsBg from './assets/clientimages/Logistics.jpg';
+import FacilityBg from './assets/clientimages/Facility.jpg';
+import HealthcareBg from './assets/clientimages/Healthcare.jpg';
+import RetailBg from './assets/clientimages/Retail.jpg';
+import EventsBg from './assets/clientimages/Events.jpg';
+// Variables for each service background (all pointing to the placeholder for now)
 
+// const OilGasBg = supportStaffPlaceholder;
+// const HospitalityBg = supportStaffPlaceholder;
+// const LogisticsBg = supportStaffPlaceholder;
+// const FacilityBg = supportStaffPlaceholder;
+// const HealthcareBg = supportStaffPlaceholder;
+// const RetailBg = supportStaffPlaceholder;
+// const EventsBg = supportStaffPlaceholder;
+// Renaming the old variables to the new comprehensive set
+// ===================================
+// Placeholder for all 8 service cards
+import supportStaffPlaceholder from './assets/clientimages/Support-staff.jpg';
 
 // ===================================
 // 0. Color Definitions & Utilities
@@ -254,7 +281,11 @@ const Navbar = ({ toggleView, currentView }) => {
                         <>
                             <NavLink to="hero">Home</NavLink>
                             {/* UPDATED: Links to the new full-page route */}
-                            <a 
+                        
+                            <NavLink to="services">Services</NavLink>
+                            <NavLink to="directors">Leadership</NavLink>
+                            <NavLink to="contact">Contact</NavLink> 
+                                <a 
                                 href="#company-profile"
                                 onClick={handleCompanyProfileClick}
                                 className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
@@ -262,9 +293,6 @@ const Navbar = ({ toggleView, currentView }) => {
                             >
                                 Company Profile
                             </a>
-                            <NavLink to="services">Services</NavLink>
-                            <NavLink to="directors">Leadership</NavLink>
-                            <NavLink to="contact">Contact</NavLink> 
                         </>
                     )}
                     
@@ -298,7 +326,11 @@ const Navbar = ({ toggleView, currentView }) => {
                         <>
                             <NavLink to="hero" setIsOpen={setIsOpen}>Home</NavLink>
                             {/* UPDATED: Links to the new full-page route for mobile */}
-                            <a 
+                          
+                            <NavLink to="services" setIsOpen={setIsOpen}>Services</NavLink>
+                            <NavLink to="directors" setIsOpen={setIsOpen}>Leadership</NavLink>
+                            <NavLink to="contact" setIsOpen={setIsOpen}>Contact</NavLink>
+                              <a 
                                 href="#company-profile"
                                 onClick={handleCompanyProfileClick}
                                 className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
@@ -306,9 +338,6 @@ const Navbar = ({ toggleView, currentView }) => {
                             >
                                 Company Profile
                             </a>
-                            <NavLink to="services" setIsOpen={setIsOpen}>Services</NavLink>
-                            <NavLink to="directors" setIsOpen={setIsOpen}>Leadership</NavLink>
-                            <NavLink to="contact" setIsOpen={setIsOpen}>Contact</NavLink>
                         </>
                     )}
                     
@@ -341,7 +370,7 @@ const Hero = () => {
             <div 
                 className="absolute inset-0 opacity-10 bg-gray-900 bg-cover bg-center"
                 style={{ 
-                    backgroundImage: "url('https://placehold.co/1200x800/544036/FBF9F6?text=ARM+Logo')",
+                    // backgroundImage: "url('https://placehold.co/1200x800/544036/FBF9F6?text=ARM+Logo')",
                     backgroundAttachment: 'fixed' 
                 }}
             ></div>
@@ -435,59 +464,150 @@ const About = () => {
 // 4. Services Component
 // ===================================
 
-const ServiceCard = ({ icon: Icon, title, description }) => (
-    <div 
-        className="p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 transform hover:-translate-y-1" 
-        style={{ 
-            backgroundColor: 'white',
-        }}
-    >
-        <div className="flex items-center justify-center w-16 h-16 rounded-full mb-6 transition duration-300 group-hover:scale-110" style={{ backgroundColor: ACCENT_SAND }}>
-            <Icon className="w-8 h-8" style={{ color: DEEP_BROWN }} />
+const ServiceCard = ({ icon: Icon, title, description, bgImage }) => {
+    // NOTE: DEEP_BROWN, ACCENT_SAND, SOFT_CREAM are assumed to be defined globally or in scope
+    const { DEEP_BROWN, ACCENT_SAND, SOFT_CREAM } = { DEEP_BROWN: '#544036', ACCENT_SAND: '#A88F68', SOFT_CREAM: '#FBF9F6' };
+    
+    return (
+        <div 
+            // Added 'group' class to enable group-hover utilities. 
+            // Added shadow, transition, and transform for the modern lift and subtle scale effect on hover.
+            className="group relative p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 hover:scale-[1.02] overflow-hidden cursor-pointer h-full"
+            style={{ 
+                backgroundColor: 'white',
+            }}
+        >
+            {/* Background Image Layer */}
+            <div 
+                // Absolute positioning to cover the card. Image is centered and covers the space.
+                // transition-transform duration-700 and group-hover:scale-105 creates the slow zoom effect.
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
+                style={{ 
+                    backgroundImage: `url(${bgImage})`,
+                }}
+            >
+                {/* Overlay Layer: Ensures the image is light and text is highly readable */}
+                <div 
+                    // 💡 UPDATED: Default opacity is 80%. On hover, it increases to 95%, significantly boosting contrast.
+                    className="absolute inset-0 transition-all duration-500 opacity-70 group-hover:opacity-95" 
+                    style={{ 
+                        backgroundColor: SOFT_CREAM,
+                    }}
+                ></div>
+            </div>
+            
+            {/* Content Layer (Must be z-10 to appear above the background image) */}
+            <div className="relative z-10">
+                <div 
+                    className="flex items-center justify-center w-16 h-16 rounded-full mb-6 transition duration-300 group-hover:scale-110" 
+                    style={{ backgroundColor: ACCENT_SAND }}
+                >
+                    <Icon className="w-8 h-8" style={{ color: DEEP_BROWN }} />
+                </div>
+                <h3 className="text-2xl font-bold mb-3" style={{ color: DEEP_BROWN }}>{title}</h3>
+                {/* Text color updated to be dark for maximum readability over the light background */}
+                <p className="text-gray-800">{description}</p>
+            </div>
         </div>
-        <h3 className="text-2xl font-bold text-gray-800 mb-3">{title}</h3>
-        <p className="text-gray-600">{description}</p>
-    </div>
-);
+    );
+};
 
+//Services Section
 const Services = () => {
     return (
-        <FadeInSection>
+   <FadeInSection>
             <section id="services" className="py-16 md:py-24" style={{ backgroundColor: 'white' }}>
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                            <ScrambleText 
-                                text="Our Specialized Manpower Solutions" 
-                                className="inline-block" 
-                                color={DEEP_BROWN} 
-                            />
-                        </h2>
-                        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                            We cover a full spectrum of workforce needs for capital-intensive industries.
-                        </p>
-                    </div>
+                    <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-center" style={{ color: DEEP_BROWN }}>
+                        Our Specialized Services
+                    </h2>
+                    <p className="text-center max-w-3xl mx-auto mb-16 text-lg text-gray-600">
+                        We provide skilled manpower on a rental and local transfer basis, as well as recruiting from overseas, to meet diverse client requirements across multiple industries.
+                    </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        
+                        {/* 1. CONSTRUCTION & SKILLED WORKERS */}
                         <ServiceCard
                             icon={HardHat}
-                            title="Construction"
-                            description="Engineers, Foremen, Welders, and general labor for large-scale projects."
+                            title="Construction & Skilled Workers"
+                            description="We deploy skilled and unskilled workers such as: Masons, Carpenters, Electricians, Plumbers, Welders & Fabricators, and General Helpers."
+                            bgImage={ConstructionBg} 
                         />
+                        
+                        {/* 2. OIL & GAS */}
                         <ServiceCard
+                            icon={Factory}
+                            title="Oil & Gas"
+                            description="We supply experienced engineers, technicians, and field workers for oil rigs, refineries, and petrochemical plants Our workforce is trained in international safety standards."
+                            bgImage={OilGasBg} 
+                        />
+                        
+                        {/* 3. MAINTENANCE & HVAC (Integrated into Construction/Facility in PDF, but kept separate for clarity) */}
+                         <ServiceCard
+                            icon={Zap}
+                            title="Technical & HVAC Maintenance"
+                            description="Includes Electrical & Mechanical maintenance staff and HVAC technicians, ensuring efficient industrial plant and building operations."
+                            bgImage={HvacBg} 
+                        />
+                      <ServiceCard
                             icon={Wrench}
                             title="Maintenance & Shutdown"
                             description="Skilled technicians for industrial plant maintenance and critical shutdown operations."
+                            bgImage={Maintenance} // NOW USING THE IMPORTED IMAGE
                         />
-                        <ServiceCard
-                            icon={Zap}
-                            title="Technical & HVAC"
-                            description="Experts in electrical systems, instrumentation, and Heating, Ventilation, and AC."
-                        />
-                        <ServiceCard
+<ServiceCard
                             icon={Shield}
                             title="Support Staff"
                             description="Trained security personnel, drivers, and administrative support roles."
+                            bgImage={SupportstaffBg} // NOW USING THE IMPORTED IMAGE
+                        />
+                        {/* 4. HOSPITALITY */}
+                        <ServiceCard
+                            icon={Hotel}
+                            title="Hospitality"
+                            description="We provide professional hospitality staff, including: Receptionists, Housekeeping Teams, Kitchen Assistants, Waiters, and Service Crew, ensuring seamless service delivery"
+                            bgImage={HospitalityBg} 
+                        />
+                        
+                        {/* 5. LOGISTICS & WAREHOUSING */}
+                        <ServiceCard
+                            icon={Truck}
+                            title="Logistics & Warehousing"
+                            description="We provide manpower for: Forklift Operators, Loaders & Pickers, Packing Staff, and Inventory Management."
+                            bgImage={LogisticsBg} 
+                        />
+                        
+                        {/* 6. FACILITY MANAGEMENT */}
+                        <ServiceCard
+                            icon={Building}
+                            title="Facility Management"
+                            description="We support day-to-day building operations by supplying: Cleaners, Landscaping Teams, and Maintenance Technicians."
+                            bgImage={FacilityBg} 
+                        />
+                        
+                        {/* 7. HEALTHCARE */}
+                        <ServiceCard
+                            icon={HeartPulse}
+                            title="Healthcare"
+                            description="We provide manpower to support hospitals, clinics, and healthcare facilities, including: Nursing Assistants, Patient Care Staff, and Administrative Support."
+                            bgImage={HealthcareBg} 
+                        />
+                        
+                   {/* 8. RETAIL & CUSTOMER SERVICE (FIXED SYNTAX) */}
+                        <ServiceCard
+                            icon={ShoppingCart}
+                            title="Retail & Customer Service"
+                    description="We support retail chains and outlets with: Sales Associates, Cashiers, Store Helpers, and Customer Support Staff"
+                            bgImage={RetailBg} 
+                        />
+
+                        {/* 9. EVENTS & ENTERTAINMENT (NEWLY ADDED) */}
+                        <ServiceCard
+                            icon={Mic}
+                            title="Events & Entertainment"
+                            description="We supply temporary and long-term staff for events such as: Ushers & Event Helpers, Stage Crew, Catering Staff, and Security"
+                            bgImage={EventsBg} 
                         />
                     </div>
                 </div>
@@ -510,7 +630,7 @@ const DirectorCard = ({ name, title, bio, imageUrl }) => (
         <img 
             src={imageUrl} 
             alt={name} 
-            className="w-full h-56 object-cover"
+            className="w-full h-56 object-contain"
             onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/400x300/e0e0e0/555?text=Director"; }}
         />
         <div className="p-6">
@@ -530,19 +650,22 @@ const Directors = () => {
             name: "Mr. Mohammed Rizwan Ahmed", 
             title: "Chairman & CEO", 
             bio: "Visionary leader responsible for corporate strategy, financial oversight, and driving ARM's market expansion and ethical growth.", 
-            imageUrl: "https://placehold.co/400x300/544036/FBF9F6?text=R.A" 
+            // USING IMPORTED IMAGE
+            imageUrl: MrRizwan 
         },
         { 
             name: "Mr. Mujeeb Ullah", 
             title: "Director & COO", 
             bio: "Oversees all operational aspects, streamlining mobilization, logistics, and compliance for highly efficient project execution.", 
-            imageUrl: "https://placehold.co/400x300/A88F68/544036?text=M.U" 
+            // USING IMPORTED IMAGE
+            imageUrl: MrMujeeb 
         },
         { 
             name: "Mr. Mohammad Hamid Ansari", 
             title: "Director - Training & Development", 
             bio: "Specialist in developing soft services personnel for hospitality, housekeeping, and facility management, ensuring service excellence.", 
-            imageUrl: "https://placehold.co/400x300/544036/A88F68?text=M.H.A" 
+            // USING IMPORTED IMAGE
+            imageUrl: MohammedHamid 
         },
     ];
 
@@ -995,7 +1118,7 @@ const CompanyProfile = ({ toggleView }) => {
                          <OurClients />
                     </div>
                 </FadeInSection>
-
+ <Directors />
                 <div className="mt-12 text-center">
                     <button 
                         onClick={() => { toggleView('public'); window.location.hash = ''; }}
@@ -1010,6 +1133,8 @@ const CompanyProfile = ({ toggleView }) => {
                     </button>
                 </div>
             </div>
+            {/* <Directors /> */}
+            <Footer/>
         </div>
     );
 };
