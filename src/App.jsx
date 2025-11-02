@@ -1,6 +1,41 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter } from 'lucide-react';
-import nccLogo from './assets/clientimages/NCC.jpeg';
+
+// ===================================
+// IMAGE IMPORTS (UPDATED PATHS and all client images)
+// ===================================
+import nccLogo from './assets/clientimages/NCC.jpeg'; 
+import ArmGroup from './assets/clientimages/ARM-Group-screenshot.jpg'; 
+import clientImage1 from './assets/clientimages/alalkaif.jpeg';
+import clientImage2 from './assets/clientimages/aldawaa.jpeg';
+import clientImage3 from './assets/clientimages/accesspartners.jpeg';
+import clientImage4 from './assets/clientimages/aljubailsanit.jpeg';
+import clientImage5 from './assets/clientimages/alliedsolutions.jpeg';
+import clientImage6 from './assets/clientimages/almarai.jpeg';
+import clientImage7 from './assets/clientimages/alrajhi.jpeg';
+import clientImage8 from './assets/clientimages/annasban.jpeg';
+import clientImage9 from './assets/clientimages/flashdiamond.jpeg';
+import clientImage10 from './assets/clientimages/gulfaar.jpeg';
+import clientImage11 from './assets/clientimages/gulfaar.jpeg';
+import clientImage12 from './assets/clientimages/gulfaar.jpeg';
+import clientImage13 from './assets/clientimages/integratedhr.jpeg';
+import clientImage14 from './assets/clientimages/kamps.jpeg';
+import clientImage15 from './assets/clientimages/karanint.jpeg';
+import clientImage16 from './assets/clientimages/lucid.jpeg';
+import clientImage17 from './assets/clientimages/marco.jpeg';
+import clientImage18 from './assets/clientimages/muffalat.jpeg';
+import clientImage19 from './assets/clientimages/musanadah.jpeg';
+import clientImage20 from './assets/clientimages/nadec.jpeg';
+import clientImage21 from './assets/clientimages/prosource.jpeg';
+import clientImage22 from './assets/clientimages/qiwaOps.jpeg';
+import clientImage23 from './assets/clientimages/rezyatgroup.jpeg';
+import clientImage24 from './assets/clientimages/samayagroup.jpeg';
+import clientImage25 from './assets/clientimages/saudieleccomp.jpeg';
+import armGroupPhoto from './assets/clientimages/ARM-group-photo.jpeg';
+import arm2GroupPhoto from './assets/clientimages/ARM-2Group.jpeg';
+// ===================================
+
+
 // ===================================
 // 0. Color Definitions & Utilities
 // ===================================
@@ -338,7 +373,7 @@ const Hero = () => {
 };
 
 // ===================================
-// 3. About Component (REMOVED from render, but kept here for reference or future use)
+// 3. About Component 
 // ===================================
 
 const FeatureCard = ({ icon: Icon, title, description }) => (
@@ -715,9 +750,91 @@ const Footer = () => {
     );
 };
 
+// ===================================
+// 8. NEW OurClients Component (Now Defined Here)
+// ===================================
+
+const OurClients = () => {
+    // List of client logos imported above
+    const clients = [
+        { name: "NCC Group", logo: nccLogo },
+        // { name: "ARM Group", logo: ArmGroup },
+        { name: "Client Partner 1", logo: clientImage1 },
+        { name: "Client Partner 2", logo: clientImage2 },
+        { name: "Client Partner 3", logo: clientImage3 },
+        { name: "Client Partner 4", logo: clientImage4 },
+        { name: "Client Partner 5", logo: clientImage5},
+        { name: "Client Partner 6", logo: clientImage6 },
+        { name: "Client Partner 7", logo: clientImage7 },
+        { name: "Client Partner 8", logo: clientImage8 },
+        { name: "Client Partner 9", logo: clientImage9 },
+        { name: "Client Partner 10", logo: clientImage10 },
+        { name: "Client Partner 11", logo: clientImage11 },
+        { name: "Client Partner 12", logo: clientImage12 },
+        { name: "Client Partner 13", logo: clientImage13 },
+        { name: "Client Partner 14", logo: clientImage14 },
+        { name: "Client Partner 15", logo: clientImage15 },
+        { name: "Client Partner 16", logo: clientImage16 },
+        { name: "Client Partner 17", logo: clientImage17 },
+        { name: "Client Partner 18", logo: clientImage18 },
+        { name: "Client Partner 19", logo: clientImage19 },
+        { name: "Client Partner 20", logo: clientImage20 },
+        { name: "Client Partner 21", logo: clientImage21 },
+        { name: "Client Partner 22", logo: clientImage22 },
+        { name: "Client Partner 23", logo: clientImage23 },
+        { name: "Client Partner 24", logo: clientImage24 },
+        { name: "Client Partner 25", logo: clientImage25 },
+        // Placeholder clients for better layout balance
+        { name: "Placeholder Client 3", logo: "https://placehold.co/120x60/f0f0f0/544036?text=Partner+3" },
+        { name: "Placeholder Client 4", logo: "https://placehold.co/120x60/f0f0f0/544036?text=Partner+4" },
+        { name: "Placeholder Client 5", logo: "https://placehold.co/120x60/f0f0f0/544036?text=Partner+5" },
+    ];
+
+    return (
+        <section id="clients" className="py-16 md:py-20" style={{ backgroundColor: 'white' }}>
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+                        <ScrambleText 
+                            text="Our Valued Client Portfolio" 
+                            className="inline-block" 
+                            color={DEEP_BROWN} 
+                        />
+                    </h2>
+                    <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                        We are proud to partner with leading organizations across various industrial and commercial sectors.
+                    </p>
+                </div>
+
+                <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-12 max-w-6xl mx-auto">
+                    {clients.map((client, index) => (
+                        <div 
+                            key={index} 
+                            className="w-36 h-20 flex items-center justify-center p-2 transition duration-500 hover:grayscale-0"
+                            // Modern Grayscale Effect: Logos are grayed out until hovered
+                            style={{ 
+                                filter: 'grayscale(100%)', 
+                                WebkitFilter: 'grayscale(100%)',
+                                border: `1px solid ${SOFT_CREAM}`
+                            }}
+                        >
+                            <img 
+                                src={client.logo} 
+                                alt={client.name} 
+                                // Object-contain ensures the entire logo is visible within the container
+                                className="max-w-full max-h-full object-contain"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
+
 
 // ===================================
-// 8. Admin Dashboard Component (STATIC)
+// 9. Admin Dashboard Component (STATIC)
 // ===================================
 
 const AdminDashboard = ({ toggleView }) => {
@@ -781,69 +898,104 @@ const AdminDashboard = ({ toggleView }) => {
     );
 };
 
+
 // ===================================
-// 9. NEW CompanyProfile Page Component (Renamed and Updated)
+// 10. CompanyProfile Page Component (UPDATED with OurClients)
 // ===================================
 
 const CompanyProfile = ({ toggleView }) => {
+    // Colors defined at the top of App.jsx
+    const { DEEP_BROWN, ACCENT_SAND, SOFT_CREAM } = { DEEP_BROWN: '#544036', ACCENT_SAND: '#A88F68', SOFT_CREAM: '#FBF9F6' };
+
     return (
-        <div className="min-h-screen p-8" style={{ backgroundColor: SOFT_CREAM }}>
-            <div className="container mx-auto max-w-5xl pt-24 pb-12">
+        <div className="min-h-screen flex flex-col" style={{ backgroundColor: SOFT_CREAM }}>
+            <div className="container mx-auto max-w-5xl pt-24 pb-12 flex-grow">
                 <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-center" style={{ color: DEEP_BROWN }}>
                     <ScrambleText text="ARM SOLUTIONS - Company Profile" />
                 </h1>
-{/* Images section */}
-<div className="grid md:grid-cols-3 gap-10 mb-10">
+
+                <div className="grid md:grid-cols-3 gap-10 mb-10">
                     {/* Image 1: NCC Logo (using the imported image) */}
-                    <div className="md:col-span-1 p-6 rounded-xl shadow-xl flex flex-col items-center justify-center" style={{ backgroundColor: 'white', border: `1px solid ${ACCENT_SAND}` }}>
-                        <h3 className="text-xl font-bold mb-3" style={{ color: DEEP_BROWN }}>Client Logo Example</h3>
+                    <div className="md:col-span-1 p-3 rounded-xl shadow-xl flex flex-col items-center justify-center" style={{ backgroundColor: 'white', border: `1px solid ${ACCENT_SAND}` }}>
+                        {/* <h3 className="text-xl font-bold mb-3" style={{ color: DEEP_BROWN }}> abababa</h3> */}
                         <img 
                             // Using the imported variable here
-                            src={nccLogo} 
-                            alt="Client Logo (NCC)" 
-                            className="w-3/4 h-auto object-contain rounded-md shadow-inner"
+                            src={arm2GroupPhoto} 
+                            alt="ARM Logo " 
+                            className="w-full h-auto object-cover transition-transform duration-500 hover:scale-110 rounded-sm"
                         />
                     </div>
+
+                    {/* Overview Content */}
+                    <div className="md:col-span-2 p-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white', borderLeft: `5px solid ${ACCENT_SAND}` }}>
+                        <h2 className="text-3xl font-bold mb-4" style={{ color: DEEP_BROWN }}>Overview</h2>
+                        <p className="text-gray-700 mb-4">
+                            ARM Group specializes in providing **skilled manpower** on a rental and local transfer basis, as well as recruiting from overseas to meet diverse client requirements across multiple industries.]. Our services ensure that clients have access to qualified professionals whenever needed—helping them maintain efficiency, reduce operational costs, and achieve long-term success.].
+                        </p>
                     </div>
-{/* Images section */}
-
-
-
-                {/* Company Overview */}
-                <div className="mb-10 p-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white', borderLeft: `5px solid ${ACCENT_SAND}` }}>
-                    <h2 className="text-3xl font-bold mb-4" style={{ color: DEEP_BROWN }}>Overview</h2>
-                    <p className="text-gray-700 mb-4">
-                        ARM Group specializes in providing **skilled manpower** on a rental and local transfer basis, as well as recruiting from overseas to meet diverse client requirements across multiple industries.pdf]. Our services ensure that clients have access to qualified professionals whenever needed—helping them maintain efficiency, reduce operational costs, and achieve long-term success].
-                    </p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-10">
+                    
                     {/* Vision & Mission */}
                     <div className="p-8 rounded-xl shadow-xl border-t-4" style={{ backgroundColor: 'white', borderColor: DEEP_BROWN }}>
                         <h2 className="text-2xl font-bold mb-4" style={{ color: ACCENT_SAND }}>Vision & Mission</h2>
                         <ul className="space-y-4 text-gray-700">
                             <li>
-                                <span className="font-bold" style={{ color: DEEP_BROWN }}>Vision:</span> To be the leading manpower solutions provider recognized for **excellence, reliability, and innovation** in workforce management.pdf].
+                                <span className="font-bold" style={{ color: DEEP_BROWN }}>Vision:</span> To be the leading manpower solutions provider recognized for **excellence, reliability, and innovation** in workforce management.].
                             </li>
                             <li>
-                                <span className="font-bold" style={{ color: DEEP_BROWN }}>Mission:</span> To deliver qualified, trained, and motivated manpower that drives our clients' success while fostering growth, safety, and satisfaction among our workforce.pdf].
+                                <span className="font-bold" style={{ color: DEEP_BROWN }}>Mission:</span> To deliver qualified, trained, and motivated manpower that drives our clients' success while fostering growth, safety, and satisfaction among our workforce.].
                             </li>
                         </ul>
                     </div>
 
-                    {/* Core Values */}
-                    <div className="p-8 rounded-xl shadow-xl border-b-4" style={{ backgroundColor: 'white', borderColor: ACCENT_SAND }}>
-                        <h2 className="text-2xl font-bold mb-4" style={{ color: DEEP_BROWN }}>Core Values</h2>
-                        <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                            <li><b>Integrity: We operate with transparency and honesty in all business dealings.].</b></li>
-                            <li><b>Excellence:We strive to deliver top-quality services that exceed expectations.].</b></li>
-                            <li><b>Commitment:Dedicated to client satisfaction and continuous improvement.].</b></li>
-                            <li><b>Teamwork:Collaboration is key to achieving collective goal].</b></li>
-                            <li><b>Innovation: We continuously improve processes and training for better service delivery.].</b></li>
-                        </ul>
+                    {/* Image 2: Corporate Image Placeholder */}
+                   <div className="p-6 rounded-xl shadow-xl flex flex-col items-center justify-center border-b-4" style={{ backgroundColor: 'white', borderColor: ACCENT_SAND }}>
+    <h3 className="text-xl font-bold mb-3" style={{ color: DEEP_BROWN }}>Group photo</h3>
+    <img 
+        // Using the newly imported variable here
+        src={armGroupPhoto} 
+        alt="ARM Group Team Photo or Office" 
+        className="w-full h-auto object-cover transition-transform duration-500 hover:scale-110"
+    />
+</div>
+                </div>
+
+                {/* Core Values Section */}
+                <div className="mt-10 p-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white', borderRight: `5px solid ${DEEP_BROWN}` }}>
+                    <h2 className="text-3xl font-bold mb-4" style={{ color: ACCENT_SAND }}>Core Values</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-700">
+                        <div>
+                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Integrity</p>
+                            <p className="text-sm">We operate with transparency and honesty in all business dealings.].</p>
+                        </div>
+                         <div>
+                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Excellence</p>
+                            <p className="text-sm">We strive to deliver top-quality services that exceed expectations.].</p>
+                        </div>
+                         <div>
+                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Commitment</p>
+                            <p className="text-sm">We are dedicated to client satisfaction and continuous improvement.].</p>
+                        </div>
+                         <div>
+                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Teamwork</p>
+                            <p className="text-sm">Collaboration is key to achieving collective goals.].</p>
+                        </div>
+                         <div>
+                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Innovation</p>
+                            <p className="text-sm">We continuously improve processes and training for better service delivery.].</p>
+                        </div>
                     </div>
                 </div>
                 
+                {/* INSERTED: Our Clients Section (Only visible on this page) */}
+                <FadeInSection>
+                    <div className="mt-12">
+                         <OurClients />
+                    </div>
+                </FadeInSection>
+
                 <div className="mt-12 text-center">
                     <button 
                         onClick={() => { toggleView('public'); window.location.hash = ''; }}
@@ -864,14 +1016,15 @@ const CompanyProfile = ({ toggleView }) => {
 
 
 // ===================================
-// 10. Public View Wrapper
+// 11. Public View Wrapper
 // ===================================
 const PublicView = ({ toggleView }) => (
     <>
         <main className="flex-grow">
-            <Hero /> {/* No FadeInSection - always visible on load */}
-            {/* The old <About /> component is removed to prevent duplicate content, since the link now goes to the full Company Profile page. */}
+            <Hero /> 
+            <About /> 
             <Services />
+            {/* Removed <OurClients /> from here */}
             <Directors />
             <Contact />
         </main>
@@ -881,16 +1034,14 @@ const PublicView = ({ toggleView }) => (
 
 
 // ===================================
-// 11. Main App Component & Routing (Updated)
+// 12. Main App Component & Routing
 // ===================================
 
 const ADMIN_HASH = '#admin-key-123';
-// RENAMED HASH: SAMPLE_HASH -> COMPANY_PROFILE_HASH
 const COMPANY_PROFILE_HASH = '#company-profile';
 
 const getInitialView = () => {
     if (window.location.hash.includes(ADMIN_HASH)) return 'admin';
-    // UPDATED CHECK
     if (window.location.hash.includes(COMPANY_PROFILE_HASH)) return 'company-profile';
     return 'public';
 };
@@ -908,7 +1059,6 @@ export default function App() {
         // Determine the hash for the target view
         let targetHash = '';
         if (targetView === 'admin') targetHash = ADMIN_HASH;
-        // UPDATED HASH ASSIGNMENT
         if (targetView === 'company-profile') targetHash = COMPANY_PROFILE_HASH;
 
         // Apply fade-out effect when leaving the main public view
@@ -956,7 +1106,7 @@ export default function App() {
                     <AdminDashboard toggleView={toggleView} />
                 )}
                 
-                {/* RENAMED: Render the CompanyProfile page */}
+                {/* Render the CompanyProfile page */}
                 {currentView === 'company-profile' && (
                     <CompanyProfile toggleView={toggleView} />
                 )}
