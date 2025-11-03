@@ -554,20 +554,22 @@ const Services = () => {
                             icon={Wrench}
                             title="Maintenance & Shutdown"
                             description="Skilled technicians for industrial plant maintenance and critical shutdown operations."
-                            bgImage={Maintenance} // NOW USING THE IMPORTED IMAGE
+                            // bgImage={Maintenance} 
+                            // NOW USING THE IMPORTED IMAGE
                         />
 <ServiceCard
                             icon={Shield}
                             title="Support Staff"
                             description="Trained security personnel, drivers, and administrative support roles."
-                            bgImage={SupportstaffBg} // NOW USING THE IMPORTED IMAGE
+                            // bgImage={SupportstaffBg} 
+                            // NOW USING THE IMPORTED IMAGE
                         />
                         {/* 4. HOSPITALITY */}
                         <ServiceCard
                             icon={Hotel}
                             title="Hospitality"
                             description="We provide professional hospitality staff, including: Receptionists, Housekeeping Teams, Kitchen Assistants, Waiters, and Service Crew, ensuring seamless service delivery"
-                            bgImage={HospitalityBg} 
+                            // bgImage={HospitalityBg} 
                         />
                         
                         {/* 5. LOGISTICS & WAREHOUSING */}
@@ -575,7 +577,7 @@ const Services = () => {
                             icon={Truck}
                             title="Logistics & Warehousing"
                             description="We provide manpower for: Forklift Operators, Loaders & Pickers, Packing Staff, and Inventory Management."
-                            bgImage={LogisticsBg} 
+                            // bgImage={LogisticsBg} 
                         />
                         
                         {/* 6. FACILITY MANAGEMENT */}
@@ -583,7 +585,7 @@ const Services = () => {
                             icon={Building}
                             title="Facility Management"
                             description="We support day-to-day building operations by supplying: Cleaners, Landscaping Teams, and Maintenance Technicians."
-                            bgImage={FacilityBg} 
+                            // bgImage={FacilityBg} 
                         />
                         
                         {/* 7. HEALTHCARE */}
@@ -599,7 +601,7 @@ const Services = () => {
                             icon={ShoppingCart}
                             title="Retail & Customer Service"
                     description="We support retail chains and outlets with: Sales Associates, Cashiers, Store Helpers, and Customer Support Staff"
-                            bgImage={RetailBg} 
+                            // bgImage={RetailBg} 
                         />
 
                         {/* 9. EVENTS & ENTERTAINMENT (NEWLY ADDED) */}
