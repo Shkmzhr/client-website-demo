@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter } from 'lucide-react';
 // NEW ICON IMPORTS: Ensure this line includes all 9 icons
 import {  Factory, Hotel, Truck, Building, HeartPulse, ShoppingCart, Mic } from 'lucide-react';
@@ -61,15 +62,29 @@ import EventsBg from './assets/clientimages/Events.jpg';
 // Renaming the old variables to the new comprehensive set
 // ===================================
 // Placeholder for all 8 service cards
-import supportStaffPlaceholder from './assets/clientimages/Support-staff.jpg';
+// import supportStaffPlaceholder from './assets/clientimages/Support-staff.jpg';
 
 // ===================================
 // 0. Color Definitions & Utilities
 // ===================================
+// ===================================
+// 0. Glassy Color Definitions & Utilities
+// ===================================
 
-const DEEP_BROWN = '#544036'; // Primary/Text Color
-const ACCENT_SAND = '#A88F68'; // Secondary/Accent Color
-const SOFT_CREAM = '#FBF9F6'; // Background Color
+// CORE THEME COLORS (Dark Blue Glassmorphism)
+const DARK_BG = '#08101F';      // Deep dark blue/black for background
+const GLASS_ACCENT = '#4B89F7'; // Soft Electric Blue (Accent/Primary)
+const BRIGHT_TEXT = '#FAFAFA';  // White/light gray for text
+
+// GLASS EFFECT STYLES (Used for card and navbar backgrounds)
+const GLASS_BASE_BG = 'rgba(255, 255, 255, 0.08)';
+const GLASS_BORDER = `1px solid ${GLASS_ACCENT}30`;
+const GLASS_SHADOW = `0 8px 32px 0 rgba(0, 0, 0, 0.37)`;
+
+// Apply to old color variables for consistency
+const DEEP_BROWN = DARK_BG;
+const ACCENT_SAND = GLASS_ACCENT;
+const SOFT_CREAM = DARK_BG;
 
 // Characters used for the scrambling effect
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=';
@@ -213,27 +228,24 @@ const FadeInSection = ({ children }) => {
 
 // UPDATED NavLink component for smooth scrolling and delay
 const NavLink = ({ to, children, setIsOpen }) => {
+    // NavLink logic remains the same
     const handleNavigation = (e) => {
         e.preventDefault();
         
-        // 1. Close mobile menu immediately if open
         if (setIsOpen) {
             setIsOpen(false);
         }
 
-        // 2. Introduce a short delay (e.g., 200ms) for smoothness
         setTimeout(() => {
             const targetElement = document.getElementById(to);
             if (targetElement) {
-                // 3. Use smooth scroll behavior
                 targetElement.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
                 });
             }
-            // Optionally update the URL hash after scrolling starts
             window.history.pushState(null, null, `#${to}`);
-        }, 200); // 200ms delay for smooth transition
+        }, 200); 
     };
 
     return (
@@ -241,7 +253,16 @@ const NavLink = ({ to, children, setIsOpen }) => {
             href={`#${to}`} 
             onClick={handleNavigation}
             className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
-            style={{ color: DEEP_BROWN, '--tw-text-hover-opacity': 1, ':hover': { color: ACCENT_SAND } }}
+            style={{ 
+                color: BRIGHT_TEXT, 
+                transition: 'color 0.3s', 
+            }}
+            onMouseEnter={(e) => {
+                e.target.style.color = GLASS_ACCENT;
+            }}
+            onMouseLeave={(e) => {
+                e.target.style.color = BRIGHT_TEXT;
+            }}
         >
             {children}
         </a>
@@ -249,30 +270,35 @@ const NavLink = ({ to, children, setIsOpen }) => {
 };
 
 const Navbar = ({ toggleView, currentView }) => {
+    
     const [isOpen, setIsOpen] = useState(false);
-
     const isPublicView = currentView === 'public';
 
-    // Handler for the new full-page Company Profile link
+    // 🌟 FIX IS HERE: Changed 'company-profile' to the expected key 'profile'
     const handleCompanyProfileClick = (e) => {
         e.preventDefault();
         setIsOpen(false);
-        // Calls the new toggleView function which handles the fade and routing
-        toggleView('company-profile'); 
+        toggleView('company-profile'); // <-- CORRECTED KEY
     };
 
     return (
         <header 
-            className={`sticky top-0 z-50 border-b border-gray-100 transition-all duration-300`}
+            className={`sticky top-0 z-50 transition-all duration-300 backdrop-blur-md`}
             style={{ 
-                backgroundColor: SOFT_CREAM,
-                boxShadow: '0 1px 6px rgba(0,0,0,0.08)'
+                backgroundColor: 'rgba(8, 16, 31, 0.8)', 
+                borderBottom: GLASS_BORDER,
+                boxShadow: GLASS_SHADOW,
+                backdropFilter: 'blur(10px)',
             }}
         >
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
                 {/* Logo */}
                 <div className="text-2xl font-bold">
-                    <ScrambleText text="ARM Group" className="tracking-widest" color={DEEP_BROWN} />
+                    <ScrambleText 
+                        text="ARM Group" 
+                        className="tracking-widest" 
+                        color={BRIGHT_TEXT} 
+                    />
                 </div>
 
                 {/* Desktop Navigation */}
@@ -280,29 +306,30 @@ const Navbar = ({ toggleView, currentView }) => {
                     {isPublicView && (
                         <>
                             <NavLink to="hero">Home</NavLink>
-                            {/* UPDATED: Links to the new full-page route */}
-                        
                             <NavLink to="services">Services</NavLink>
                             <NavLink to="directors">Leadership</NavLink>
                             <NavLink to="contact">Contact</NavLink> 
-                                <a 
+                            <a 
                                 href="#company-profile"
                                 onClick={handleCompanyProfileClick}
                                 className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
-                                style={{ color: DEEP_BROWN, '--tw-text-hover-opacity': 1, ':hover': { color: ACCENT_SAND } }}
+                                style={{ color: BRIGHT_TEXT }}
+                                onMouseEnter={(e) => { e.target.style.color = GLASS_ACCENT; }}
+                                onMouseLeave={(e) => { e.target.style.color = BRIGHT_TEXT; }}
                             >
                                 Company Profile
                             </a>
                         </>
                     )}
                     
+                    {/* Admin Login Button */}
                     <button 
                         onClick={() => toggleView && toggleView(isPublicView ? 'admin' : 'public')}
                         className="px-4 py-2 text-sm font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
                         style={{ 
-                            backgroundColor: isPublicView ? DEEP_BROWN : ACCENT_SAND, 
-                            color: isPublicView ? SOFT_CREAM : DEEP_BROWN,
-                            border: `2px solid ${DEEP_BROWN}`
+                            backgroundColor: isPublicView ? GLASS_ACCENT : DARK_BG, 
+                            color: isPublicView ? DARK_BG : BRIGHT_TEXT,
+                            border: `2px solid ${GLASS_ACCENT}`,
                         }}
                     >
                         {isPublicView ? 'Admin Login' : 'Back to Site'}
@@ -312,8 +339,8 @@ const Navbar = ({ toggleView, currentView }) => {
                 {/* Mobile Menu Button */}
                 <button 
                     onClick={() => setIsOpen(!isOpen)}
-                    className="lg:hidden p-2 rounded-md transition duration-200 hover:bg-gray-200"
-                    style={{ color: DEEP_BROWN }}
+                    className="lg:hidden p-2 rounded-md transition duration-200 hover:bg-gray-800"
+                    style={{ color: GLASS_ACCENT }}
                 >
                     {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
@@ -321,20 +348,23 @@ const Navbar = ({ toggleView, currentView }) => {
 
             {/* Mobile Menu Dropdown */}
             {isOpen && (
-                 <div className="lg:hidden px-4 pt-2 pb-4 space-y-2 border-t" style={{ backgroundColor: SOFT_CREAM, borderColor: DEEP_BROWN }}>
+                <div 
+                    className="lg:hidden px-4 pt-2 pb-4 space-y-2 border-t" 
+                    style={{ backgroundColor: DARK_BG, borderColor: GLASS_ACCENT }}
+                >
                     {isPublicView && (
                         <>
                             <NavLink to="hero" setIsOpen={setIsOpen}>Home</NavLink>
-                            {/* UPDATED: Links to the new full-page route for mobile */}
-                          
                             <NavLink to="services" setIsOpen={setIsOpen}>Services</NavLink>
                             <NavLink to="directors" setIsOpen={setIsOpen}>Leadership</NavLink>
                             <NavLink to="contact" setIsOpen={setIsOpen}>Contact</NavLink>
-                              <a 
+                            <a 
                                 href="#company-profile"
-                                onClick={handleCompanyProfileClick}
+                                onClick={handleCompanyProfileClick} // Uses the corrected handler
                                 className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
-                                style={{ color: DEEP_BROWN, '--tw-text-hover-opacity': 1, ':hover': { color: ACCENT_SAND } }}
+                                style={{ color: BRIGHT_TEXT }}
+                                onMouseEnter={(e) => { e.target.style.color = GLASS_ACCENT; }}
+                                onMouseLeave={(e) => { e.target.style.color = BRIGHT_TEXT; }}
                             >
                                 Company Profile
                             </a>
@@ -344,10 +374,10 @@ const Navbar = ({ toggleView, currentView }) => {
                     <button 
                         onClick={() => { toggleView && toggleView(isPublicView ? 'admin' : 'public'); setIsOpen(false); }}
                         className="w-full text-left px-4 py-2 text-sm font-semibold rounded-md shadow-md transition duration-300 mt-2"
-                        style={{ 
-                            backgroundColor: isPublicView ? DEEP_BROWN : ACCENT_SAND, 
-                            color: isPublicView ? SOFT_CREAM : DEEP_BROWN,
-                            border: `2px solid ${DEEP_BROWN}`
+                         style={{ 
+                            backgroundColor: isPublicView ? GLASS_ACCENT : DARK_BG, 
+                            color: isPublicView ? DARK_BG : BRIGHT_TEXT,
+                            border: `2px solid ${GLASS_ACCENT}`,
                         }}
                     >
                         {isPublicView ? 'Admin Login' : 'Back to Site'}
@@ -357,7 +387,6 @@ const Navbar = ({ toggleView, currentView }) => {
         </header>
     );
 };
-
 // ===================================
 // 2. Hero Component 
 // ===================================
@@ -365,7 +394,7 @@ const Navbar = ({ toggleView, currentView }) => {
 const Hero = () => {
     // Hero is the only section not wrapped by FadeInSection as it is visible on load.
     return (
-        <section id="hero" className="relative h-[60vh] md:h-[80vh] flex items-center justify-center overflow-hidden" style={{ backgroundColor: DEEP_BROWN }}>
+        <section id="hero" className="relative h-[60vh] md:h-[80vh] flex items-center justify-center overflow-hidden" style={{ backgroundColor: DARK_BG }}>
             {/* Background pattern/image layer - Fixed position */}
             <div 
                 className="absolute inset-0 opacity-10 bg-gray-900 bg-cover bg-center"
@@ -389,13 +418,35 @@ const Hero = () => {
                 >
                     ARM Group delivers highly skilled technical, maintenance, and construction personnel across the Middle East.
                 </p>
-                <a 
-                    href="#services" 
-                    className="inline-block px-8 py-3 font-bold text-lg rounded-full shadow-xl transition duration-300 transform hover:scale-105 hover:shadow-2xl"
-                    style={{ backgroundColor: ACCENT_SAND, color: DEEP_BROWN }}
-                >
-                    Explore Our Services
-                </a>
+               <motion.a 
+                href="#services" 
+                // Framer Motion Animation Properties
+                animate={{
+                    // Keyframe-like animation for the box shadow (the "flame/pulse")
+                    boxShadow: [
+                        `0 0 10px ${GLASS_ACCENT}50`, // Subtle start
+                        `0 0 25px ${GLASS_ACCENT}90`, // Intense glow
+                        `0 0 10px ${GLASS_ACCENT}50`, // Fade back
+                    ],
+                }}
+                transition={{
+                    duration: 3, // Duration of one pulse cycle
+                    ease: "easeInOut", // Smooth in and out
+                    repeat: Infinity, // Make it infinite
+                    repeatType: "reverse", // Smoothly reverse the animation
+                }}
+
+                className="mt-10 inline-block px-8 py-3 text-lg font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-110"
+                style={{ 
+                    backgroundColor: GLASS_ACCENT, 
+                    color: DARK_BG,
+                    fontWeight: 700,
+                    // Initial subtle glow (Framer Motion overwrites the boxShadow property here)
+                    boxShadow: `0 0 10px ${GLASS_ACCENT}50`, 
+                }}
+            >
+                Explore Our Services
+            </motion.a>
             </div>
         </section>
     );
@@ -466,152 +517,196 @@ const About = () => {
 
 const ServiceCard = ({ icon: Icon, title, description, bgImage }) => {
     // NOTE: DEEP_BROWN, ACCENT_SAND, SOFT_CREAM are assumed to be defined globally or in scope
-    const { DEEP_BROWN, ACCENT_SAND, SOFT_CREAM } = { DEEP_BROWN: '#544036', ACCENT_SAND: '#A88F68', SOFT_CREAM: '#FBF9F6' };
-    
+    // const { DEEP_BROWN, ACCENT_SAND, SOFT_CREAM } = { DEEP_BROWN: '#544036', ACCENT_SAND: '#A88F68', SOFT_CREAM: '#FBF9F6' };
     return (
-        <div 
-            // Added 'group' class to enable group-hover utilities. 
-            // Added shadow, transition, and transform for the modern lift and subtle scale effect on hover.
-            className="group relative p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 hover:scale-[1.02] overflow-hidden cursor-pointer h-full"
+        <motion.div 
+            whileHover={{ 
+                scale: 1.05, 
+                // Enhanced shadow on hover for a lift
+                boxShadow: `0 15px 40px rgba(75, 137, 247, 0.5)`,
+                transition: { type: "spring", stiffness: 250, damping: 15 } 
+            }}
+            className="group relative p-8 rounded-xl overflow-hidden cursor-pointer h-full backdrop-blur-sm"
             style={{ 
-                backgroundColor: 'white',
+                // 💡 GLASS CARD STYLES
+                backgroundColor: GLASS_BASE_BG, 
+                border: GLASS_BORDER,
+                boxShadow: GLASS_SHADOW,
+                // Add blur to the card itself for extra depth
+                backdropFilter: 'blur(3px)', 
             }}
         >
-            {/* Background Image Layer */}
-            <div 
-                // Absolute positioning to cover the card. Image is centered and covers the space.
-                // transition-transform duration-700 and group-hover:scale-105 creates the slow zoom effect.
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
-                style={{ 
-                    backgroundImage: `url(${bgImage})`,
-                }}
+            {/* Background Image Layer: Set for depth, not visibility */}
+            <motion.div 
+                className="absolute inset-0 bg-cover bg-center" 
+                style={{ backgroundImage: `url(${bgImage})` }}
+                // Keep the image dark and subtle
+                initial={{ filter: 'grayscale(100%) brightness(0.1)' }} 
+                whileHover={{ scale: 1.1, filter: 'grayscale(50%) brightness(0.4)', transition: { duration: 0.7 } }} 
             >
-                {/* Overlay Layer: Ensures the image is light and text is highly readable */}
+                {/* Overlay Layer: Ensures maximum darkness behind the card content */}
                 <div 
-                    // 💡 UPDATED: Default opacity is 80%. On hover, it increases to 95%, significantly boosting contrast.
-                    className="absolute inset-0 transition-all duration-500 opacity-70 group-hover:opacity-95" 
-                    style={{ 
-                        backgroundColor: SOFT_CREAM,
-                    }}
+                    className="absolute inset-0 transition-all duration-500 opacity-80 group-hover:opacity-95" 
+                    style={{ backgroundColor: DARK_BG }}
                 ></div>
-            </div>
+            </motion.div>
             
-            {/* Content Layer (Must be z-10 to appear above the background image) */}
+            {/* Content Layer (Must be z-10) */}
             <div className="relative z-10">
+                {/* ICON CONTAINER: Bright accent color, no intense glow */}
                 <div 
-                    className="flex items-center justify-center w-16 h-16 rounded-full mb-6 transition duration-300 group-hover:scale-110" 
-                    style={{ backgroundColor: ACCENT_SAND }}
+                    className="flex items-center justify-center w-16 h-16 rounded-lg mb-6 transition duration-300 group-hover:scale-110 group-hover:rounded-2xl" 
+                    style={{ 
+                        backgroundColor: GLASS_ACCENT, 
+                        boxShadow: `0 0 15px ${GLASS_ACCENT}80`, // Subtle blue shadow
+                    }}
                 >
-                    <Icon className="w-8 h-8" style={{ color: DEEP_BROWN }} />
+                    <Icon className="w-8 h-8" style={{ color: DARK_BG }} /> 
                 </div>
-                <h3 className="text-2xl font-bold mb-3" style={{ color: DEEP_BROWN }}>{title}</h3>
-                {/* Text color updated to be dark for maximum readability over the light background */}
-                <p className="text-gray-800">{description}</p>
+                
+                {/* TEXT: Primary text is white/light gray */}
+                <h3 
+                    className="text-2xl font-bold mb-3" 
+                    style={{ 
+                        color: BRIGHT_TEXT, 
+                    }}
+                >{title}</h3>
+                <p className="text-gray-300">{description}</p>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
 //Services Section
+const itemVariants = {
+    hidden: { scale: 0.9, opacity: 0, y: 30, rotate: -1 }, // Starts small, low, invisible, and slightly tilted
+    show: { 
+        scale: 1, 
+        opacity: 1, 
+        rotate: 0, // Springs back to level
+        transition: { type: "spring", stiffness: 100, damping: 10 }
+    }
+};
+
+const containerVariants = {
+    hidden: {},
+    show: {
+        transition: {
+            staggerChildren: 0.08, // Time delay between each card animation start (0.08s)
+            delayChildren: 0.1 // Small initial delay before the first card starts
+        }
+    }
+};
 const Services = () => {
-    return (
-   <FadeInSection>
-            <section id="services" className="py-16 md:py-24" style={{ backgroundColor: 'white' }}>
+   return (
+        <FadeInSection>
+            <section id="services" className="py-16 md:py-24" style={{ backgroundColor: DARK_BG }}>
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-center" style={{ color: DEEP_BROWN }}>
+                    <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-center" style={{ color: GLASS_ACCENT }}>
                         Our Specialized Services
                     </h2>
                     <p className="text-center max-w-3xl mx-auto mb-16 text-lg text-gray-600">
                         We provide skilled manpower on a rental and local transfer basis, as well as recruiting from overseas, to meet diverse client requirements across multiple industries.
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <motion.div 
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                        variants={containerVariants}
+                        initial="hidden"
+                        whileInView="show" // Trigger animation when the section scrolls into view
+                        viewport={{ once: true, amount: 0.1 }} // Only run once when 10% of the section is visible
+                    >
                         
-                        {/* 1. CONSTRUCTION & SKILLED WORKERS */}
-                        <ServiceCard
-                            icon={HardHat}
-                            title="Construction & Skilled Workers"
-                            description="We deploy skilled and unskilled workers such as: Masons, Carpenters, Electricians, Plumbers, Welders & Fabricators, and General Helpers."
-                            bgImage={ConstructionBg} 
-                        />
+                        {/* 1. OIL & GAS */}
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={Factory}
+                                title="Oil & Gas"
+                                description="We supply experienced engineers, technicians, and field workers for oil rigs, refineries, and petrochemical plants. Our workforce is trained in international safety standards."
+                                // bgImage={OilGasBg} 
+                            />
+                        </motion.div>
                         
-                        {/* 2. OIL & GAS */}
-                        <ServiceCard
-                            icon={Factory}
-                            title="Oil & Gas"
-                            description="We supply experienced engineers, technicians, and field workers for oil rigs, refineries, and petrochemical plants Our workforce is trained in international safety standards."
-                            bgImage={OilGasBg} 
-                        />
+                        {/* 2. HOSPITALITY */}
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={Hotel}
+                                title="Hospitality"
+                                description="We provide professional hospitality staff, including: Receptionists, Housekeeping Teams, Kitchen Assistants, Waiters, and Service Crew, ensuring seamless service delivery."
+                                // bgImage={HospitalityBg} 
+                            />
+                        </motion.div>
                         
-                        {/* 3. MAINTENANCE & HVAC (Integrated into Construction/Facility in PDF, but kept separate for clarity) */}
-                         <ServiceCard
-                            icon={Zap}
-                            title="Technical & HVAC Maintenance"
-                            description="Includes Electrical & Mechanical maintenance staff and HVAC technicians, ensuring efficient industrial plant and building operations."
-                            bgImage={HvacBg} 
-                        />
-                      <ServiceCard
-                            icon={Wrench}
-                            title="Maintenance & Shutdown"
-                            description="Skilled technicians for industrial plant maintenance and critical shutdown operations."
-                            // bgImage={Maintenance} 
-                            // NOW USING THE IMPORTED IMAGE
-                        />
-<ServiceCard
-                            icon={Shield}
-                            title="Support Staff"
-                            description="Trained security personnel, drivers, and administrative support roles."
-                            // bgImage={SupportstaffBg} 
-                            // NOW USING THE IMPORTED IMAGE
-                        />
-                        {/* 4. HOSPITALITY */}
-                        <ServiceCard
-                            icon={Hotel}
-                            title="Hospitality"
-                            description="We provide professional hospitality staff, including: Receptionists, Housekeeping Teams, Kitchen Assistants, Waiters, and Service Crew, ensuring seamless service delivery"
-                            // bgImage={HospitalityBg} 
-                        />
+                        {/* 3. LOGISTICS & WAREHOUSING */}
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={Truck}
+                                title="Logistics & Warehousing"
+                                description="We provide manpower for: Forklift Operators, Loaders & Pickers, Packing Staff, and Inventory Management."
+                                // bgImage={LogisticsBg} 
+                            />
+                        </motion.div>
                         
-                        {/* 5. LOGISTICS & WAREHOUSING */}
-                        <ServiceCard
-                            icon={Truck}
-                            title="Logistics & Warehousing"
-                            description="We provide manpower for: Forklift Operators, Loaders & Pickers, Packing Staff, and Inventory Management."
-                            // bgImage={LogisticsBg} 
-                        />
+                        {/* 4. FACILITY MANAGEMENT */}
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={Building}
+                                title="Facility Management"
+                                description="We support day-to-day building operations by supplying: Cleaners, Landscaping Teams, and Maintenance Technicians."
+                                // bgImage={FacilityBg} 
+                            />
+                        </motion.div>
                         
-                        {/* 6. FACILITY MANAGEMENT */}
-                        <ServiceCard
-                            icon={Building}
-                            title="Facility Management"
-                            description="We support day-to-day building operations by supplying: Cleaners, Landscaping Teams, and Maintenance Technicians."
-                            // bgImage={FacilityBg} 
-                        />
+                        {/* 5. CONSTRUCTION & SKILLED WORKERS */}
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={HardHat}
+                                title="Construction & Skilled Workers"
+                                description="We deploy skilled and unskilled workers such as: Masons, Carpenters, Electricians, Plumbers, Welders & Fabricators, and General Helpers."
+                                // bgImage={ConstructionBg} 
+                            />
+                        </motion.div>
+                        
+                        {/* 6. TECHNICAL & HVAC MAINTENANCE */}
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={Zap}
+                                title="Technical & HVAC Maintenance"
+                                description="Includes Electrical & Mechanical maintenance staff and HVAC technicians, ensuring efficient industrial plant and building operations."
+                                // bgImage={HvacBg} 
+                            />
+                        </motion.div>
                         
                         {/* 7. HEALTHCARE */}
-                        <ServiceCard
-                            icon={HeartPulse}
-                            title="Healthcare"
-                            description="We provide manpower to support hospitals, clinics, and healthcare facilities, including: Nursing Assistants, Patient Care Staff, and Administrative Support."
-                            bgImage={HealthcareBg} 
-                        />
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={HeartPulse}
+                                title="Healthcare"
+                                description="We provide manpower to support hospitals, clinics, and healthcare facilities, including: Nursing Assistants, Patient Care Staff, and Administrative Support."
+                                // bgImage={HealthcareBg} 
+                            />
+                        </motion.div>
                         
-                   {/* 8. RETAIL & CUSTOMER SERVICE (FIXED SYNTAX) */}
-                        <ServiceCard
-                            icon={ShoppingCart}
-                            title="Retail & Customer Service"
-                    description="We support retail chains and outlets with: Sales Associates, Cashiers, Store Helpers, and Customer Support Staff"
-                            // bgImage={RetailBg} 
-                        />
+                        {/* 8. RETAIL & CUSTOMER SERVICE */}
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={ShoppingCart}
+                                title="Retail & Customer Service"
+                                description="We support retail chains and outlets with: Sales Associates, Cashiers, Store Helpers, and Customer Support Staff."
+                                // bgImage={RetailBg} 
+                            />
+                        </motion.div>
 
-                        {/* 9. EVENTS & ENTERTAINMENT (NEWLY ADDED) */}
-                        <ServiceCard
-                            icon={Mic}
-                            title="Events & Entertainment"
-                            description="We supply temporary and long-term staff for events such as: Ushers & Event Helpers, Stage Crew, Catering Staff, and Security"
-                            bgImage={EventsBg} 
-                        />
-                    </div>
+                        {/* 9. EVENTS & ENTERTAINMENT */}
+                        <motion.div variants={itemVariants}>
+                            <ServiceCard
+                                icon={Mic}
+                                title="Events & Entertainment"
+                                description="We supply temporary and long-term staff for events such as: Ushers & Event Helpers, Stage Crew, Catering Staff, and Security."
+                                // bgImage={EventsBg} 
+                            />
+                        </motion.div>
+                    </motion.div>
                 </div>
             </section>
         </FadeInSection>
