@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-
+import heroParallaxBg from './assets/clientimages/constructionparallax1.jpg'; 
+ 
 import { motion, useScroll, useTransform,useSpring   } from 'framer-motion'; 
 import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter,MessageCircle  } from 'lucide-react';
 // NEW ICON IMPORTS: Ensure this line includes all 9 icons
-import {  Factory, Hotel, Truck, Building, HeartPulse, ShoppingCart, Mic, Pause, Play, Repeat  } from 'lucide-react';
+import {  Factory, Hotel, Truck, Building, HeartPulse, ShoppingCart, Mic, Pause, Play, Repeat,ArrowUp, ArrowDown  } from 'lucide-react';
 // ===================================
 // IMAGE IMPORTS (UPDATED PATHS and all client images)
 // ===================================
@@ -35,10 +36,13 @@ import clientImage23 from './assets/clientimages/rezyatgroup.jpeg';
 import clientImage24 from './assets/clientimages/samayagroup.jpeg';
 import clientImage25 from './assets/clientimages/saudieleccomp.jpeg';
 import armGroupPhoto from './assets/clientimages/ARM-group-photo.jpeg';
-import arm2GroupPhoto from './assets/clientimages/ARM-group-photo.jpeg';
+import arm2GroupPhoto from './assets/clientimages/ARM-2Group.jpeg';
 import MrRizwan from './assets/clientimages/mohammedrizwanahmed.jpg';
 import MrMujeeb from './assets/clientimages/mujeebullah.jpg';
 import MohammedHamid from './assets/clientimages/mohammedhamidansari.jpg';
+import MrTajammul from './assets/clientimages/dummyProfile.png';
+import MrAbdullah from './assets/clientimages/dummyProfile.png';
+import MrPaleshRana from './assets/clientimages/dummyProfile.png';
 import dummyServiceBg from './assets/clientimages/womenwashingdish.jpeg';
 import ConstructionBg from './assets/clientimages/Construction.jpg';
 import HvacBg from './assets/clientimages/HVAC.jpg';
@@ -72,15 +76,26 @@ import EventsBg from './assets/clientimages/Events.jpg';
 // 0. Glassy Color Definitions & Utilities
 // ===================================
 
-// CORE THEME COLORS (Dark Blue Glassmorphism)
-const DARK_BG = '#08101F';      // Deep dark blue/black for background
-const GLASS_ACCENT = '#4B89F7'; // Soft Electric Blue (Accent/Primary)
-const BRIGHT_TEXT = '#FAFAFA';  // White/light gray for text
+// BACKGROUND
+const DARK_BG = '#060B16'; // Richer blue-black (less flat, more depth)
+const DARK_GRADIENT = 'linear-gradient(145deg, #060B16 0%, #0A162A 100%)';
 
-// GLASS EFFECT STYLES (Used for card and navbar backgrounds)
-const GLASS_BASE_BG = 'rgba(255, 255, 255, 0.08)';
-const GLASS_BORDER = `1px solid ${GLASS_ACCENT}30`;
-const GLASS_SHADOW = `0 8px 32px 0 rgba(0, 0, 0, 0.37)`;
+// ACCENTS
+const GLASS_ACCENT = '#4B89F7'; // Primary neon blue
+const GLASS_ACCENT_SOFT = '#6FA3FF'; // Lighter glow version for gradients/glows
+
+// TEXT
+const BRIGHT_TEXT = '#F5F7FA'; // Slightly warmer white for readability
+const SUBTEXT = 'rgba(240,240,240,0.7)'; // Secondary text tone
+
+// GLASS EFFECTS
+const GLASS_BASE_BG = 'rgba(255, 255, 255, 0.12)'; // Slightly brighter glass
+const GLASS_BORDER = `1px solid ${GLASS_ACCENT}50`;
+const GLASS_SHADOW = `0 8px 32px 0 rgba(75, 137, 247, 0.15)`; // Blue-tinted shadow
+
+// GLOW ACCENTS (for subtle layer blending)
+const GLOW_EDGE = `0 0 25px ${GLASS_ACCENT_SOFT}60`;
+const GLOW_HALO = `0 0 80px ${GLASS_ACCENT_SOFT}30`;
 
 // Apply to old color variables for consistency
 const DEEP_BROWN = DARK_BG;
@@ -89,7 +104,7 @@ const SOFT_CREAM = DARK_BG;
 
 // Characters used for the scrambling effect
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=';
-const DURATION = 1000; // Total duration of the scramble effect in ms
+const DURATION = 540; // Total duration of the scramble effect in ms
 
 /**
  * ScrambleText Component (Animation Utility)
@@ -145,7 +160,18 @@ const ScrambleText = ({ text, className, color = DEEP_BROWN }) => {
         </span>
     );
 };
-
+const FramerFadeIn = ({ children, delay = 0, duration = 0.8, y = 30, once = true }) => {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: y }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: duration, delay: delay, ease: "easeOut" }}
+            viewport={{ once: once, amount: 0.1 }}
+        >
+            {children}
+        </motion.div>
+    );
+};
 /**
  * PageTransitionWrapper Component (Controls Admin/Public full-page fade)
  * Manages the fade-in/fade-out effect for the entire public site when switching views.
@@ -221,6 +247,48 @@ const FadeInSection = ({ children }) => {
         </div>
     );
 };
+
+
+// Service Card Component (Used in Services section)
+const ServiceCard = ({ icon: Icon, title, description, widthClass = "w-full" }) => (
+    <motion.div 
+        whileHover={{ 
+            scale: 1.05, 
+            boxShadow: `0 15px 40px rgba(75, 137, 247, 0.5)`,
+            transition: { type: "spring", stiffness: 250, damping: 15 } 
+        }}
+        // widthClass is critical for the horizontal layout
+        // For mobile (default), cards are w-72, for md (desktop scroll), they are w-80.
+        className={`group relative p-8 rounded-xl overflow-hidden cursor-pointer h-full backdrop-blur-sm flex-shrink-0 w-72 md:w-80`}
+        style={{ 
+            // 💡 GLASS CARD STYLES
+            backgroundColor: GLASS_BASE_BG, 
+            border: GLASS_BORDER,
+            boxShadow: GLASS_SHADOW,
+            backdropFilter: 'blur(3px)', 
+        }}
+    >
+        <div className="relative z-10">
+            <div 
+                className="flex items-center justify-center w-16 h-16 rounded-lg mb-6 transition duration-300 group-hover:scale-110 group-hover:rounded-2xl" 
+                style={{ 
+                    backgroundColor: GLASS_ACCENT, 
+                    boxShadow: `0 0 15px ${GLASS_ACCENT}80`, 
+                }}
+            >
+                <Icon className="w-8 h-8" style={{ color: DARK_BG }} /> 
+            </div>
+            
+            <h3 
+                className="text-2xl font-bold mb-3" 
+                style={{ 
+                    color: BRIGHT_TEXT, 
+                }}
+            >{title}</h3>
+            <p className="text-gray-300">{description}</p>
+        </div>
+    </motion.div>
+);
 
 
 // ===================================
@@ -397,14 +465,14 @@ const Hero = () => {
     return (
         <section
             id="hero"
-            className="relative h-[60vh] md:h-[80vh] flex items-center justify-center overflow-hidden"
+            className="relative h-screen sm:h-screen flex items-center justify-center overflow-hidden"
             style={{ backgroundColor: DARK_BG }}
         >
             {/* Enhanced Parallax Background */}
             <motion.div
                 className="absolute inset-0 bg-cover bg-center will-change-transform"
                 style={{
-                    backgroundImage: `url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1950&q=80')`,
+                backgroundImage: `url('${heroParallaxBg}')`,
                     y,
                     scale,
                 }}
@@ -428,7 +496,7 @@ const Hero = () => {
                 </h1>
 
                 <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-3xl mx-auto transition duration-700 opacity-100">
-                    ARM Solutions delivers highly skilled technical, maintenance, and construction personnel across the Middle East.
+                    ARM Solutions delivers highly skilled technical, maintenance, and construction personnel across the Saudi Arabia
                 </p>
 
                 <motion.a
@@ -466,159 +534,144 @@ const Hero = () => {
 // ===================================
 // 3. About Component 
 // ===================================
-
 const FeatureCard = ({ icon: Icon, title, description }) => (
-    <div 
-        className="p-6 rounded-xl shadow-lg border-t-4" 
-        style={{ 
-            backgroundColor: 'white', 
-            borderColor: ACCENT_SAND, 
-        }}
+  <motion.div
+    whileHover={{
+      scale: 1.05,
+      boxShadow: `0 0 25px ${GLASS_ACCENT}60`,
+      transition: { duration: 0.4, ease: "easeOut" },
+    }}
+    className="p-6 rounded-2xl backdrop-blur-md border transition-all duration-300"
+    style={{
+      background: `linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(75, 137, 247, 0.1))`,
+      borderColor: `${GLASS_ACCENT}40`,
+      boxShadow: `0 4px 20px rgba(0, 0, 0, 0.3)`,
+    }}
+  >
+    <div
+      className="flex items-center justify-center w-14 h-14 rounded-xl mb-4"
+      style={{
+        background: `radial-gradient(circle at top left, ${GLASS_ACCENT}60, transparent 70%)`,
+        boxShadow: `0 0 15px ${GLASS_ACCENT}40`,
+      }}
     >
-        <Icon className="w-8 h-8 mb-4" style={{ color: DEEP_BROWN }} />
-        <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
-        <p className="text-gray-600">{description}</p>
+      <Icon className="w-8 h-8" style={{ color: BRIGHT_TEXT }} />
     </div>
+
+    <h3
+      className="text-xl font-semibold mb-2"
+      style={{ color: BRIGHT_TEXT }}
+    >
+      {title}
+    </h3>
+    <p className="text-gray-300 leading-relaxed">{description}</p>
+  </motion.div>
 );
+
 const About = () => {
-    return (
-        <FadeInSection>
-            <motion.section
-                id="about"
-                className="relative py-16 md:py-24 -mt-20 z-20"
-                style={{ backgroundColor: SOFT_CREAM }}
-                initial={{ opacity: 0, y: 60 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                viewport={{ once: true, amount: 0.2 }}
+  return (
+    <FadeInSection>
+      <motion.section
+        id="about"
+        className="relative py-20 md:py-28 z-20 overflow-hidden"
+        style={{
+          background: `linear-gradient(120deg, ${DARK_BG} 0%, #0E1C35 40%, ${GLASS_ACCENT}15 100%)`,
+        }}
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        {/* Glow Accent */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            background: `radial-gradient(circle at 20% 30%, ${GLASS_ACCENT}60, transparent 70%)`,
+          }}
+        ></div>
+
+        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2
+              className="text-3xl md:text-4xl font-extrabold mb-4"
+              style={{ color: GLASS_ACCENT }}
             >
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                            <ScrambleText 
-                                text="A Legacy of Trust and Excellence" 
-                                className="inline-block" 
-                                color={DEEP_BROWN} 
-                            />
-                        </h2>
-                        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                            For over two decades, ARM Solutions has been the reliable partner for major industrial and construction projects.
-                        </p>
-                    </div>
+              <ScrambleText
+                text="A Legacy of Trust and Excellence"
+                className="inline-block"
+                color={GLASS_ACCENT}
+              />
+            </h2>
+            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+              For over two decades, ARM Solutions has been the reliable partner
+              for major industrial and construction projects — delivering manpower
+              excellence, safety, and dependability.
+            </p>
+          </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <FeatureCard
-                            icon={Globe}
-                            title="Global Reach"
-                            description="Sourcing and mobilizing top talent from key regions worldwide to meet localized project demands."
-                        />
-                        <FeatureCard
-                            icon={Users}
-                            title="Skilled Manpower"
-                            description="Providing certified engineers, technicians, and specialized labor vetted for immediate deployment."
-                        />
-                        <FeatureCard
-                            icon={TrendingUp}
-                            title="Operational Efficiency"
-                            description="Streamlining recruitment, logistics, and compliance processes to minimize project lead times."
-                        />
-                    </div>
-                </div>
-            </motion.section>
-        </FadeInSection>
-    );
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <FeatureCard
+              icon={Globe}
+              title="Global Reach"
+              description="Sourcing and mobilizing top talent from key regions worldwide to meet localized project demands."
+            />
+            <FeatureCard
+              icon={Users}
+              title="Skilled Manpower"
+              description="Providing certified engineers, technicians, and specialized labor vetted for immediate deployment."
+            />
+            <FeatureCard
+              icon={TrendingUp}
+              title="Operational Efficiency"
+              description="Streamlining recruitment, logistics, and compliance processes to minimize project lead times."
+            />
+          </div>
+        </div>
+      </motion.section>
+    </FadeInSection>
+  );
 };
-
-
 // ===================================
 // 4. Services Component
 // ===================================
-
-const FramerFadeIn = ({ children, delay = 0, duration = 0.8, y = 30, once = true }) => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: y }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: duration, delay: delay, ease: "easeOut" }}
-            viewport={{ once: once, amount: 0.1 }}
-        >
-            {children}
-        </motion.div>
-    );
-};
-
-
-const ServiceCard = ({ icon: Icon, title, description, widthClass = "w-full" }) => (
-    <motion.div 
-        whileHover={{ 
-            scale: 1.05, 
-            boxShadow: `0 15px 40px rgba(75, 137, 247, 0.5)`,
-            transition: { type: "spring", stiffness: 250, damping: 15 } 
-        }}
-        // widthClass is critical for the horizontal layout
-        className={`group relative p-8 rounded-xl overflow-hidden cursor-pointer h-full backdrop-blur-sm flex-shrink-0 ${widthClass}`}
-        style={{ 
-            // 💡 GLASS CARD STYLES
-            backgroundColor: GLASS_BASE_BG, 
-            border: GLASS_BORDER,
-            boxShadow: GLASS_SHADOW,
-            backdropFilter: 'blur(3px)', 
-        }}
-    >
-        <div className="relative z-10">
-            <div 
-                className="flex items-center justify-center w-16 h-16 rounded-lg mb-6 transition duration-300 group-hover:scale-110 group-hover:rounded-2xl" 
-                style={{ 
-                    backgroundColor: GLASS_ACCENT, 
-                    boxShadow: `0 0 15px ${GLASS_ACCENT}80`, 
-                }}
-            >
-                <Icon className="w-8 h-8" style={{ color: DARK_BG }} /> 
-            </div>
-            
-            <h3 
-                className="text-2xl font-bold mb-3" 
-                style={{ 
-                    color: BRIGHT_TEXT, 
-                }}
-            >{title}</h3>
-            <p className="text-gray-300">{description}</p>
-        </div>
-    </motion.div>
-);
-
 const Services = () => {
-    
-    // 1. Setup useRef for the container that generates the scroll distance
-    const containerRef = useRef(null);
-    const [scrollRange, setScrollRange] = useState(-1300);
-useEffect(() => {
+  const containerRef = useRef(null);
+  const trackRef = useRef(null);
+  const [scrollRange, setScrollRange] = useState(0);
+
+  useEffect(() => {
     const updateRange = () => {
-      const width = window.innerWidth;
-      setScrollRange(width < 768 ? -800 : -1300);
+      if (containerRef.current && trackRef.current) {
+        const contentWidth = trackRef.current.scrollWidth;
+        const containerWidth = containerRef.current.clientWidth;
+
+        // Add more padding (e.g. 200px total) to ensure first/last card visible
+        const newRange =
+          contentWidth > containerWidth
+            ? -(contentWidth - containerWidth + 200)
+            : 0;
+        setScrollRange(newRange);
+      }
     };
+
     updateRange();
     window.addEventListener("resize", updateRange);
-    return () => window.removeEventListener("resize", updateRange);
+    const timeout = setTimeout(updateRange, 150);
+    return () => {
+      window.removeEventListener("resize", updateRange);
+      clearTimeout(timeout);
+    };
   }, []);
 
-    
-    // 2. Track the scroll progress of the container
- const { scrollYProgress } = useScroll({
+  const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.7", "end 0.3"], // starts when 70% visible
+    offset: ["start 0.9", "end 0.3"],
   });
-    
-    // 3. Define the horizontal translation (x) based on scroll progress
-    // x is transformed from 0% scroll progress (0px) to 100% scroll progress (-1300px)
- const xRaw = useTransform(scrollYProgress, [0, 1], ["0px", `${scrollRange}px`]);
-  const x = useSpring(xRaw, {
-    stiffness: 100,
-    damping: 30,
-    mass: 0.5,
-  });
-    // Framer Motion Variants for vertical-in animation
- const itemVariants = {
+
+  const xRaw = useTransform(scrollYProgress, [0, 1], ["0px", `${scrollRange}px`]);
+  const x = useSpring(xRaw, { stiffness: 100, damping: 30, mass: 0.5 });
+
+  const itemVariants = {
     hidden: { scale: 0.9, opacity: 0, y: 30, rotate: -1 },
     show: {
       scale: 1,
@@ -628,7 +681,17 @@ useEffect(() => {
     },
   };
 
-   return (
+  const services = [
+    { icon: HardHat, title: "Construction", description: "Engineers, Foremen, Welders, and general labor for large-scale projects." },
+    { icon: Wrench, title: "Maintenance & Shutdown", description: "Skilled technicians for industrial plant maintenance and critical shutdown operations." },
+    { icon: Zap, title: "Technical & HVAC", description: "Experts in electrical systems, instrumentation, and HVAC services." },
+    { icon: Shield, title: "Support Staff", description: "Trained security personnel, drivers, and administrative support roles." },
+    { icon: Factory, title: "Oil & Gas", description: "Specialized manpower for oil rigs, refineries, and petrochemical plants." },
+    { icon: Hotel, title: "Hospitality", description: "Soft services personnel, housekeeping, and facility management experts." },
+    { icon: Building, title: "Manufacturing", description: "Assembly line workers, quality control inspectors, and logistics support." },
+  ];
+
+  return (
     <section id="services" className="py-16 md:py-24" style={{ backgroundColor: DARK_BG }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
@@ -650,15 +713,14 @@ useEffect(() => {
               className="text-sm text-gray-400 mt-2 font-bold"
               style={{ color: GLASS_ACCENT }}
             >
-              Scroll down — cards will move horizontally when section reaches 70%.
+              Scroll down — cards will move horizontally
             </p>
           </FramerFadeIn>
         </div>
       </div>
 
-      {/* --- Scroll Wrapper --- */}
+      {/* Scroll Wrapper */}
       <div ref={containerRef} className="relative z-0" style={{ height: "300vh" }}>
-        {/* Sticky Container */}
         <div className="sticky top-0 h-screen overflow-hidden flex items-center">
           <div className="w-full relative">
             {/* Gradient Edge Masks */}
@@ -668,61 +730,22 @@ useEffect(() => {
             {/* Horizontal Track */}
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div
+                ref={trackRef}
                 style={{ x }}
-                className="flex space-x-8 pb-8 md:pb-12"
+                className="flex space-x-8 pb-8 md:pb-12 pl-32 pr-32" // ✅ added side padding
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.1 }}
               >
-                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
-                  <ServiceCard
-                    icon={HardHat}
-                    title="Construction"
-                    description="Engineers, Foremen, Welders, and general labor for large-scale projects."
-                  />
-                </motion.div>
-                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
-                  <ServiceCard
-                    icon={Wrench}
-                    title="Maintenance & Shutdown"
-                    description="Skilled technicians for industrial plant maintenance and critical shutdown operations."
-                  />
-                </motion.div>
-                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
-                  <ServiceCard
-                    icon={Zap}
-                    title="Technical & HVAC"
-                    description="Experts in electrical systems, instrumentation, and HVAC services."
-                  />
-                </motion.div>
-                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
-                  <ServiceCard
-                    icon={Shield}
-                    title="Support Staff"
-                    description="Trained security personnel, drivers, and administrative support roles."
-                  />
-                </motion.div>
-                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
-                  <ServiceCard
-                    icon={Factory}
-                    title="Oil & Gas"
-                    description="Specialized manpower for oil rigs, refineries, and petrochemical plants."
-                  />
-                </motion.div>
-                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
-                  <ServiceCard
-                    icon={Hotel}
-                    title="Hospitality"
-                    description="Soft services personnel, housekeeping, and facility management experts."
-                  />
-                </motion.div>
-                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
-                  <ServiceCard
-                    icon={Building}
-                    title="Manufacturing"
-                    description="Assembly line workers, quality control inspectors, and logistics support."
-                  />
-                </motion.div>
+                {services.map((s, i) => (
+                  <motion.div
+                    key={i}
+                    variants={itemVariants}
+                    className="flex-shrink-0 w-64 sm:w-72 md:w-80 lg:w-96"
+                  >
+                    <ServiceCard {...s} />
+                  </motion.div>
+                ))}
               </motion.div>
             </div>
           </div>
@@ -732,129 +755,176 @@ useEffect(() => {
   );
 };
 
-
 // ===================================
 // 5. Directors Component
 // ===================================
+const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
+  const [flipped, setFlipped] = React.useState(false);
 
-const DirectorCard = ({ name, title, bio, imageUrl, index }) => (
-  <motion.div
-    className="rounded-2xl overflow-hidden text-center backdrop-blur-lg relative border transition-all duration-500 cursor-pointer"
-    style={{
-      background: GLASS_BASE_BG,
-      border: GLASS_BORDER,
-      boxShadow: GLASS_SHADOW,
-    }}
-    initial={{ opacity: 0, y: 50 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{
-      delay: index * 0.2,
-      duration: 0.7,
-      ease: "easeOut",
-    }}
-    viewport={{ once: true, amount: 0.3 }}
-    whileHover={{
-      scale: 1.05,
-      boxShadow: `0 0 25px ${GLASS_ACCENT}80`,
-      transition: { duration: 0.4 },
-    }}
-  >
+  return (
     <motion.div
-      className="overflow-hidden relative"
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.6 }}
+      className="relative w-full h-[430px] perspective cursor-pointer"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.2, duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.3 }}
+      onMouseEnter={() => setFlipped(true)}
+      onMouseLeave={() => setFlipped(false)}
     >
-      <motion.img
-        src={imageUrl}
-        alt={name}
-        className="w-full h-56 object-contain opacity-90"
-        onError={(e) => {
-          e.target.onerror = null;
-          e.target.src =
-            "https://placehold.co/400x300/0a0a0a/777?text=Director";
-        }}
-        whileHover={{ scale: 1.1, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      />
-      {/* Accent glow ring */}
+      {/* Inner 3D rotation wrapper */}
       <motion.div
-        className="absolute inset-0 opacity-20"
-        whileHover={{ opacity: 0.3 }}
+        animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+        className="relative w-full h-full"
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        {/* FRONT SIDE */}
+        <div
+          className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col text-center"
+          style={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: `1px solid ${GLASS_ACCENT}30`,
+            boxShadow: `0 0 25px ${GLASS_ACCENT}40, inset 0 0 10px ${GLASS_ACCENT}20`,
+            backdropFilter: "blur(10px)",
+            backfaceVisibility: "hidden",
+          }}
+        >
+          {/* Image container */}
+          <div className="relative flex items-center justify-center bg-black/20" style={{ height: "220px" }}>
+            <motion.img
+              src={imageUrl}
+              alt={name}
+              className="h-[200px] object-contain opacity-90 transition-all duration-500"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "https://placehold.co/400x300/0a0a0a/777?text=Director";
+              }}
+              whileHover={{ scale: 1.03 }}
+            />
+            <div
+              className="absolute inset-0 opacity-15"
+              style={{
+                background: `radial-gradient(circle at 50% 0%, ${GLASS_ACCENT}50, transparent 70%)`,
+              }}
+            ></div>
+          </div>
+
+          {/* Text content */}
+          <div className="p-5 flex flex-col flex-grow justify-between">
+            <div>
+              <h3 className="text-lg font-bold mb-1" style={{ color: BRIGHT_TEXT }}>
+                {name}
+              </h3>
+              <p className="text-sm font-medium mb-2" style={{ color: GLASS_ACCENT }}>
+                {title}
+              </p>
+              <p className="text-xs text-gray-400 italic line-clamp-3">{bio}</p>
+            </div>
+
+            <motion.a
+              href="#"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 200 }}
+              className="inline-block mt-3"
+            >
+              <Linkedin className="w-5 h-5 mx-auto" style={{ color: GLASS_ACCENT }} />
+            </motion.a>
+          </div>
+        </div>
+
+        {/* BACK SIDE */}
+        <div
+          className="absolute inset-0 rounded-2xl backdrop-blur-lg border flex flex-col justify-center p-6 text-left overflow-hidden"
+          style={{
+            background: "rgba(255, 255, 255, 0.05)",
+            border: `1px solid ${GLASS_ACCENT}30`,
+            boxShadow: `0 0 30px ${GLASS_ACCENT}50, inset 0 0 10px ${GLASS_ACCENT}25`,
+            transform: "rotateY(180deg)",
+            backfaceVisibility: "hidden",
+          }}
+        >
+          <h3 className="text-lg font-bold mb-3 text-center" style={{ color: GLASS_ACCENT }}>
+            {name}
+          </h3>
+          <p className="text-sm text-gray-300 leading-relaxed overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/30 scrollbar-track-transparent">
+            {intro}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* ✨ Outer Glow Aura */}
+      <motion.div
+        className="absolute inset-0 rounded-2xl z-[-1]"
+        animate={{ opacity: [0.5, 0.8, 0.5] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         style={{
-      background: `radial-gradient(circle at 50% 0%, ${GLASS_ACCENT}50, transparent 70%)`,
+          boxShadow: `0 0 30px 8px ${GLASS_ACCENT}40`,
+          filter: "blur(8px)",
         }}
       ></motion.div>
     </motion.div>
-
-    <div className="p-6">
-      <h3
-        className="text-xl font-bold mb-1"
-        style={{ color: BRIGHT_TEXT }}
-      >
-        {name}
-      </h3>
-      <p
-        className="font-medium mb-3"
-        style={{ color: GLASS_ACCENT }}
-      >
-        {title}
-      </p>
-      <p className="text-sm text-gray-400 italic mb-4">{bio}</p>
-
-      <motion.a
-        href="#"
-        whileHover={{ scale: 1.2, rotate: 5 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 200 }}
-        className="inline-block"
-      >
-        <Linkedin
-          className="w-6 h-6 mx-auto"
-          style={{ color: GLASS_ACCENT }}
-        />
-      </motion.a>
-    </div>
-  </motion.div>
-);
+  );
+};
 
 const Directors = () => {
   const { scrollY } = useScroll();
-const y = useTransform(scrollY, [0, 1000], [0, -200]);
+  const y = useTransform(scrollY, [0, 1000], [0, -200]);
 
   const directors = [
     {
       name: "Mr. Mohammed Rizwan Ahmed",
-      title: "Chairman & CEO",
-      bio: "Visionary leader responsible for corporate strategy, financial oversight, and driving ARM's market expansion and ethical growth.",
+      title: "Managing Director",
+      bio: "14+ years of leadership experience in manpower operations and strategic management.",
+      intro: `Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at Lucid Investment Company. With over 14 years of experience, he has led large-scale operations, optimized workforce strategies, and implemented effective process improvements contributing to organizational growth.`,
       imageUrl: MrRizwan,
     },
     {
       name: "Mr. Mujeeb Ullah",
-      title: "Director & COO",
-      bio: "Oversees all operational aspects, streamlining mobilization, logistics, and compliance for highly efficient project execution.",
+      title: "CEO",
+      bio: "A decade of experience in sales and workforce client relations.",
+      intro: `Mr. Mujeeb Ullah currently works as the Sales Manager at Lucid Investment Company. With over 10 years of experience in manpower solutions, he is known for his client relationship expertise, strategic sales vision, and ability to deliver tailored workforce solutions.`,
       imageUrl: MrMujeeb,
     },
     {
       name: "Mr. Mohammad Hamid Ansari",
-      title: "Director - Training & Development",
-      bio: "Specialist in developing soft services personnel for hospitality, housekeeping, and facility management, ensuring service excellence.",
+      title: "Founder and Business Development",
+      bio: "Expert recruiter skilled in strategic hiring and workforce planning.",
+      intro: `Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at Lucid Investment Company. With more than a decade of experience in recruitment and manpower solutions, he brings deep understanding of talent acquisition, strategic hiring practices, and workforce planning.`,
       imageUrl: MohammedHamid,
+    },
+    {
+      name: "Mr. Mohammed Tajammul Ahmed",
+      title: "Administrator",
+      bio: "Expert in soft services training and staff development.",
+      intro: `Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel. With deep expertise in grooming workers for hospitality and facility management, he ensures service excellence and client satisfaction.`,
+      imageUrl: MrTajammul,
+    },
+    {
+      name: "Mr Abdullah",
+      title: "Deputy CEO",
+      bio: "Expert in soft services training and staff development.",
+      intro: 
+      `Mr. Abdullah specializes in the training and development of soft services personnel. With deep expertise in grooming workers for hospitality and facility management, he ensures service excellence and client satisfaction.`,
+      imageUrl: MrAbdullah,
+    },
+    {
+      name: "Mr. Palesh Rana",
+      title: "Senior Recruiter - Overseas and Local (Bangladesh)",
+      bio: "Expert in soft services training and staff development.",
+      intro: `Mr. Mr. Palesh Rana specializes in the training and development of soft services personnel. With deep expertise in grooming workers for hospitality and facility management, he ensures service excellence and client satisfaction.`,
+      imageUrl: MrPaleshRana,
     },
   ];
 
   return (
-    <section
-      id="directors"
-      className="relative py-20 md:py-28 overflow-hidden"
-      style={{ backgroundColor: DARK_BG }}
-    >
-      {/* Moving Parallax Glow Background */}
+    <section id="directors" className="relative py-20 md:py-28 overflow-hidden" style={{ backgroundColor: DARK_BG }}>
       <motion.div
         className="absolute inset-0 opacity-20"
-     style={{
-    background: `radial-gradient(circle at 50% 0%, ${GLASS_ACCENT}50, transparent 70%)`,
-    y,
-  }}
+        style={{
+          background: `radial-gradient(circle at 50% 0%, ${GLASS_ACCENT}50, transparent 70%)`,
+          y,
+        }}
       ></motion.div>
 
       <motion.div
@@ -865,39 +935,25 @@ const y = useTransform(scrollY, [0, 1000], [0, -200]);
         viewport={{ once: true, amount: 0.2 }}
       >
         <div className="mb-12">
-          <h2
-            className="text-4xl md:text-5xl font-extrabold mb-4"
-            style={{ color: GLASS_ACCENT }}
-          >
-            <ScrambleText
-              text="Our Leadership"
-              className="inline-block"
-              color={GLASS_ACCENT}
-            />
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: GLASS_ACCENT }}>
+            <ScrambleText text="Our Leadership" className="inline-block" color={GLASS_ACCENT} />
           </h2>
-          <p
-            className="text-lg max-w-3xl mx-auto"
-            style={{ color: "rgba(255,255,255,0.6)" }}
-          >
-            Guidance from industry veterans drives our commitment to
-            quality, innovation, and safety.
+          <p className="text-lg max-w-3xl mx-auto" style={{ color: "rgba(255,255,255,0.6)" }}>
+            Our leadership team combines experience, integrity, and innovation to shape Lucid’s success in manpower
+            excellence.
           </p>
         </div>
 
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {directors.map((director, index) => (
             <DirectorCard key={index} {...director} index={index} />
           ))}
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   );
 };
+
 
 // ===================================
 // 6. Contact Form Component
@@ -960,8 +1016,8 @@ const Contact = () => {
             <motion.div
               className="p-8 rounded-2xl backdrop-blur-lg border shadow-xl space-y-6"
               style={{
-                background: GLASS_BASE_BG,
-                border: GLASS_BORDER,
+                background: DARK_BG ,
+                // border: GLASS_BORDER,
                 boxShadow: GLASS_SHADOW,
               }}
               initial={{ opacity: 0, x: -40 }}
@@ -982,7 +1038,7 @@ const Contact = () => {
                   <MapPin className="h-6 w-6" style={{ color: GLASS_ACCENT }} />
                   <div>
                     <p className="font-semibold text-white">Headquarters</p>
-                    <p className="text-gray-400">Riyadh, Kingdom of Saudi Arabia</p>
+                    <p className="text-gray-400">Dammam, Kingdom of Saudi Arabia</p>
                   </div>
                 </div>
 
@@ -1039,8 +1095,8 @@ const Contact = () => {
             <motion.div
               className="p-8 rounded-2xl backdrop-blur-lg border shadow-xl"
               style={{
-                background: GLASS_BASE_BG,
-                border: GLASS_BORDER,
+                            background: DARK_BG ,
+                // border: GLASS_BORDER,
                 boxShadow: GLASS_SHADOW,
               }}
               initial={{ opacity: 0, x: 40 }}
@@ -1070,6 +1126,28 @@ const Contact = () => {
                 <input
                   type="email"
                   placeholder="Your Email"
+                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
+                  style={{
+                    color: BRIGHT_TEXT,
+                    borderColor: `${GLASS_ACCENT}40`,
+                    focusRingColor: GLASS_ACCENT,
+                  }}
+                  required
+                />
+                <input
+                  type="Phone"
+                  placeholder="Your Phone Number"
+                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
+                  style={{
+                    color: BRIGHT_TEXT,
+                    borderColor: `${GLASS_ACCENT}40`,
+                    focusRingColor: GLASS_ACCENT,
+                  }}
+                  required
+                />
+                <input
+                  type="Company"
+                  placeholder="Your Company Name"
                   className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
                   style={{
                     color: BRIGHT_TEXT,
@@ -1114,7 +1192,9 @@ const Contact = () => {
         </div>
       </section>
     </FadeInSection>
+    
   );
+  
 };
 
 // ===================================
@@ -1164,7 +1244,7 @@ const Footer = () => {
                             <ul className="space-y-3 text-sm">
                                 <li className="flex items-center">
                                     <MapPin className="w-5 h-5 mr-3" style={{ color: ACCENT_SAND }} />
-                                    Riyadh, Kingdom of Saudi Arabia
+                                    Dammam, Kingdom of Saudi Arabia
                                 </li>
                                 <li className="flex items-center">
                                     <Phone className="w-5 h-5 mr-3" style={{ color: ACCENT_SAND }} />
@@ -1187,7 +1267,7 @@ const Footer = () => {
                                   {/* <a href="https://wa.me/XXXXXXXXXX" target="_blank" className="text-green-500 hover:text-green-300 transition" aria-label="WhatsApp">
                                 <MessageCircle  className="h-6 w-6" />
                             </a> */}
-                              <a href="https://wa.me/+917097453414" target="_blank" className="text-green-500 hover:text-green-300 transition" aria-label="WhatsApp">
+                              <a href="https://wa.me/+966500000000" target="_blank" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200" aria-label="WhatsApp">
                                 <MessageCircle  className="h-6 w-6" />
                             </a>
                             </div>
@@ -1203,7 +1283,84 @@ const Footer = () => {
         </FadeInSection>
     );
 };
+//
+// Floating buttons
 
+const FloatingButtons = () => {
+  const [visible, setVisible] = useState(true);
+
+  // Hide buttons when idle or not scrolling
+  useEffect(() => {
+    let timer;
+    const handleScroll = () => {
+      setVisible(true);
+      clearTimeout(timer);
+      timer = setTimeout(() => setVisible(false), 4000); // hides after 4s idle
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollToBottom = () =>
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+
+  return (
+    <motion.div
+      className="fixed bottom-4 right-4 flex flex-col gap-3 z-50 sm:bottom-6 sm:right-6"
+      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 30 }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
+    >
+      {/* WhatsApp Button */}
+      <motion.a
+        href="https://wa.me/966500000000"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-3 sm:p-4 rounded-full backdrop-blur-md border transition-transform hover:scale-110 active:scale-95"
+        style={{
+          background: "rgba(75,137,247,0.15)",
+          borderColor: `${GLASS_ACCENT}50`,
+          boxShadow: `0 0 20px ${GLASS_ACCENT}70`,
+        }}
+        aria-label="Chat on WhatsApp"
+      >
+        <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: "#25D366" }} />
+      </motion.a>
+
+      {/* Scroll to Top */}
+      <motion.button
+        onClick={scrollToTop}
+        className="p-3 sm:p-4 rounded-full backdrop-blur-md border transition-transform hover:scale-110 active:scale-95"
+        style={{
+          background: "rgba(75,137,247,0.15)",
+          borderColor: `${GLASS_ACCENT}50`,
+          boxShadow: `0 0 20px ${GLASS_ACCENT}70`,
+          color: "#FAFAFA",
+        }}
+        aria-label="Scroll to Top"
+      >
+        <ArrowUp className="w-6 h-6 sm:w-7 sm:h-7" />
+      </motion.button>
+
+      {/* Scroll to Bottom */}
+      <motion.button
+        onClick={scrollToBottom}
+        className="p-3 sm:p-4 rounded-full backdrop-blur-md border transition-transform hover:scale-110 active:scale-95"
+        style={{
+          background: "rgba(75,137,247,0.15)",
+          borderColor: `${GLASS_ACCENT}50`,
+          boxShadow: `0 0 20px ${GLASS_ACCENT}70`,
+          color: "#FAFAFA",
+        }}
+        aria-label="Scroll to Bottom"
+      >
+        <ArrowDown className="w-6 h-6 sm:w-7 sm:h-7" />
+      </motion.button>
+    </motion.div>
+  );
+};
+
+//
 // ===================================
 // 8. NEW OurClients Component (Now Defined Here)
 // ===================================
@@ -1264,7 +1421,7 @@ const OurClients = () => {
         {/* LEFT CONTENT */}
         <div className="space-y-6">
           <h2 className="text-4xl md:text-5xl font-extrabold text-blue-400">
-            <ScrambleText text="Our Valued Clients" />
+           Our Valued Clients
           </h2>
 
           <p className="text-gray-400 leading-relaxed max-w-md">
@@ -1301,6 +1458,18 @@ const OurClients = () => {
               />
             </button>
           </div>
+          <button 
+                   
+                        className="px-4 py-2 text-lg font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
+                        style={{ 
+                        backgroundColor: GLASS_ACCENT,
+                        color: DARK_BG,
+                        fontWeight: 700,
+                        boxShadow: `0 0 10px ${GLASS_ACCENT}50`,
+                        }}
+                    >
+                        Become our Client
+                    </button>
         </div>
 
         {/* RIGHT: MULTI-LINE MARQUEE */}
@@ -1452,7 +1621,7 @@ const CompanyProfile = ({ toggleView }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <ScrambleText text="ARM SOLUTIONS — Company Profile" color={GLASS_ACCENT} />
+          <ScrambleText text="ARM SOLUTIONS — Company Profile" color={DARK_GRADIENT} />
         </motion.h1>
 
         {/* Top Grid (Image + Overview) */}
@@ -1617,6 +1786,7 @@ transition={{ duration: 0.6, ease: "easeOut" }}
       </div>
 
       <Footer />
+      <FloatingButtons />
     </motion.div>
   );
 };
@@ -1636,6 +1806,7 @@ const PublicView = ({ toggleView }) => (
             <Contact />
         </main>
         <Footer />
+        <FloatingButtons />
     </>
 );
 
