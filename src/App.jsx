@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter } from 'lucide-react';
+
+import { motion, useScroll, useTransform,useSpring   } from 'framer-motion'; 
+import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter,MessageCircle  } from 'lucide-react';
 // NEW ICON IMPORTS: Ensure this line includes all 9 icons
-import {  Factory, Hotel, Truck, Building, HeartPulse, ShoppingCart, Mic } from 'lucide-react';
+import {  Factory, Hotel, Truck, Building, HeartPulse, ShoppingCart, Mic, Pause, Play, Repeat  } from 'lucide-react';
 // ===================================
 // IMAGE IMPORTS (UPDATED PATHS and all client images)
 // ===================================
@@ -295,7 +296,7 @@ const Navbar = ({ toggleView, currentView }) => {
                 {/* Logo */}
                 <div className="text-2xl font-bold">
                     <ScrambleText 
-                        text="ARM Group" 
+                        text="ARM Solutions" 
                         className="tracking-widest" 
                         color={BRIGHT_TEXT} 
                     />
@@ -388,24 +389,36 @@ const Navbar = ({ toggleView, currentView }) => {
     );
 };
 // ===================================
-// 2. Hero Component 
-// ===================================
-
 const Hero = () => {
-    // Hero is the only section not wrapped by FadeInSection as it is visible on load.
+    const { scrollY } = useScroll();
+    const y = useTransform(scrollY, [0, 800], [0, -350]);
+    const scale = useTransform(scrollY, [0, 800], [1, 1.2]);
+
     return (
-        <section id="hero" className="relative h-[60vh] md:h-[80vh] flex items-center justify-center overflow-hidden" style={{ backgroundColor: DARK_BG }}>
-            {/* Background pattern/image layer - Fixed position */}
-            <div 
-                className="absolute inset-0 opacity-10 bg-gray-900 bg-cover bg-center"
-                style={{ 
-                    // backgroundImage: "url('https://placehold.co/1200x800/544036/FBF9F6?text=ARM+Logo')",
-                    backgroundAttachment: 'fixed' 
+        <section
+            id="hero"
+            className="relative h-[60vh] md:h-[80vh] flex items-center justify-center overflow-hidden"
+            style={{ backgroundColor: DARK_BG }}
+        >
+            {/* Enhanced Parallax Background */}
+            <motion.div
+                className="absolute inset-0 bg-cover bg-center will-change-transform"
+                style={{
+                    backgroundImage: `url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1950&q=80')`,
+                    y,
+                    scale,
                 }}
+            ></motion.div>
+
+            {/* Background pattern/image layer */}
+            <div
+                className="absolute inset-0 opacity-10 bg-gray-900 bg-cover bg-center"
+                style={{ backgroundAttachment: 'fixed' }}
             ></div>
+
             {/* Dark Overlay Layer */}
             <div className="absolute inset-0 opacity-80" style={{ backgroundColor: DEEP_BROWN }}></div>
-            
+
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
                 <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
                     <ScrambleText text="Powering Infrastructure with" className="inline-block" color="white" />
@@ -413,44 +426,42 @@ const Hero = () => {
                         <ScrambleText text="Expert Manpower" className="inline-block" color={ACCENT_SAND} />
                     </span>
                 </h1>
-                <p 
-                    className="text-lg md:text-xl text-gray-200 mb-8 max-w-3xl mx-auto transition duration-700 opacity-100"
-                >
-                    ARM Group delivers highly skilled technical, maintenance, and construction personnel across the Middle East.
-                </p>
-               <motion.a 
-                href="#services" 
-                // Framer Motion Animation Properties
-                animate={{
-                    // Keyframe-like animation for the box shadow (the "flame/pulse")
-                    boxShadow: [
-                        `0 0 10px ${GLASS_ACCENT}50`, // Subtle start
-                        `0 0 25px ${GLASS_ACCENT}90`, // Intense glow
-                        `0 0 10px ${GLASS_ACCENT}50`, // Fade back
-                    ],
-                }}
-                transition={{
-                    duration: 3, // Duration of one pulse cycle
-                    ease: "easeInOut", // Smooth in and out
-                    repeat: Infinity, // Make it infinite
-                    repeatType: "reverse", // Smoothly reverse the animation
-                }}
 
-                className="mt-10 inline-block px-8 py-3 text-lg font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-110"
-                style={{ 
-                    backgroundColor: GLASS_ACCENT, 
-                    color: DARK_BG,
-                    fontWeight: 700,
-                    // Initial subtle glow (Framer Motion overwrites the boxShadow property here)
-                    boxShadow: `0 0 10px ${GLASS_ACCENT}50`, 
-                }}
-            >
-                Explore Our Services
-            </motion.a>
+                <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-3xl mx-auto transition duration-700 opacity-100">
+                    ARM Solutions delivers highly skilled technical, maintenance, and construction personnel across the Middle East.
+                </p>
+
+                <motion.a
+                    href="#services"
+                    animate={{
+                        boxShadow: [
+                            `0 0 10px ${GLASS_ACCENT}50`,
+                            `0 0 25px ${GLASS_ACCENT}90`,
+                            `0 0 10px ${GLASS_ACCENT}50`,
+                        ],
+                    }}
+                    transition={{
+                        duration: 3,
+                        ease: 'easeInOut',
+                        repeat: Infinity,
+                        repeatType: 'reverse',
+                    }}
+                    className="mt-10 inline-block px-8 py-3 text-lg font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-110"
+                    style={{
+                        backgroundColor: GLASS_ACCENT,
+                        color: DARK_BG,
+                        fontWeight: 700,
+                        boxShadow: `0 0 10px ${GLASS_ACCENT}50`,
+                    }}
+                >
+                    Explore Our Services
+                </motion.a>
             </div>
         </section>
     );
 };
+
+
 
 // ===================================
 // 3. About Component 
@@ -469,11 +480,18 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
         <p className="text-gray-600">{description}</p>
     </div>
 );
-
 const About = () => {
     return (
         <FadeInSection>
-            <section id="about" className="py-16 md:py-24" style={{ backgroundColor: SOFT_CREAM }}>
+            <motion.section
+                id="about"
+                className="relative py-16 md:py-24 -mt-20 z-20"
+                style={{ backgroundColor: SOFT_CREAM }}
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.2 }}
+            >
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
@@ -484,7 +502,7 @@ const About = () => {
                             />
                         </h2>
                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                            For over two decades, ARM Group has been the reliable partner for major industrial and construction projects.
+                            For over two decades, ARM Solutions has been the reliable partner for major industrial and construction projects.
                         </p>
                     </div>
 
@@ -506,295 +524,379 @@ const About = () => {
                         />
                     </div>
                 </div>
-            </section>
+            </motion.section>
         </FadeInSection>
     );
 };
+
 
 // ===================================
 // 4. Services Component
 // ===================================
 
-const ServiceCard = ({ icon: Icon, title, description, bgImage }) => {
-    // NOTE: DEEP_BROWN, ACCENT_SAND, SOFT_CREAM are assumed to be defined globally or in scope
-    // const { DEEP_BROWN, ACCENT_SAND, SOFT_CREAM } = { DEEP_BROWN: '#544036', ACCENT_SAND: '#A88F68', SOFT_CREAM: '#FBF9F6' };
+const FramerFadeIn = ({ children, delay = 0, duration = 0.8, y = 30, once = true }) => {
     return (
-        <motion.div 
-            whileHover={{ 
-                scale: 1.05, 
-                // Enhanced shadow on hover for a lift
-                boxShadow: `0 15px 40px rgba(75, 137, 247, 0.5)`,
-                transition: { type: "spring", stiffness: 250, damping: 15 } 
-            }}
-            className="group relative p-8 rounded-xl overflow-hidden cursor-pointer h-full backdrop-blur-sm"
-            style={{ 
-                // 💡 GLASS CARD STYLES
-                backgroundColor: GLASS_BASE_BG, 
-                border: GLASS_BORDER,
-                boxShadow: GLASS_SHADOW,
-                // Add blur to the card itself for extra depth
-                backdropFilter: 'blur(3px)', 
-            }}
+        <motion.div
+            initial={{ opacity: 0, y: y }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: duration, delay: delay, ease: "easeOut" }}
+            viewport={{ once: once, amount: 0.1 }}
         >
-            {/* Background Image Layer: Set for depth, not visibility */}
-            <motion.div 
-                className="absolute inset-0 bg-cover bg-center" 
-                style={{ backgroundImage: `url(${bgImage})` }}
-                // Keep the image dark and subtle
-                initial={{ filter: 'grayscale(100%) brightness(0.1)' }} 
-                whileHover={{ scale: 1.1, filter: 'grayscale(50%) brightness(0.4)', transition: { duration: 0.7 } }} 
-            >
-                {/* Overlay Layer: Ensures maximum darkness behind the card content */}
-                <div 
-                    className="absolute inset-0 transition-all duration-500 opacity-80 group-hover:opacity-95" 
-                    style={{ backgroundColor: DARK_BG }}
-                ></div>
-            </motion.div>
-            
-            {/* Content Layer (Must be z-10) */}
-            <div className="relative z-10">
-                {/* ICON CONTAINER: Bright accent color, no intense glow */}
-                <div 
-                    className="flex items-center justify-center w-16 h-16 rounded-lg mb-6 transition duration-300 group-hover:scale-110 group-hover:rounded-2xl" 
-                    style={{ 
-                        backgroundColor: GLASS_ACCENT, 
-                        boxShadow: `0 0 15px ${GLASS_ACCENT}80`, // Subtle blue shadow
-                    }}
-                >
-                    <Icon className="w-8 h-8" style={{ color: DARK_BG }} /> 
-                </div>
-                
-                {/* TEXT: Primary text is white/light gray */}
-                <h3 
-                    className="text-2xl font-bold mb-3" 
-                    style={{ 
-                        color: BRIGHT_TEXT, 
-                    }}
-                >{title}</h3>
-                <p className="text-gray-300">{description}</p>
-            </div>
+            {children}
         </motion.div>
     );
 };
 
-//Services Section
-const itemVariants = {
-    hidden: { scale: 0.9, opacity: 0, y: 30, rotate: -1 }, // Starts small, low, invisible, and slightly tilted
-    show: { 
-        scale: 1, 
-        opacity: 1, 
-        rotate: 0, // Springs back to level
-        transition: { type: "spring", stiffness: 100, damping: 10 }
-    }
-};
 
-const containerVariants = {
-    hidden: {},
-    show: {
-        transition: {
-            staggerChildren: 0.08, // Time delay between each card animation start (0.08s)
-            delayChildren: 0.1 // Small initial delay before the first card starts
-        }
-    }
-};
+const ServiceCard = ({ icon: Icon, title, description, widthClass = "w-full" }) => (
+    <motion.div 
+        whileHover={{ 
+            scale: 1.05, 
+            boxShadow: `0 15px 40px rgba(75, 137, 247, 0.5)`,
+            transition: { type: "spring", stiffness: 250, damping: 15 } 
+        }}
+        // widthClass is critical for the horizontal layout
+        className={`group relative p-8 rounded-xl overflow-hidden cursor-pointer h-full backdrop-blur-sm flex-shrink-0 ${widthClass}`}
+        style={{ 
+            // 💡 GLASS CARD STYLES
+            backgroundColor: GLASS_BASE_BG, 
+            border: GLASS_BORDER,
+            boxShadow: GLASS_SHADOW,
+            backdropFilter: 'blur(3px)', 
+        }}
+    >
+        <div className="relative z-10">
+            <div 
+                className="flex items-center justify-center w-16 h-16 rounded-lg mb-6 transition duration-300 group-hover:scale-110 group-hover:rounded-2xl" 
+                style={{ 
+                    backgroundColor: GLASS_ACCENT, 
+                    boxShadow: `0 0 15px ${GLASS_ACCENT}80`, 
+                }}
+            >
+                <Icon className="w-8 h-8" style={{ color: DARK_BG }} /> 
+            </div>
+            
+            <h3 
+                className="text-2xl font-bold mb-3" 
+                style={{ 
+                    color: BRIGHT_TEXT, 
+                }}
+            >{title}</h3>
+            <p className="text-gray-300">{description}</p>
+        </div>
+    </motion.div>
+);
+
 const Services = () => {
+    
+    // 1. Setup useRef for the container that generates the scroll distance
+    const containerRef = useRef(null);
+    const [scrollRange, setScrollRange] = useState(-1300);
+useEffect(() => {
+    const updateRange = () => {
+      const width = window.innerWidth;
+      setScrollRange(width < 768 ? -800 : -1300);
+    };
+    updateRange();
+    window.addEventListener("resize", updateRange);
+    return () => window.removeEventListener("resize", updateRange);
+  }, []);
+
+    
+    // 2. Track the scroll progress of the container
+ const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 0.7", "end 0.3"], // starts when 70% visible
+  });
+    
+    // 3. Define the horizontal translation (x) based on scroll progress
+    // x is transformed from 0% scroll progress (0px) to 100% scroll progress (-1300px)
+ const xRaw = useTransform(scrollYProgress, [0, 1], ["0px", `${scrollRange}px`]);
+  const x = useSpring(xRaw, {
+    stiffness: 100,
+    damping: 30,
+    mass: 0.5,
+  });
+    // Framer Motion Variants for vertical-in animation
+ const itemVariants = {
+    hidden: { scale: 0.9, opacity: 0, y: 30, rotate: -1 },
+    show: {
+      scale: 1,
+      opacity: 1,
+      rotate: 0,
+      transition: { type: "spring", stiffness: 100, damping: 10 },
+    },
+  };
+
    return (
-        <FadeInSection>
-            <section id="services" className="py-16 md:py-24" style={{ backgroundColor: DARK_BG }}>
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-center" style={{ color: GLASS_ACCENT }}>
-                        Our Specialized Services
-                    </h2>
-                    <p className="text-center max-w-3xl mx-auto mb-16 text-lg text-gray-600">
-                        We provide skilled manpower on a rental and local transfer basis, as well as recruiting from overseas, to meet diverse client requirements across multiple industries.
-                    </p>
+    <section id="services" className="py-16 md:py-24" style={{ backgroundColor: DARK_BG }}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <FramerFadeIn y={50}>
+            <h2
+              className="text-4xl md:text-5xl font-extrabold mb-4"
+              style={{ color: GLASS_ACCENT }}
+            >
+              <ScrambleText
+                text="Our Specialized Manpower Solutions"
+                className="inline-block"
+                color={GLASS_ACCENT}
+              />
+            </h2>
+            <p className="text-lg text-gray-400 max-w-3xl mx-auto">
+              We cover a full spectrum of workforce needs for capital-intensive industries.
+            </p>
+            <p
+              className="text-sm text-gray-400 mt-2 font-bold"
+              style={{ color: GLASS_ACCENT }}
+            >
+              Scroll down — cards will move horizontally when section reaches 70%.
+            </p>
+          </FramerFadeIn>
+        </div>
+      </div>
 
-                    <motion.div 
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-                        variants={containerVariants}
-                        initial="hidden"
-                        whileInView="show" // Trigger animation when the section scrolls into view
-                        viewport={{ once: true, amount: 0.1 }} // Only run once when 10% of the section is visible
-                    >
-                        
-                        {/* 1. OIL & GAS */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={Factory}
-                                title="Oil & Gas"
-                                description="We supply experienced engineers, technicians, and field workers for oil rigs, refineries, and petrochemical plants. Our workforce is trained in international safety standards."
-                                // bgImage={OilGasBg} 
-                            />
-                        </motion.div>
-                        
-                        {/* 2. HOSPITALITY */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={Hotel}
-                                title="Hospitality"
-                                description="We provide professional hospitality staff, including: Receptionists, Housekeeping Teams, Kitchen Assistants, Waiters, and Service Crew, ensuring seamless service delivery."
-                                // bgImage={HospitalityBg} 
-                            />
-                        </motion.div>
-                        
-                        {/* 3. LOGISTICS & WAREHOUSING */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={Truck}
-                                title="Logistics & Warehousing"
-                                description="We provide manpower for: Forklift Operators, Loaders & Pickers, Packing Staff, and Inventory Management."
-                                // bgImage={LogisticsBg} 
-                            />
-                        </motion.div>
-                        
-                        {/* 4. FACILITY MANAGEMENT */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={Building}
-                                title="Facility Management"
-                                description="We support day-to-day building operations by supplying: Cleaners, Landscaping Teams, and Maintenance Technicians."
-                                // bgImage={FacilityBg} 
-                            />
-                        </motion.div>
-                        
-                        {/* 5. CONSTRUCTION & SKILLED WORKERS */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={HardHat}
-                                title="Construction & Skilled Workers"
-                                description="We deploy skilled and unskilled workers such as: Masons, Carpenters, Electricians, Plumbers, Welders & Fabricators, and General Helpers."
-                                // bgImage={ConstructionBg} 
-                            />
-                        </motion.div>
-                        
-                        {/* 6. TECHNICAL & HVAC MAINTENANCE */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={Zap}
-                                title="Technical & HVAC Maintenance"
-                                description="Includes Electrical & Mechanical maintenance staff and HVAC technicians, ensuring efficient industrial plant and building operations."
-                                // bgImage={HvacBg} 
-                            />
-                        </motion.div>
-                        
-                        {/* 7. HEALTHCARE */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={HeartPulse}
-                                title="Healthcare"
-                                description="We provide manpower to support hospitals, clinics, and healthcare facilities, including: Nursing Assistants, Patient Care Staff, and Administrative Support."
-                                // bgImage={HealthcareBg} 
-                            />
-                        </motion.div>
-                        
-                        {/* 8. RETAIL & CUSTOMER SERVICE */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={ShoppingCart}
-                                title="Retail & Customer Service"
-                                description="We support retail chains and outlets with: Sales Associates, Cashiers, Store Helpers, and Customer Support Staff."
-                                // bgImage={RetailBg} 
-                            />
-                        </motion.div>
+      {/* --- Scroll Wrapper --- */}
+      <div ref={containerRef} className="relative z-0" style={{ height: "300vh" }}>
+        {/* Sticky Container */}
+        <div className="sticky top-0 h-screen overflow-hidden flex items-center">
+          <div className="w-full relative">
+            {/* Gradient Edge Masks */}
+            <div className="absolute left-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-r from-[#08101F] to-transparent z-20"></div>
+            <div className="absolute right-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-l from-[#08101F] to-transparent z-20"></div>
 
-                        {/* 9. EVENTS & ENTERTAINMENT */}
-                        <motion.div variants={itemVariants}>
-                            <ServiceCard
-                                icon={Mic}
-                                title="Events & Entertainment"
-                                description="We supply temporary and long-term staff for events such as: Ushers & Event Helpers, Stage Crew, Catering Staff, and Security."
-                                // bgImage={EventsBg} 
-                            />
-                        </motion.div>
-                    </motion.div>
-                </div>
-            </section>
-        </FadeInSection>
-    );
+            {/* Horizontal Track */}
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                style={{ x }}
+                className="flex space-x-8 pb-8 md:pb-12"
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.1 }}
+              >
+                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
+                  <ServiceCard
+                    icon={HardHat}
+                    title="Construction"
+                    description="Engineers, Foremen, Welders, and general labor for large-scale projects."
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
+                  <ServiceCard
+                    icon={Wrench}
+                    title="Maintenance & Shutdown"
+                    description="Skilled technicians for industrial plant maintenance and critical shutdown operations."
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
+                  <ServiceCard
+                    icon={Zap}
+                    title="Technical & HVAC"
+                    description="Experts in electrical systems, instrumentation, and HVAC services."
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
+                  <ServiceCard
+                    icon={Shield}
+                    title="Support Staff"
+                    description="Trained security personnel, drivers, and administrative support roles."
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
+                  <ServiceCard
+                    icon={Factory}
+                    title="Oil & Gas"
+                    description="Specialized manpower for oil rigs, refineries, and petrochemical plants."
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
+                  <ServiceCard
+                    icon={Hotel}
+                    title="Hospitality"
+                    description="Soft services personnel, housekeeping, and facility management experts."
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants} className="flex-shrink-0 w-72 md:w-80">
+                  <ServiceCard
+                    icon={Building}
+                    title="Manufacturing"
+                    description="Assembly line workers, quality control inspectors, and logistics support."
+                  />
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
+
 
 // ===================================
 // 5. Directors Component
 // ===================================
 
-const DirectorCard = ({ name, title, bio, imageUrl }) => (
-    <div 
-        className="rounded-xl shadow-lg overflow-hidden text-center hover:shadow-xl transition duration-300 transform hover:scale-[1.03]" 
-        style={{ 
-            backgroundColor: 'white',
-        }}
+const DirectorCard = ({ name, title, bio, imageUrl, index }) => (
+  <motion.div
+    className="rounded-2xl overflow-hidden text-center backdrop-blur-lg relative border transition-all duration-500 cursor-pointer"
+    style={{
+      background: GLASS_BASE_BG,
+      border: GLASS_BORDER,
+      boxShadow: GLASS_SHADOW,
+    }}
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{
+      delay: index * 0.2,
+      duration: 0.7,
+      ease: "easeOut",
+    }}
+    viewport={{ once: true, amount: 0.3 }}
+    whileHover={{
+      scale: 1.05,
+      boxShadow: `0 0 25px ${GLASS_ACCENT}80`,
+      transition: { duration: 0.4 },
+    }}
+  >
+    <motion.div
+      className="overflow-hidden relative"
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.6 }}
     >
-        <img 
-            src={imageUrl} 
-            alt={name} 
-            className="w-full h-56 object-contain"
-            onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/400x300/e0e0e0/555?text=Director"; }}
+      <motion.img
+        src={imageUrl}
+        alt={name}
+        className="w-full h-56 object-contain opacity-90"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src =
+            "https://placehold.co/400x300/0a0a0a/777?text=Director";
+        }}
+        whileHover={{ scale: 1.1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      />
+      {/* Accent glow ring */}
+      <motion.div
+        className="absolute inset-0 opacity-20"
+        whileHover={{ opacity: 0.3 }}
+        style={{
+      background: `radial-gradient(circle at 50% 0%, ${GLASS_ACCENT}50, transparent 70%)`,
+        }}
+      ></motion.div>
+    </motion.div>
+
+    <div className="p-6">
+      <h3
+        className="text-xl font-bold mb-1"
+        style={{ color: BRIGHT_TEXT }}
+      >
+        {name}
+      </h3>
+      <p
+        className="font-medium mb-3"
+        style={{ color: GLASS_ACCENT }}
+      >
+        {title}
+      </p>
+      <p className="text-sm text-gray-400 italic mb-4">{bio}</p>
+
+      <motion.a
+        href="#"
+        whileHover={{ scale: 1.2, rotate: 5 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 200 }}
+        className="inline-block"
+      >
+        <Linkedin
+          className="w-6 h-6 mx-auto"
+          style={{ color: GLASS_ACCENT }}
         />
-        <div className="p-6">
-            <h3 className="text-xl font-bold mb-1" style={{ color: DEEP_BROWN }}>{name}</h3>
-            <p className="font-medium mb-3" style={{ color: ACCENT_SAND }}>{title}</p>
-            <p className="text-sm text-gray-600 italic">{bio}</p>
-            <a href="#" className="mt-4 inline-block text-gray-400 hover:text-gray-700 transition duration-200">
-                <Linkedin className="w-6 h-6 mx-auto" style={{ color: DEEP_BROWN }} />
-            </a>
-        </div>
+      </motion.a>
     </div>
+  </motion.div>
 );
 
 const Directors = () => {
-    const directors = [
-        { 
-            name: "Mr. Mohammed Rizwan Ahmed", 
-            title: "Chairman & CEO", 
-            bio: "Visionary leader responsible for corporate strategy, financial oversight, and driving ARM's market expansion and ethical growth.", 
-            // USING IMPORTED IMAGE
-            imageUrl: MrRizwan 
-        },
-        { 
-            name: "Mr. Mujeeb Ullah", 
-            title: "Director & COO", 
-            bio: "Oversees all operational aspects, streamlining mobilization, logistics, and compliance for highly efficient project execution.", 
-            // USING IMPORTED IMAGE
-            imageUrl: MrMujeeb 
-        },
-        { 
-            name: "Mr. Mohammad Hamid Ansari", 
-            title: "Director - Training & Development", 
-            bio: "Specialist in developing soft services personnel for hospitality, housekeeping, and facility management, ensuring service excellence.", 
-            // USING IMPORTED IMAGE
-            imageUrl: MohammedHamid 
-        },
-    ];
+  const { scrollY } = useScroll();
+const y = useTransform(scrollY, [0, 1000], [0, -200]);
 
-    return (
-        <FadeInSection>
-            <section id="directors" className="py-16 md:py-24" style={{ backgroundColor: SOFT_CREAM }}>
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="mb-12">
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                            <ScrambleText 
-                                text="Our Leadership" 
-                                className="inline-block" 
-                                color={DEEP_BROWN} 
-                            />
-                        </h2>
-                        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                            Guidance from industry veterans drives our commitment to quality and safety.
-                        </p>
-                    </div>
+  const directors = [
+    {
+      name: "Mr. Mohammed Rizwan Ahmed",
+      title: "Chairman & CEO",
+      bio: "Visionary leader responsible for corporate strategy, financial oversight, and driving ARM's market expansion and ethical growth.",
+      imageUrl: MrRizwan,
+    },
+    {
+      name: "Mr. Mujeeb Ullah",
+      title: "Director & COO",
+      bio: "Oversees all operational aspects, streamlining mobilization, logistics, and compliance for highly efficient project execution.",
+      imageUrl: MrMujeeb,
+    },
+    {
+      name: "Mr. Mohammad Hamid Ansari",
+      title: "Director - Training & Development",
+      bio: "Specialist in developing soft services personnel for hospitality, housekeeping, and facility management, ensuring service excellence.",
+      imageUrl: MohammedHamid,
+    },
+  ];
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                        {directors.map((director, index) => (
-                            <DirectorCard 
-                                key={index} 
-                                {...director} 
-                            />
-                        ))}
-                    </div>
-                </div>
-            </section>
-        </FadeInSection>
-    );
+  return (
+    <section
+      id="directors"
+      className="relative py-20 md:py-28 overflow-hidden"
+      style={{ backgroundColor: DARK_BG }}
+    >
+      {/* Moving Parallax Glow Background */}
+      <motion.div
+        className="absolute inset-0 opacity-20"
+     style={{
+    background: `radial-gradient(circle at 50% 0%, ${GLASS_ACCENT}50, transparent 70%)`,
+    y,
+  }}
+      ></motion.div>
+
+      <motion.div
+        className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <div className="mb-12">
+          <h2
+            className="text-4xl md:text-5xl font-extrabold mb-4"
+            style={{ color: GLASS_ACCENT }}
+          >
+            <ScrambleText
+              text="Our Leadership"
+              className="inline-block"
+              color={GLASS_ACCENT}
+            />
+          </h2>
+          <p
+            className="text-lg max-w-3xl mx-auto"
+            style={{ color: "rgba(255,255,255,0.6)" }}
+          >
+            Guidance from industry veterans drives our commitment to
+            quality, innovation, and safety.
+          </p>
+        </div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          {directors.map((director, index) => (
+            <DirectorCard key={index} {...director} index={index} />
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
 };
 
 // ===================================
@@ -811,82 +913,208 @@ const Contact = () => {
         e.target.reset();
     };
 
-    return (
-        <FadeInSection>
-            <section id="contact" className="py-16 md:py-24" style={{ backgroundColor: 'white' }}>
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                            <ScrambleText 
-                                text="Get In Touch" 
-                                className="inline-block" 
-                                color={DEEP_BROWN} 
-                            />
-                        </h2>
-                        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                            Have a question about services or a potential partnership? Send us a message below.
-                        </p>
-                    </div>
+  return (
+    <FadeInSection>
+      <section
+        id="contact"
+        className="relative py-20 md:py-28 overflow-hidden"
+        style={{ backgroundColor: DARK_BG }}
+      >
+        {/* Animated glowing background */}
+        <motion.div
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: `radial-gradient(circle at 30% 20%, ${GLASS_ACCENT}40, transparent 70%), 
+                         radial-gradient(circle at 80% 80%, ${GLASS_ACCENT}30, transparent 70%)`,
+          }}
+          animate={{ opacity: [0.25, 0.35, 0.25] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        ></motion.div>
 
-                    <div className="max-w-xl mx-auto p-8 rounded-xl shadow-2xl" style={{ backgroundColor: SOFT_CREAM, border: `1px solid ${ACCENT_SAND}` }}>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Name Field */}
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium" style={{ color: DEEP_BROWN }}>Full Name</label>
-                                <input 
-                                    type="text" 
-                                    id="name" 
-                                    required
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-ACCENT_SAND focus:border-ACCENT_SAND p-3"
-                                    style={{ borderColor: ACCENT_SAND }}
-                                />
-                            </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <p
+              className="font-semibold uppercase mb-2 tracking-widest"
+              style={{ color: GLASS_ACCENT }}
+            >
+              Connect With Us
+            </p>
+            <h2
+              className="text-3xl md:text-5xl font-extrabold mb-6"
+              style={{ color: BRIGHT_TEXT }}
+            >
+              Ready to Build Your Team?
+            </h2>
+            <p
+              className="text-gray-400 max-w-2xl mx-auto"
+              style={{ lineHeight: "1.6" }}
+            >
+              Reach out today and let’s create workforce solutions that move your projects forward.
+            </p>
+          </div>
 
-                            {/* Email Field */}
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium" style={{ color: DEEP_BROWN }}>Email Address</label>
-                                <input 
-                                    type="email" 
-                                    id="email" 
-                                    required
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-ACCENT_SAND focus:border-ACCENT_SAND p-3"
-                                    style={{ borderColor: ACCENT_SAND }}
-                                />
-                            </div>
+          {/* Grid Layout */}
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Contact Info Card */}
+            <motion.div
+              className="p-8 rounded-2xl backdrop-blur-lg border shadow-xl space-y-6"
+              style={{
+                background: GLASS_BASE_BG,
+                border: GLASS_BORDER,
+                boxShadow: GLASS_SHADOW,
+              }}
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <h3
+                className="text-2xl font-bold mb-6 border-b pb-2"
+                style={{ color: BRIGHT_TEXT, borderColor: `${GLASS_ACCENT}40` }}
+              >
+                Our Details
+              </h3>
 
-                            {/* Message Field */}
-                            <div>
-                                <label htmlFor="message" className="block text-sm font-medium" style={{ color: DEEP_BROWN }}>Message</label>
-                                <textarea 
-                                    id="message" 
-                                    rows="4" 
-                                    required
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-ACCENT_SAND focus:border-ACCENT_SAND p-3"
-                                    style={{ borderColor: ACCENT_SAND }}
-                                ></textarea>
-                            </div>
-                            
-                            {/* Status Message */}
-                            {status === 'success' && (
-                                <p className="text-green-600 font-semibold text-center">Thank you! Your message has been received.</p>
-                            )}
-
-                            {/* Submit Button */}
-                            <div className="text-center">
-                                <button
-                                    type="submit"
-                                    className="inline-block px-8 py-3 font-bold text-lg rounded-full shadow-xl transition duration-300 transform hover:scale-105"
-                                    style={{ backgroundColor: ACCENT_SAND, color: DEEP_BROWN }}
-                                >
-                                    Send Message
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+              <div className="space-y-6 text-left">
+                {/* Address */}
+                <div className="flex items-start space-x-4">
+                  <MapPin className="h-6 w-6" style={{ color: GLASS_ACCENT }} />
+                  <div>
+                    <p className="font-semibold text-white">Headquarters</p>
+                    <p className="text-gray-400">Riyadh, Kingdom of Saudi Arabia</p>
+                  </div>
                 </div>
-            </section>
-        </FadeInSection>
-    );
+
+                {/* Email */}
+                <div className="flex items-start space-x-4">
+                  <Mail className="h-6 w-6" style={{ color: GLASS_ACCENT }} />
+                  <div>
+                    <p className="font-semibold text-white">Email Us</p>
+                    <a
+                      href="mailto:info@armsolutions.sa"
+                      className="text-gray-400 hover:text-blue-400 transition"
+                    >
+                      info@armsolutions.sa
+                    </a>
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="flex items-start space-x-4">
+                  <Phone className="h-6 w-6" style={{ color: GLASS_ACCENT }} />
+                  <div>
+                    <p className="font-semibold text-white">Call Us</p>
+                    <a
+                      href="tel:+966500000000"
+                      className="text-gray-400 hover:text-blue-400 transition"
+                    >
+                      +966 50 000 0000
+                    </a>
+                  </div>
+                </div>
+
+                {/* Social Links */}
+                <div className="pt-4 flex space-x-4">
+                  {[Facebook, Linkedin, Twitter, MessageCircle].map(
+                    (Icon, i) => (
+                      <a
+                        key={i}
+                        href="#"
+                        className="p-2 rounded-full backdrop-blur-sm border transition-all hover:scale-110"
+                        style={{
+                          color: GLASS_ACCENT,
+                          borderColor: `${GLASS_ACCENT}30`,
+                        }}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </a>
+                    )
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Contact Form */}
+            <motion.div
+              className="p-8 rounded-2xl backdrop-blur-lg border shadow-xl"
+              style={{
+                background: GLASS_BASE_BG,
+                border: GLASS_BORDER,
+                boxShadow: GLASS_SHADOW,
+              }}
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <h3
+                className="text-2xl font-bold mb-6"
+                style={{ color: BRIGHT_TEXT }}
+              >
+                Send Us a Message
+              </h3>
+
+              <form className="space-y-5" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
+                  style={{
+                    color: BRIGHT_TEXT,
+                    borderColor: `${GLASS_ACCENT}40`,
+                    focusRingColor: GLASS_ACCENT,
+                  }}
+                  required
+                />
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
+                  style={{
+                    color: BRIGHT_TEXT,
+                    borderColor: `${GLASS_ACCENT}40`,
+                    focusRingColor: GLASS_ACCENT,
+                  }}
+                  required
+                />
+                <textarea
+                  placeholder="How can we help you?"
+                  rows="4"
+                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
+                  style={{
+                    color: BRIGHT_TEXT,
+                    borderColor: `${GLASS_ACCENT}40`,
+                    focusRingColor: GLASS_ACCENT,
+                  }}
+                  required
+                ></textarea>
+
+                <motion.button
+                  type="submit"
+                  whileHover={{ scale: 1.05, boxShadow: `0 0 15px ${GLASS_ACCENT}` }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full py-3 font-semibold rounded-lg transition-all"
+                  style={{
+                    backgroundColor: GLASS_ACCENT,
+                    color: DARK_BG,
+                  }}
+                >
+                  Submit Inquiry
+                </motion.button>
+              </form>
+
+              {status === "success" && (
+                <p className="mt-4 text-green-400 text-center">
+                  ✅ Your message has been sent!
+                </p>
+              )}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+    </FadeInSection>
+  );
 };
 
 // ===================================
@@ -913,7 +1141,7 @@ const Footer = () => {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8 border-b pb-8 mb-8" style={{ borderColor: ACCENT_SAND }}>
                         {/* Company Info */}
                         <div className="transition duration-700">
-                            <h3 className="text-2xl font-bold mb-4" style={{ color: ACCENT_SAND }}>ARM Group</h3>
+                            <h3 className="text-2xl font-bold mb-4" style={{ color: ACCENT_SAND }}>ARM Solutions</h3>
                             <p className="text-sm text-gray-300">
                                 Delivering skilled manpower solutions for infrastructure and industrial projects across the MENA region.
                             </p>
@@ -953,16 +1181,22 @@ const Footer = () => {
                         <div className="transition duration-700">
                             <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: ACCENT_SAND }}>Follow Us</h4>
                             <div className="flex space-x-4">
-                                <a href="#" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200"><Facebook className="w-6 h-6" /></a>
+                                <a href="#" target="_blank" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200"><Facebook className="w-6 h-6" /></a>
                                 <a href="#" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200"><Twitter className="w-6 h-6" /></a>
                                 <a href="#" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200"><Linkedin className="w-6 h-6" /></a>
+                                  {/* <a href="https://wa.me/XXXXXXXXXX" target="_blank" className="text-green-500 hover:text-green-300 transition" aria-label="WhatsApp">
+                                <MessageCircle  className="h-6 w-6" />
+                            </a> */}
+                              <a href="https://wa.me/+917097453414" target="_blank" className="text-green-500 hover:text-green-300 transition" aria-label="WhatsApp">
+                                <MessageCircle  className="h-6 w-6" />
+                            </a>
                             </div>
                         </div>
                     </div>
 
                     {/* Copyright */}
                     <div className="text-center text-sm text-gray-400 pt-4">
-                        &copy; 2025 ARM Group. All rights reserved.
+                        &copy; 2025 ARM Solutions. All rights reserved.
                     </div>
                 </div>
             </footer>
@@ -975,82 +1209,138 @@ const Footer = () => {
 // ===================================
 
 const OurClients = () => {
-    // List of client logos imported above
-    const clients = [
-        { name: "NCC Group", logo: nccLogo },
-        // { name: "ARM Group", logo: ArmGroup },
-        { name: "Client Partner 1", logo: clientImage1 },
-        { name: "Client Partner 2", logo: clientImage2 },
-        { name: "Client Partner 3", logo: clientImage3 },
-        { name: "Client Partner 4", logo: clientImage4 },
-        { name: "Client Partner 5", logo: clientImage5},
-        { name: "Client Partner 6", logo: clientImage6 },
-        { name: "Client Partner 7", logo: clientImage7 },
-        { name: "Client Partner 8", logo: clientImage8 },
-        { name: "Client Partner 9", logo: clientImage9 },
-        { name: "Client Partner 10", logo: clientImage10 },
-        { name: "Client Partner 11", logo: clientImage11 },
-        { name: "Client Partner 12", logo: clientImage12 },
-        { name: "Client Partner 13", logo: clientImage13 },
-        { name: "Client Partner 14", logo: clientImage14 },
-        { name: "Client Partner 15", logo: clientImage15 },
-        { name: "Client Partner 16", logo: clientImage16 },
-        { name: "Client Partner 17", logo: clientImage17 },
-        { name: "Client Partner 18", logo: clientImage18 },
-        { name: "Client Partner 19", logo: clientImage19 },
-        { name: "Client Partner 20", logo: clientImage20 },
-        { name: "Client Partner 21", logo: clientImage21 },
-        { name: "Client Partner 22", logo: clientImage22 },
-        { name: "Client Partner 23", logo: clientImage23 },
-        { name: "Client Partner 24", logo: clientImage24 },
-        { name: "Client Partner 25", logo: clientImage25 },
-        // Placeholder clients for better layout balance
-        { name: "Placeholder Client 3", logo: "https://placehold.co/120x60/f0f0f0/544036?text=Partner+3" },
-        { name: "Placeholder Client 4", logo: "https://placehold.co/120x60/f0f0f0/544036?text=Partner+4" },
-        { name: "Placeholder Client 5", logo: "https://placehold.co/120x60/f0f0f0/544036?text=Partner+5" },
-    ];
+  const [isPaused, setIsPaused] = useState(false);
+  const [reverse, setReverse] = useState(false);
 
-    return (
-        <section id="clients" className="py-16 md:py-20" style={{ backgroundColor: 'white' }}>
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                        <ScrambleText 
-                            text="Our Valued Client Portfolio" 
-                            className="inline-block" 
-                            color={DEEP_BROWN} 
-                        />
-                    </h2>
-                    <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                        We are proud to partner with leading organizations across various industrial and commercial sectors.
-                    </p>
-                </div>
+  const clients = [
+    { name: "NCC Group", logo: nccLogo },
+    { name: "Client Partner 1", logo: clientImage1 },
+    { name: "Client Partner 2", logo: clientImage2 },
+    { name: "Client Partner 3", logo: clientImage3 },
+    { name: "Client Partner 4", logo: clientImage4 },
+    { name: "Client Partner 5", logo: clientImage5 },
+    { name: "Client Partner 6", logo: clientImage6 },
+    { name: "Client Partner 7", logo: clientImage7 },
+    { name: "Client Partner 8", logo: clientImage8 },
+    { name: "Client Partner 9", logo: clientImage9 },
+    { name: "Client Partner 10", logo: clientImage10 },
+    { name: "Client Partner 11", logo: clientImage11 },
+    { name: "Client Partner 12", logo: clientImage12 },
+    { name: "Client Partner 13", logo: clientImage13 },
+    { name: "Client Partner 14", logo: clientImage14 },
+    { name: "Client Partner 15", logo: clientImage15 },
+    { name: "Client Partner 16", logo: clientImage16 },
+    { name: "Client Partner 17", logo: clientImage17 },
+    { name: "Client Partner 18", logo: clientImage18 },
+    { name: "Client Partner 19", logo: clientImage19 },
+    { name: "Client Partner 20", logo: clientImage20 },
+    { name: "Client Partner 21", logo: clientImage21 },
+    { name: "Client Partner 22", logo: clientImage22 },
+    { name: "Client Partner 23", logo: clientImage23 },
+    { name: "Client Partner 24", logo: clientImage24 },
+    { name: "Client Partner 25", logo: clientImage25 },
+  ];
 
-                <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-12 max-w-6xl mx-auto">
-                    {clients.map((client, index) => (
-                        <div 
-                            key={index} 
-                            className="w-36 h-20 flex items-center justify-center p-2 transition duration-500 hover:grayscale-0"
-                            // Modern Grayscale Effect: Logos are grayed out until hovered
-                            style={{ 
-                                filter: 'grayscale(100%)', 
-                                WebkitFilter: 'grayscale(100%)',
-                                border: `1px solid ${SOFT_CREAM}`
-                            }}
-                        >
-                            <img 
-                                src={client.logo} 
-                                alt={client.name} 
-                                // Object-contain ensures the entire logo is visible within the container
-                                className="max-w-full max-h-full object-contain"
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+ const row1 = clients.slice(0, 9);
+ 
+  const row2 = clients.slice(9, 17);
+  const row3 = clients.slice(17, 25);
+
+ return (
+    <section
+      id="clients"
+      className="relative py-20 overflow-hidden"
+      style={{ backgroundColor: "#08101F" }}
+    >
+      {/* Subtle Glow Accent */}
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          background: `radial-gradient(circle at 25% 20%, #4B89F7 0%, transparent 70%)`,
+        }}
+      ></div>
+
+      <div className="relative z-10 container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+        {/* LEFT CONTENT */}
+        <div className="space-y-6">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-blue-400">
+            <ScrambleText text="Our Valued Clients" />
+          </h2>
+
+          <p className="text-gray-400 leading-relaxed max-w-md">
+            We take pride in collaborating with industry leaders across sectors,
+            offering skilled manpower and operational excellence that drive
+            success.
+          </p>
+
+          {/* CONTROL BUTTONS */}
+          <div className="flex space-x-4 pt-4">
+            {/* Play / Pause */}
+            <button
+              onClick={() => setIsPaused(!isPaused)}
+              className="p-3 rounded-full backdrop-blur-md bg-white/5 border border-blue-500/30 hover:bg-blue-600/20 transition-all shadow-md"
+              title={isPaused ? "Play" : "Pause"}
+            >
+              {isPaused ? (
+                <Play className="w-6 h-6 text-blue-400" />
+              ) : (
+                <Pause className="w-6 h-6 text-blue-400" />
+              )}
+            </button>
+
+            {/* Reverse Direction */}
+            <button
+              onClick={() => setReverse(!reverse)}
+              className="p-3 rounded-full backdrop-blur-md bg-white/5 border border-blue-500/30 hover:bg-blue-600/20 transition-all shadow-md"
+              title="Reverse Direction"
+            >
+              <Repeat
+                className={`w-6 h-6 text-blue-400 transition-transform ${
+                  reverse ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT: MULTI-LINE MARQUEE */}
+     <div className="relative rounded-2xl backdrop-blur-xl bg-white/5 border border-blue-500/20 shadow-lg p-6 overflow-hidden">
+  {[row1, row2, row3].map((row, i) => (
+<div
+  key={i}
+  className={`flex gap-8 mb-6 ${
+    reverse
+      ? "animate-marquee-reverse"
+      : i % 2 === 0
+      ? "animate-marquee"
+      : "animate-marquee-reverse"
+  }`}
+  style={{
+    animationPlayState: isPaused ? "paused" : "running",
+    animationDuration: `${18 + i * 4}s`, // ✅ refined smooth duration
+  }}
+>
+      {/* Duplicate logos once for seamless looping */}
+      {[...row, ...row].map((client, index) => (
+        <div
+          key={`${i}-${index}`}
+          className="w-36 h-20 flex items-center justify-center rounded-lg bg-white/10 border border-blue-500/10 hover:bg-blue-600/10 transition transform hover:scale-105 shadow-md flex-shrink-0"
+        >
+          <img
+            src={client.logo}
+            alt={client.name}
+            className="max-w-full max-h-full object-contain opacity-80 hover:opacity-100 transition"
+          />
+        </div>
+      ))}
+    </div>
+  ))}
+</div>
+      </div>
+    </section>
+  );
 };
+;
 
 
 // ===================================
@@ -1118,122 +1408,217 @@ const AdminDashboard = ({ toggleView }) => {
     );
 };
 
+// ===================================
+// 10. CompanyProfile Page Component (Dark Glassmorphic Version)
+// ===================================
 
-// ===================================
-// 10. CompanyProfile Page Component (UPDATED with OurClients)
-// ===================================
+
 
 const CompanyProfile = ({ toggleView }) => {
-    // Colors defined at the top of App.jsx
-    const { DEEP_BROWN, ACCENT_SAND, SOFT_CREAM } = { DEEP_BROWN: '#544036', ACCENT_SAND: '#A88F68', SOFT_CREAM: '#FBF9F6' };
+  const { DARK_BG, GLASS_ACCENT, BRIGHT_TEXT, GLASS_BASE_BG, GLASS_BORDER, GLASS_SHADOW } = {
+    DARK_BG: "#08101F",
+    GLASS_ACCENT: "#4B89F7",
+    BRIGHT_TEXT: "#FAFAFA",
+    GLASS_BASE_BG: "rgba(255, 255, 255, 0.08)",
+    GLASS_BORDER: `1px solid #4B89F730`,
+    GLASS_SHADOW: `0 8px 32px 0 rgba(0, 0, 0, 0.37)`,
+  };
 
-    return (
-        <div className="min-h-screen flex flex-col" style={{ backgroundColor: SOFT_CREAM }}>
-            <div className="container mx-auto max-w-5xl pt-24 pb-12 flex-grow">
-                <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-center" style={{ color: DEEP_BROWN }}>
-                    <ScrambleText text="ARM SOLUTIONS - Company Profile" />
-                </h1>
+  return (
+    <motion.div
+      className="min-h-screen flex flex-col relative overflow-hidden"
+      style={{ backgroundColor: DARK_BG }}
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 1, ease: "easeOut" }}
+    >
+      {/* Animated Background Glow */}
+      <motion.div
+        className="absolute inset-0 opacity-30"
+        style={{
+          background: `radial-gradient(circle at 20% 20%, ${GLASS_ACCENT}40, transparent 70%),
+                       radial-gradient(circle at 80% 80%, ${GLASS_ACCENT}30, transparent 70%)`,
+        }}
+        animate={{ opacity: [0.2, 0.35, 0.2] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      ></motion.div>
 
-                <div className="grid md:grid-cols-3 gap-10 mb-10">
-                    {/* Image 1: NCC Logo (using the imported image) */}
-                    <div className="md:col-span-1 p-3 rounded-xl shadow-xl flex flex-col items-center justify-center" style={{ backgroundColor: 'white', border: `1px solid ${ACCENT_SAND}` }}>
-                        {/* <h3 className="text-xl font-bold mb-3" style={{ color: DEEP_BROWN }}> abababa</h3> */}
-                        <img 
-                            // Using the imported variable here
-                            src={arm2GroupPhoto} 
-                            alt="ARM Logo " 
-                            className="w-full h-auto object-cover transition-transform duration-500 hover:scale-110 rounded-sm"
-                        />
-                    </div>
+      <div className="container mx-auto max-w-5xl pt-24 pb-12 flex-grow relative z-10">
+        {/* Title */}
+        <motion.h1
+          className="text-4xl md:text-5xl font-extrabold mb-12 text-center"
+          style={{ color: BRIGHT_TEXT }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <ScrambleText text="ARM SOLUTIONS — Company Profile" color={GLASS_ACCENT} />
+        </motion.h1>
 
-                    {/* Overview Content */}
-                    <div className="md:col-span-2 p-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white', borderLeft: `5px solid ${ACCENT_SAND}` }}>
-                        <h2 className="text-3xl font-bold mb-4" style={{ color: DEEP_BROWN }}>Overview</h2>
-                        <p className="text-gray-700 mb-4">
-                            ARM Group specializes in providing **skilled manpower** on a rental and local transfer basis, as well as recruiting from overseas to meet diverse client requirements across multiple industries.]. Our services ensure that clients have access to qualified professionals whenever needed—helping them maintain efficiency, reduce operational costs, and achieve long-term success.].
-                        </p>
-                    </div>
-                </div>
+        {/* Top Grid (Image + Overview) */}
+        <motion.div
+          className="grid md:grid-cols-3 gap-10 mb-10"
+initial={{ opacity: 0.7, scale: 1 }}
+animate={{ opacity: 1, scale: 1 }}
+transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          {/* Company Image */}
+          <div
+            className="md:col-span-1 p-3 rounded-2xl backdrop-blur-md border flex flex-col items-center justify-center"
+            style={{
+              background: GLASS_BASE_BG,
+              border: GLASS_BORDER,
+              boxShadow: GLASS_SHADOW,
+            }}
+          >
+           <img
+  src={arm2GroupPhoto}
+  alt="ARM Logo"
+  loading="lazy"
+  className="w-full h-auto object-contain rounded-md"
+/>
+          </div>
 
-                <div className="grid md:grid-cols-2 gap-10">
-                    
-                    {/* Vision & Mission */}
-                    <div className="p-8 rounded-xl shadow-xl border-t-4" style={{ backgroundColor: 'white', borderColor: DEEP_BROWN }}>
-                        <h2 className="text-2xl font-bold mb-4" style={{ color: ACCENT_SAND }}>Vision & Mission</h2>
-                        <ul className="space-y-4 text-gray-700">
-                            <li>
-                                <span className="font-bold" style={{ color: DEEP_BROWN }}>Vision:</span> To be the leading manpower solutions provider recognized for **excellence, reliability, and innovation** in workforce management.].
-                            </li>
-                            <li>
-                                <span className="font-bold" style={{ color: DEEP_BROWN }}>Mission:</span> To deliver qualified, trained, and motivated manpower that drives our clients' success while fostering growth, safety, and satisfaction among our workforce.].
-                            </li>
-                        </ul>
-                    </div>
+          {/* Overview */}
+          <div
+            className="md:col-span-2 p-8 rounded-2xl backdrop-blur-md border shadow-xl"
+            style={{
+              background: GLASS_BASE_BG,
+              border: GLASS_BORDER,
+              boxShadow: GLASS_SHADOW,
+            }}
+          >
+            <h2 className="text-3xl font-bold mb-4" style={{ color: GLASS_ACCENT }}>
+              Overview
+            </h2>
+            <p className="text-gray-300 leading-relaxed">
+              ARM Solutions specializes in providing <span className="text-white font-semibold">skilled manpower</span> on a rental and local transfer basis, as well as recruiting from overseas to meet diverse client requirements across multiple industries. Our services ensure that clients have access to qualified professionals whenever needed — helping them maintain efficiency, reduce operational costs, and achieve long-term success.
+            </p>
+          </div>
+        </motion.div>
 
-                    {/* Image 2: Corporate Image Placeholder */}
-                   <div className="p-6 rounded-xl shadow-xl flex flex-col items-center justify-center border-b-4" style={{ backgroundColor: 'white', borderColor: ACCENT_SAND }}>
-    <h3 className="text-xl font-bold mb-3" style={{ color: DEEP_BROWN }}>Group photo</h3>
-    <img 
-        // Using the newly imported variable here
-        src={armGroupPhoto} 
-        alt="ARM Group Team Photo or Office" 
-        className="w-full h-auto object-cover transition-transform duration-500 hover:scale-110"
-    />
-</div>
-                </div>
+        {/* Vision & Mission */}
+        <motion.div
+          className="grid md:grid-cols-2 gap-10"
+   initial={{ opacity: 0.7, scale: 1 }}
+animate={{ opacity: 1, scale: 1 }}
+transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <div
+            className="p-8 rounded-2xl backdrop-blur-md border-t-4"
+            style={{
+              background: GLASS_BASE_BG,
+              borderColor: GLASS_ACCENT,
+              boxShadow: GLASS_SHADOW,
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-4" style={{ color: GLASS_ACCENT }}>
+              Vision & Mission
+            </h2>
+            <ul className="space-y-4 text-gray-300">
+              <li>
+                <span className="font-bold text-white">Vision:</span> To be the leading manpower solutions provider recognized for <span className="text-blue-400">excellence, reliability, and innovation</span> in workforce management.
+              </li>
+              <li>
+                <span className="font-bold text-white">Mission:</span> To deliver qualified, trained, and motivated manpower that drives our clients' success while fostering growth, safety, and satisfaction among our workforce.
+              </li>
+            </ul>
+          </div>
 
-                {/* Core Values Section */}
-                <div className="mt-10 p-8 rounded-xl shadow-2xl" style={{ backgroundColor: 'white', borderRight: `5px solid ${DEEP_BROWN}` }}>
-                    <h2 className="text-3xl font-bold mb-4" style={{ color: ACCENT_SAND }}>Core Values</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-700">
-                        <div>
-                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Integrity</p>
-                            <p className="text-sm">We operate with transparency and honesty in all business dealings.].</p>
-                        </div>
-                         <div>
-                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Excellence</p>
-                            <p className="text-sm">We strive to deliver top-quality services that exceed expectations.].</p>
-                        </div>
-                         <div>
-                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Commitment</p>
-                            <p className="text-sm">We are dedicated to client satisfaction and continuous improvement.].</p>
-                        </div>
-                         <div>
-                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Teamwork</p>
-                            <p className="text-sm">Collaboration is key to achieving collective goals.].</p>
-                        </div>
-                         <div>
-                            <p className="font-bold mb-1" style={{ color: DEEP_BROWN }}>Innovation</p>
-                            <p className="text-sm">We continuously improve processes and training for better service delivery.].</p>
-                        </div>
-                    </div>
-                </div>
-                
-                {/* INSERTED: Our Clients Section (Only visible on this page) */}
-                <FadeInSection>
-                    <div className="mt-12">
-                         <OurClients />
-                    </div>
-                </FadeInSection>
- <Directors />
-                <div className="mt-12 text-center">
-                    <button 
-                        onClick={() => { toggleView('public'); window.location.hash = ''; }}
-                        className="px-6 py-3 text-base font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
-                        style={{ 
-                            backgroundColor: ACCENT_SAND, 
-                            color: DEEP_BROWN,
-                            border: `2px solid ${DEEP_BROWN}`
-                        }}
-                    >
-                        &larr; Back to Main Site
-                    </button>
-                </div>
-            </div>
-            {/* <Directors /> */}
-            <Footer/>
-        </div>
-    );
+          <div
+            className="p-6 rounded-2xl backdrop-blur-md border-b-4 flex flex-col items-center justify-center"
+            style={{
+              background: GLASS_BASE_BG,
+              borderColor: GLASS_ACCENT,
+              boxShadow: GLASS_SHADOW,
+            }}
+          >
+            <h3 className="text-xl font-bold mb-3" style={{ color: BRIGHT_TEXT }}>
+              Group Photo
+            </h3>
+           <img
+  src={armGroupPhoto}
+  alt="ARM Logo"
+  loading="lazy"
+  className="w-full h-auto object-contain rounded-md"
+/>
+          </div>
+        </motion.div>
+
+        {/* Core Values */}
+        <motion.div
+          className="mt-12 p-8 rounded-2xl backdrop-blur-md border shadow-2xl"
+          style={{
+            background: GLASS_BASE_BG,
+            border: GLASS_BORDER,
+            boxShadow: GLASS_SHADOW,
+          }}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl font-bold mb-8" style={{ color: GLASS_ACCENT }}>
+            Core Values
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-300">
+            {[
+              ["Integrity", "We operate with transparency and honesty in all business dealings."],
+              ["Excellence", "We strive to deliver top-quality services that exceed expectations."],
+              ["Commitment", "We are dedicated to client satisfaction and continuous improvement."],
+              ["Teamwork", "Collaboration is key to achieving collective goals."],
+              ["Innovation", "We continuously improve processes and training for better service delivery."],
+            ].map(([title, desc], i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <p className="font-bold mb-2 text-white">{title}</p>
+                <p className="text-sm">{desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Clients + Directors */}
+        <FadeInSection>
+          <div className="mt-12">
+            <OurClients />
+          </div>
+        </FadeInSection>
+
+        <Directors />
+
+        {/* Back Button */}
+        <motion.div
+          className="mt-12 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <button
+            onClick={() => {
+              toggleView("public");
+              window.location.hash = "";
+            }}
+            className="px-6 py-3 text-base font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
+            style={{
+              backgroundColor: GLASS_ACCENT,
+              color: DARK_BG,
+              border: `2px solid ${GLASS_ACCENT}`,
+            }}
+          >
+            &larr; Back to Main Site
+          </button>
+        </motion.div>
+      </div>
+
+      <Footer />
+    </motion.div>
+  );
 };
 
 
