@@ -687,19 +687,25 @@ const About = ({ COLORS }) => {
 
 // ===================================
 // 4. Services Component
-// ===================================
 const Services = ({ COLORS }) => {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
   const [scrollRange, setScrollRange] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Detect mobile screen width
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    // Update horizontal scroll range
     const updateRange = () => {
       if (containerRef.current && trackRef.current) {
         const contentWidth = trackRef.current.scrollWidth;
         const containerWidth = containerRef.current.clientWidth;
-
-        // Add more padding (e.g. 200px total) to ensure first/last card visible
         const newRange =
           contentWidth > containerWidth
             ? -(contentWidth - containerWidth + 200)
@@ -711,7 +717,9 @@ const Services = ({ COLORS }) => {
     updateRange();
     window.addEventListener("resize", updateRange);
     const timeout = setTimeout(updateRange, 150);
+
     return () => {
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("resize", updateRange);
       clearTimeout(timeout);
     };
@@ -752,60 +760,81 @@ const Services = ({ COLORS }) => {
           <FramerFadeIn y={50}>
             <h2
               className="text-4xl md:text-5xl font-extrabold mb-4"
-              style={{ color: COLORS.ACCENT  }}
+              style={{ color: COLORS.ACCENT }}
             >
               <ScrambleText
                 text="Our Specialized Manpower Solutions"
                 className="inline-block"
-                color={COLORS.ACCENT }
+                color={COLORS.ACCENT}
               />
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl mx-auto">
               We cover a full spectrum of workforce needs for capital-intensive industries.
             </p>
-            <p
-              className="text-sm text-gray-400 mt-2 font-bold"
-              style={{ color: COLORS.ACCENT  }}
-            >
-              Scroll down — cards will move horizontally
-            </p>
+            {!isMobile && (
+              <p
+                className="text-sm text-gray-400 mt-2 font-bold"
+                style={{ color: COLORS.ACCENT }}
+              >
+                Scroll down — cards will move horizontally
+              </p>
+            )}
           </FramerFadeIn>
         </div>
       </div>
 
-      {/* Scroll Wrapper */}
-      <div ref={containerRef} className="relative z-0" style={{ height: "300vh" }}>
-        <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-          <div className="w-full relative">
-            {/* Gradient Edge Masks */}
-            <div className="absolute left-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-r from-[#08101F] to-transparent z-20"></div>
-            <div className="absolute right-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-l from-[#08101F] to-transparent z-20"></div>
+      {/* 🔹 Desktop: Horizontal Scroll  */}
+      {!isMobile && (
+        <div ref={containerRef} className="relative z-0" style={{ height: "300vh" }}>
+          <div className="sticky top-0 h-screen overflow-hidden flex items-center">
+            <div className="w-full relative">
+              {/* Gradient Edge Masks */}
+              <div className="absolute left-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-r from-[#08101F] to-transparent z-20"></div>
+              <div className="absolute right-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-l from-[#08101F] to-transparent z-20"></div>
 
-            {/* Horizontal Track */}
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                ref={trackRef}
-                style={{ x }}
-                className="flex space-x-8 pb-8 md:pb-12 pl-32 pr-32" // ✅ added side padding
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.1 }}
-              >
-                {services.map((s, i) => (
-                  <motion.div
-                    key={i}
-                    variants={itemVariants}
-                    className="flex-shrink-0 w-64 sm:w-72 md:w-80 lg:w-96"
-                  >
-             <ServiceCard {...s} COLORS={COLORS} />
-
-                  </motion.div>
-                ))}
-              </motion.div>
+              {/* Horizontal Track */}
+              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <motion.div
+                  ref={trackRef}
+                  style={{ x }}
+                  className="flex space-x-8 pb-8 md:pb-12 pl-32 pr-32"
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: true, amount: 0.1 }}
+                >
+                  {services.map((s, i) => (
+                    <motion.div
+                      key={i}
+                      variants={itemVariants}
+                      className="flex-shrink-0 w-64 sm:w-72 md:w-80 lg:w-96"
+                    >
+                      <ServiceCard {...s} COLORS={COLORS} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* 🔹 Mobile: Simple Vertical List  */}
+      {isMobile && (
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8">
+            {services.map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}
+              >
+                <ServiceCard {...s} COLORS={COLORS} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 };
@@ -813,12 +842,12 @@ const Services = ({ COLORS }) => {
 // ===================================
 // 5. Directors Component
 // ===================================
-const DirectorCard = ({ name, title, bio, intro, imageUrl, index,COLORS }) => {
+const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS }) => {
   const [flipped, setFlipped] = React.useState(false);
 
   return (
     <motion.div
-      className="relative w-full h-[430px] perspective cursor-pointer"
+      className="relative w-full h-[420px] cursor-pointer perspective"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.2, duration: 0.6, ease: "easeOut" }}
@@ -830,89 +859,111 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index,COLORS }) => {
       <motion.div
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
-        className="relative w-full h-full"
+        className="relative w-full h-full rounded-2xl"
         style={{ transformStyle: "preserve-3d" }}
       >
         {/* FRONT SIDE */}
         <div
-          className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col text-center"
-           style={{
-      background: COLORS.GLASS_BG,
-      border: COLORS.GLASS_BORDER,
-      boxShadow: COLORS.SHADOW,
-    }}
+          className="absolute inset-0 rounded-2xl flex flex-col text-center overflow-hidden"
+          style={{
+            background: `linear-gradient(180deg, ${COLORS.GLASS_BG}, ${COLORS.BG})`,
+            border: COLORS.GLASS_BORDER,
+            boxShadow: COLORS.SHADOW,
+            backfaceVisibility: "hidden",
+          }}
         >
           {/* Image container */}
-          <div className="relative flex items-center justify-center bg-black/20" style={{ height: "220px" }}>
+          <div
+            className="relative flex items-center justify-center"
+            style={{
+              height: "210px",
+              background: `radial-gradient(circle at 50% 20%, ${COLORS.ACCENT}30, transparent 70%)`,
+            }}
+          >
             <motion.img
               src={imageUrl}
               alt={name}
-              className="h-[200px] object-contain opacity-90 transition-all duration-500"
+              className="h-[190px] object-contain drop-shadow-lg transition-transform duration-500"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "https://placehold.co/400x300/0a0a0a/777?text=Director";
               }}
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.05 }}
             />
-            <div
-              className="absolute inset-0 opacity-15"
-              style={{
-                background: `radial-gradient(circle at 50% 0%, ${COLORS.ACCENT }50, transparent 70%)`,
-              }}
-            ></div>
           </div>
 
           {/* Text content */}
-          <div className="p-5 flex flex-col flex-grow justify-between">
+          <div className="flex flex-col justify-between flex-grow p-5">
             <div>
-              <h3 className="text-lg font-bold mb-1" style={{ color: COLORS.TEXT }}>
+              <h3
+                className="text-lg font-semibold mb-1"
+                style={{ color: COLORS.TEXT }}
+              >
                 {name}
               </h3>
-              <p className="text-sm font-medium mb-2" style={{ color: COLORS.ACCENT  }}>
+              <p
+                className="text-sm font-medium mb-2 uppercase tracking-wide"
+                style={{ color: COLORS.ACCENT }}
+              >
                 {title}
               </p>
-              <p className="text-xs text-gray-400 italic line-clamp-3">{bio}</p>
+              <p
+                className="text-xs opacity-80 italic leading-snug"
+                style={{ color: COLORS.SUBTEXT }}
+              >
+                {bio}
+              </p>
             </div>
 
             <motion.a
               href="#"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 200 }}
-              className="inline-block mt-3"
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 250 }}
+              className="mt-3 inline-block"
             >
-              <Linkedin className="w-5 h-5 mx-auto" style={{ color: COLORS.ACCENT  }} />
+              <Linkedin
+                className="w-5 h-5 mx-auto"
+                style={{ color: COLORS.ACCENT }}
+              />
             </motion.a>
           </div>
         </div>
 
         {/* BACK SIDE */}
         <div
-          className="absolute inset-0 rounded-2xl backdrop-blur-lg border flex flex-col justify-center p-6 text-left overflow-hidden"
+          className="absolute inset-0 rounded-2xl flex flex-col justify-center items-center px-6 py-5 text-left"
           style={{
-            background: "rgba(255, 255, 255, 0.05)",
-            border: `1px solid ${COLORS.ACCENT }30`,
-            boxShadow: `0 0 30px ${COLORS.ACCENT }50, inset 0 0 10px ${COLORS.ACCENT }25`,
+            background: `linear-gradient(160deg, ${COLORS.BG}, ${COLORS.ACCENT}20)`,
+            border: `1px solid ${COLORS.ACCENT}50`,
+            boxShadow: `inset 0 0 20px ${COLORS.ACCENT}20, 0 0 25px ${COLORS.ACCENT}40`,
+            color: COLORS.TEXT,
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
           }}
         >
-          <h3 className="text-lg font-bold mb-3 text-center" style={{ color: COLORS.ACCENT  }}>
+          <h3
+            className="text-lg font-bold mb-2 text-center"
+            style={{ color: COLORS.ACCENT }}
+          >
             {name}
           </h3>
-          <p className="text-sm text-gray-300 leading-relaxed overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/30 scrollbar-track-transparent">
+          <p
+            className="text-sm text-center leading-relaxed opacity-90"
+            style={{ color: COLORS.TEXT }}
+          >
             {intro}
           </p>
         </div>
       </motion.div>
 
-      {/* ✨ Outer Glow Aura */}
+      {/* Outer Glow Aura */}
       <motion.div
         className="absolute inset-0 rounded-2xl z-[-1]"
-        animate={{ opacity: [0.5, 0.8, 0.5] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [0.4, 0.8, 0.4] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         style={{
-          boxShadow: `0 0 30px 8px ${COLORS.ACCENT }40`,
+          boxShadow: `0 0 30px 8px ${COLORS.ACCENT}30`,
           filter: "blur(8px)",
         }}
       ></motion.div>
