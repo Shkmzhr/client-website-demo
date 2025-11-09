@@ -32,3 +32,8 @@ we mainly use this file to ensure basic typography reset.
   width: max-content;
   animation: marquee-reverse 20s linear infinite;
 }
+
+html.light {
+  background-color: #f8f9fa;
+  color: #222;
+}

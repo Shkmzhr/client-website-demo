@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import heroParallaxBg from './assets/clientimages/constructionparallax1.jpg'; 
- 
-import { motion, useScroll, useTransform,useSpring   } from 'framer-motion'; 
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, LineChart, Line, CartesianGrid, Legend
+} from "recharts";
+import { motion, useScroll, useTransform,useSpring,AnimatePresence   } from 'framer-motion'; 
 import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter,MessageCircle  } from 'lucide-react';
 // NEW ICON IMPORTS: Ensure this line includes all 9 icons
 import {  Factory, Hotel, Truck, Building, HeartPulse, ShoppingCart, Mic, Pause, Play, Repeat,ArrowUp, ArrowDown  } from 'lucide-react';
@@ -75,32 +78,28 @@ import EventsBg from './assets/clientimages/Events.jpg';
 // ===================================
 // 0. Glassy Color Definitions & Utilities
 // ===================================
-
-// BACKGROUND
-const DARK_BG = '#060B16'; // Richer blue-black (less flat, more depth)
-const DARK_GRADIENT = 'linear-gradient(145deg, #060B16 0%, #0A162A 100%)';
-
-// ACCENTS
-const GLASS_ACCENT = '#4B89F7'; // Primary neon blue
-const GLASS_ACCENT_SOFT = '#6FA3FF'; // Lighter glow version for gradients/glows
-
-// TEXT
-const BRIGHT_TEXT = '#F5F7FA'; // Slightly warmer white for readability
-const SUBTEXT = 'rgba(240,240,240,0.7)'; // Secondary text tone
-
-// GLASS EFFECTS
-const GLASS_BASE_BG = 'rgba(255, 255, 255, 0.12)'; // Slightly brighter glass
-const GLASS_BORDER = `1px solid ${GLASS_ACCENT}50`;
-const GLASS_SHADOW = `0 8px 32px 0 rgba(75, 137, 247, 0.15)`; // Blue-tinted shadow
-
-// GLOW ACCENTS (for subtle layer blending)
-const GLOW_EDGE = `0 0 25px ${GLASS_ACCENT_SOFT}60`;
-const GLOW_HALO = `0 0 80px ${GLASS_ACCENT_SOFT}30`;
-
-// Apply to old color variables for consistency
-const DEEP_BROWN = DARK_BG;
-const ACCENT_SAND = GLASS_ACCENT;
-const SOFT_CREAM = DARK_BG;
+// Theme Definitions
+// ===================================
+const THEMES = {
+  dark: {
+    BG: "#060B16",
+    TEXT: "#F5F7FA",
+    SUBTEXT: "rgba(240,240,240,0.7)",
+    ACCENT: "#4B89F7",
+    GLASS_BG: "rgba(255,255,255,0.12)",
+    GLASS_BORDER: "1px solid #4B89F750",
+    SHADOW: "0 8px 32px 0 rgba(75, 137, 247, 0.15)",
+  },
+  light: {
+    BG: "#F7F9FC",
+    TEXT: "#1A202C",
+    SUBTEXT: "rgba(0,0,0,0.7)",
+    ACCENT: "#2B6CB0",
+    GLASS_BG: "rgba(255, 255, 255, 0.6)",
+    GLASS_BORDER: "1px solid rgba(43, 108, 176, 0.2)",
+    SHADOW: "0 8px 32px 0 rgba(0, 0, 0, 0.15)",
+  },
+};
 
 // Characters used for the scrambling effect
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=';
@@ -250,332 +249,365 @@ const FadeInSection = ({ children }) => {
 
 
 // Service Card Component (Used in Services section)
-const ServiceCard = ({ icon: Icon, title, description, widthClass = "w-full" }) => (
-    <motion.div 
-        whileHover={{ 
-            scale: 1.05, 
-            boxShadow: `0 15px 40px rgba(75, 137, 247, 0.5)`,
-            transition: { type: "spring", stiffness: 250, damping: 15 } 
+const ServiceCard = ({ icon: Icon, title,COLORS, description, widthClass = "w-full" }) => (
+     <motion.div
+    whileHover={{
+      scale: 1.05,
+      boxShadow: `0 15px 40px ${COLORS.ACCENT}70`,
+      transition: { type: "spring", stiffness: 250, damping: 15 },
+    }}
+    className="group relative p-8 rounded-xl overflow-hidden cursor-pointer h-full backdrop-blur-sm flex-shrink-0 w-72 md:w-80"
+  style={{
+      backgroundColor: COLORS.GLASS_BG,
+      border: COLORS.GLASS_BORDER,
+      boxShadow: COLORS.SHADOW,
+    }}
+  >
+    <div className="relative z-10">
+      <div
+        className="flex items-center justify-center w-16 h-16 rounded-lg mb-6 transition duration-300 group-hover:scale-110 group-hover:rounded-2xl"
+      style={{
+          backgroundColor: COLORS.ACCENT,
+          boxShadow: `0 0 15px ${COLORS.ACCENT}80`,
         }}
-        // widthClass is critical for the horizontal layout
-        // For mobile (default), cards are w-72, for md (desktop scroll), they are w-80.
-        className={`group relative p-8 rounded-xl overflow-hidden cursor-pointer h-full backdrop-blur-sm flex-shrink-0 w-72 md:w-80`}
-        style={{ 
-            // 💡 GLASS CARD STYLES
-            backgroundColor: GLASS_BASE_BG, 
-            border: GLASS_BORDER,
-            boxShadow: GLASS_SHADOW,
-            backdropFilter: 'blur(3px)', 
-        }}
-    >
-        <div className="relative z-10">
-            <div 
-                className="flex items-center justify-center w-16 h-16 rounded-lg mb-6 transition duration-300 group-hover:scale-110 group-hover:rounded-2xl" 
-                style={{ 
-                    backgroundColor: GLASS_ACCENT, 
-                    boxShadow: `0 0 15px ${GLASS_ACCENT}80`, 
-                }}
-            >
-                <Icon className="w-8 h-8" style={{ color: DARK_BG }} /> 
-            </div>
-            
-            <h3 
-                className="text-2xl font-bold mb-3" 
-                style={{ 
-                    color: BRIGHT_TEXT, 
-                }}
-            >{title}</h3>
-            <p className="text-gray-300">{description}</p>
-        </div>
-    </motion.div>
+      >
+        <Icon className="w-8 h-8" style={{ color: COLORS.BG }} />
+      </div>
+
+      <h3 className="text-2xl font-bold mb-3" style={{ color: COLORS.TEXT }}>
+        {title}
+      </h3>
+      <p style={{ color: COLORS.SUBTEXT }}>{description}</p>
+    </div>
+  </motion.div>
 );
 
-
-// ===================================
-// 1. Navbar Component
-// ===================================
-
-// UPDATED NavLink component for smooth scrolling and delay
+// Smooth scrolling NavLink helper
 const NavLink = ({ to, children, setIsOpen }) => {
-    // NavLink logic remains the same
-    const handleNavigation = (e) => {
-        e.preventDefault();
-        
-        if (setIsOpen) {
-            setIsOpen(false);
-        }
+  const handleClick = (e) => {
+    e.preventDefault();
 
-        setTimeout(() => {
-            const targetElement = document.getElementById(to);
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-            window.history.pushState(null, null, `#${to}`);
-        }, 200); 
-    };
+    // Find the target section and scroll to it smoothly
+    const target = document.getElementById(to);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-    return (
-        <a 
-            href={`#${to}`} 
-            onClick={handleNavigation}
-            className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
-            style={{ 
-                color: BRIGHT_TEXT, 
-                transition: 'color 0.3s', 
-            }}
-            onMouseEnter={(e) => {
-                e.target.style.color = GLASS_ACCENT;
-            }}
-            onMouseLeave={(e) => {
-                e.target.style.color = BRIGHT_TEXT;
-            }}
-        >
-            {children}
-        </a>
-    );
+    // If on mobile menu, close it after clicking
+    if (setIsOpen) setIsOpen(false);
+  };
+
+  return (
+    <a
+      href={`#${to}`}
+      onClick={handleClick}
+      className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
+    >
+      {children}
+    </a>
+  );
 };
+const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const isPublicView = currentView === "public";
 
-const Navbar = ({ toggleView, currentView }) => {
-    
-    const [isOpen, setIsOpen] = useState(false);
-    const isPublicView = currentView === 'public';
+  const handleCompanyProfileClick = (e) => {
+    e.preventDefault();
+    setIsOpen(false);
+    toggleView("company-profile");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-    // 🌟 FIX IS HERE: Changed 'company-profile' to the expected key 'profile'
-    const handleCompanyProfileClick = (e) => {
-        e.preventDefault();
-        setIsOpen(false);
-        toggleView('company-profile'); // <-- CORRECTED KEY
-    };
+  // ✨ Animation Variants
+  const menuVariants = {
+    hidden: { opacity: 0, y: -30, scaleY: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scaleY: 1,
+      transition: {
+        duration: 0.4,
+        when: "beforeChildren",
+        staggerChildren: 0.08,
+      },
+    },
+    exit: { opacity: 0, y: -30, scaleY: 0.95, transition: { duration: 0.3 } },
+  };
 
-    return (
-        <header 
-            className={`sticky top-0 z-50 transition-all duration-300 backdrop-blur-md`}
-            style={{ 
-                backgroundColor: 'rgba(8, 16, 31, 0.8)', 
-                borderBottom: GLASS_BORDER,
-                boxShadow: GLASS_SHADOW,
-                backdropFilter: 'blur(10px)',
-            }}
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  };
+
+  return (
+    <header
+      className="sticky top-0 z-50 transition-all duration-300 backdrop-blur-md"
+      style={{
+        backgroundColor:
+          theme === "dark"
+            ? "rgba(8, 16, 31, 0.8)"
+            : "rgba(255, 255, 255, 0.8)",
+        borderBottom: COLORS.GLASS_BORDER,
+        boxShadow: COLORS.SHADOW,
+      }}
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+        {/* Logo */}
+        <motion.div
+          className="text-2xl font-bold cursor-pointer"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-                {/* Logo */}
-                <div className="text-2xl font-bold">
-                    <ScrambleText 
-                        text="ARM Solutions" 
-                        className="tracking-widest" 
-                        color={BRIGHT_TEXT} 
-                    />
-                </div>
+          <ScrambleText
+            text="ARM Solutions"
+            className="tracking-widest"
+            color={COLORS.TEXT}
+          />
+        </motion.div>
 
-                {/* Desktop Navigation */}
-                <nav className="hidden lg:flex items-center space-x-8">
-                    {isPublicView && (
-                        <>
-                            <NavLink to="hero">Home</NavLink>
-                            <NavLink to="services">Services</NavLink>
-                            <NavLink to="directors">Leadership</NavLink>
-                            <NavLink to="contact">Contact</NavLink> 
-                            <a 
-                                href="#company-profile"
-                                onClick={handleCompanyProfileClick}
-                                className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
-                                style={{ color: BRIGHT_TEXT }}
-                                onMouseEnter={(e) => { e.target.style.color = GLASS_ACCENT; }}
-                                onMouseLeave={(e) => { e.target.style.color = BRIGHT_TEXT; }}
-                            >
-                                Company Profile
-                            </a>
-                        </>
-                    )}
-                    
-                    {/* Admin Login Button */}
-                    <button 
-                        onClick={() => toggleView && toggleView(isPublicView ? 'admin' : 'public')}
-                        className="px-4 py-2 text-sm font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
-                        style={{ 
-                            backgroundColor: isPublicView ? GLASS_ACCENT : DARK_BG, 
-                            color: isPublicView ? DARK_BG : BRIGHT_TEXT,
-                            border: `2px solid ${GLASS_ACCENT}`,
-                        }}
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center space-x-8">
+          {isPublicView && (
+            <>
+              <NavLink to="hero">Home</NavLink>
+              <NavLink to="services">Services</NavLink>
+              <NavLink to="directors">Leadership</NavLink>
+              <NavLink to="contact">Contact</NavLink>
+              <a
+                href="#company-profile"
+                onClick={handleCompanyProfileClick}
+                className="transition duration-300 block py-2 font-medium hover:scale-110"
+                style={{ color: COLORS.TEXT }}
+                onMouseEnter={(e) => (e.target.style.color = COLORS.ACCENT)}
+                onMouseLeave={(e) => (e.target.style.color = COLORS.TEXT)}
+              >
+                Company Profile
+              </a>
+            </>
+          )}
+
+          {/* Admin Login Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() =>
+              toggleView && toggleView(isPublicView ? "admin" : "public")
+            }
+            className="px-4 py-2 text-sm font-semibold rounded-full shadow-md transition"
+            style={{
+              backgroundColor: isPublicView ? COLORS.ACCENT : COLORS.BG,
+              color: isPublicView ? COLORS.BG : COLORS.TEXT,
+              border: `2px solid ${COLORS.ACCENT}`,
+            }}
+          >
+            {isPublicView ? "Admin Login" : "Back to Site"}
+          </motion.button>
+
+          {/* Theme Toggle */}
+          <motion.button
+            whileHover={{ rotate: 180, scale: 1.2 }}
+            transition={{ duration: 0.6 }}
+            onClick={toggleTheme}
+            className="ml-4 p-2 rounded-full transition border"
+            style={{
+              backgroundColor: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              color: COLORS.ACCENT,
+            }}
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </motion.button>
+        </nav>
+
+        {/* Mobile Menu Toggle */}
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setIsOpen(!isOpen)}
+          className="lg:hidden p-2 rounded-md transition duration-200 hover:bg-opacity-20"
+          style={{
+            color: COLORS.ACCENT,
+            background: `${COLORS.ACCENT}10`,
+            border: COLORS.GLASS_BORDER,
+          }}
+        >
+          <motion.div
+            initial={false}
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </motion.div>
+        </motion.button>
+      </div>
+
+      {/*  Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="lg:hidden origin-top"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={menuVariants}
+            style={{
+              background: COLORS.GLASS_BG,
+              borderTop: COLORS.GLASS_BORDER,
+              boxShadow: `0 8px 32px ${COLORS.ACCENT}30`,
+              backdropFilter: "blur(15px)",
+            }}
+          >
+            <motion.div
+              className="px-6 py-5 space-y-4 text-center"
+              variants={itemVariants}
+            >
+              {isPublicView && (
+                <>
+                  {["home", "services", "directors", "contact"].map((item) => (
+                    <motion.a
+                      key={item}
+                      href={`#${item}`}
+                      onClick={() => setIsOpen(false)}
+                      className="block text-lg font-medium tracking-wide hover:scale-105 transition"
+                      style={{ color: COLORS.TEXT }}
+                      variants={itemVariants}
+                      whileHover={{ color: COLORS.ACCENT, scale: 1.1 }}
                     >
-                        {isPublicView ? 'Admin Login' : 'Back to Site'}
-                    </button>
-                </nav>
+                      {item.charAt(0).toUpperCase() + item.slice(1)}
+                    </motion.a>
+                  ))}
 
-                {/* Mobile Menu Button */}
-                <button 
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="lg:hidden p-2 rounded-md transition duration-200 hover:bg-gray-800"
-                    style={{ color: GLASS_ACCENT }}
-                >
-                    {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                </button>
-            </div>
+                  <motion.a
+                    href="#company-profile"
+                    onClick={handleCompanyProfileClick}
+                    className="block text-lg font-semibold hover:scale-105"
+                    style={{ color: COLORS.ACCENT }}
+                    variants={itemVariants}
+                  >
+                    Company Profile
+                  </motion.a>
+                </>
+              )}
 
-            {/* Mobile Menu Dropdown */}
-            {isOpen && (
-                <div 
-                    className="lg:hidden px-4 pt-2 pb-4 space-y-2 border-t" 
-                    style={{ backgroundColor: DARK_BG, borderColor: GLASS_ACCENT }}
-                >
-                    {isPublicView && (
-                        <>
-                            <NavLink to="hero" setIsOpen={setIsOpen}>Home</NavLink>
-                            <NavLink to="services" setIsOpen={setIsOpen}>Services</NavLink>
-                            <NavLink to="directors" setIsOpen={setIsOpen}>Leadership</NavLink>
-                            <NavLink to="contact" setIsOpen={setIsOpen}>Contact</NavLink>
-                            <a 
-                                href="#company-profile"
-                                onClick={handleCompanyProfileClick} // Uses the corrected handler
-                                className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
-                                style={{ color: BRIGHT_TEXT }}
-                                onMouseEnter={(e) => { e.target.style.color = GLASS_ACCENT; }}
-                                onMouseLeave={(e) => { e.target.style.color = BRIGHT_TEXT; }}
-                            >
-                                Company Profile
-                            </a>
-                        </>
-                    )}
-                    
-                    <button 
-                        onClick={() => { toggleView && toggleView(isPublicView ? 'admin' : 'public'); setIsOpen(false); }}
-                        className="w-full text-left px-4 py-2 text-sm font-semibold rounded-md shadow-md transition duration-300 mt-2"
-                         style={{ 
-                            backgroundColor: isPublicView ? GLASS_ACCENT : DARK_BG, 
-                            color: isPublicView ? DARK_BG : BRIGHT_TEXT,
-                            border: `2px solid ${GLASS_ACCENT}`,
-                        }}
-                    >
-                        {isPublicView ? 'Admin Login' : 'Back to Site'}
-                    </button>
-                </div>
-            )}
-        </header>
-    );
+              <motion.button
+                variants={itemVariants}
+                onClick={() => {
+                  toggleView && toggleView(isPublicView ? "admin" : "public");
+                  setIsOpen(false);
+                }}
+                className="w-full py-2 rounded-full font-semibold shadow-lg transition transform hover:scale-105"
+                style={{
+                  backgroundColor: COLORS.ACCENT,
+                  color: COLORS.BG,
+                }}
+              >
+                {isPublicView ? "Admin Login" : "Back to Site"}
+              </motion.button>
+
+              {/* Theme Toggle */}
+              <motion.button
+                variants={itemVariants}
+                onClick={toggleTheme}
+                className="mt-2 p-2 w-full rounded-md border font-medium transition hover:scale-105"
+                style={{
+                  border: COLORS.GLASS_BORDER,
+                  color: COLORS.ACCENT,
+                  background: COLORS.GLASS_BG,
+                }}
+              >
+                {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
 };
 // ===================================
-const Hero = () => {
-    const { scrollY } = useScroll();
-    const y = useTransform(scrollY, [0, 800], [0, -350]);
-    const scale = useTransform(scrollY, [0, 800], [1, 1.2]);
+// Hero section
+// ===================================
+const Hero = ({ COLORS }) => {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 800], [0, -350]);
+  const scale = useTransform(scrollY, [0, 800], [1, 1.2]);
 
-    return (
-        <section
-            id="hero"
-            className="relative h-screen sm:h-screen flex items-center justify-center overflow-hidden"
-            style={{ backgroundColor: DARK_BG }}
+  return (
+    <section
+      id="hero"
+      className="relative h-screen sm:h-screen flex items-center justify-center overflow-hidden"
+      style={{ background: COLORS.GRADIENT }}
+    >
+      {/* Parallax Background */}
+      <motion.div
+        className="absolute inset-0 bg-cover bg-center will-change-transform"
+        style={{ backgroundImage: `url('${heroParallaxBg}')`, y, scale }}
+      ></motion.div>
+
+      {/* Dark/Light overlay */}
+      <div
+        className="absolute inset-0 opacity-80"
+        style={{ backgroundColor: COLORS.BG }}
+      ></div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
+          <ScrambleText text="Powering Infrastructure with" color={COLORS.TEXT} />
+          <span className="block" style={{ color: COLORS.ACCENT }}>
+            <ScrambleText text="Expert Manpower" color={COLORS.ACCENT} />
+          </span>
+        </h1>
+
+        <p
+          className="text-lg md:text-xl mb-8 max-w-3xl mx-auto transition duration-700"
+          style={{ color: COLORS.SUBTEXT }}
         >
-            {/* Enhanced Parallax Background */}
-            <motion.div
-                className="absolute inset-0 bg-cover bg-center will-change-transform"
-                style={{
-                backgroundImage: `url('${heroParallaxBg}')`,
-                    y,
-                    scale,
-                }}
-            ></motion.div>
+          ARM Solutions delivers highly skilled technical, maintenance, and construction personnel across Saudi Arabia.
+        </p>
 
-            {/* Background pattern/image layer */}
-            <div
-                className="absolute inset-0 opacity-10 bg-gray-900 bg-cover bg-center"
-                style={{ backgroundAttachment: 'fixed' }}
-            ></div>
-
-            {/* Dark Overlay Layer */}
-            <div className="absolute inset-0 opacity-80" style={{ backgroundColor: DEEP_BROWN }}></div>
-
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
-                    <ScrambleText text="Powering Infrastructure with" className="inline-block" color="white" />
-                    <span style={{ color: ACCENT_SAND }} className="block">
-                        <ScrambleText text="Expert Manpower" className="inline-block" color={ACCENT_SAND} />
-                    </span>
-                </h1>
-
-                <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-3xl mx-auto transition duration-700 opacity-100">
-                    ARM Solutions delivers highly skilled technical, maintenance, and construction personnel across the Saudi Arabia
-                </p>
-
-                <motion.a
-                    href="#services"
-                    animate={{
-                        boxShadow: [
-                            `0 0 10px ${GLASS_ACCENT}50`,
-                            `0 0 25px ${GLASS_ACCENT}90`,
-                            `0 0 10px ${GLASS_ACCENT}50`,
-                        ],
-                    }}
-                    transition={{
-                        duration: 3,
-                        ease: 'easeInOut',
-                        repeat: Infinity,
-                        repeatType: 'reverse',
-                    }}
-                    className="mt-10 inline-block px-8 py-3 text-lg font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-110"
-                    style={{
-                        backgroundColor: GLASS_ACCENT,
-                        color: DARK_BG,
-                        fontWeight: 700,
-                        boxShadow: `0 0 10px ${GLASS_ACCENT}50`,
-                    }}
-                >
-                    Explore Our Services
-                </motion.a>
-            </div>
-        </section>
-    );
+        <motion.a
+          href="#services"
+          animate={{
+            boxShadow: [
+              `0 0 10px ${COLORS.ACCENT}50`,
+              `0 0 25px ${COLORS.ACCENT}90`,
+              `0 0 10px ${COLORS.ACCENT}50`,
+            ],
+          }}
+          transition={{
+            duration: 3,
+            ease: 'easeInOut',
+            repeat: Infinity,
+            repeatType: 'reverse',
+          }}
+          className="mt-10 inline-block px-8 py-3 text-lg font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-110"
+          style={{
+            backgroundColor: COLORS.ACCENT,
+            color: COLORS.BG,
+            boxShadow: `0 0 15px ${COLORS.ACCENT}`,
+          }}
+        >
+          Explore Our Services
+        </motion.a>
+      </div>
+    </section>
+  );
 };
+
 
 
 
 // ===================================
 // 3. About Component 
 // ===================================
-const FeatureCard = ({ icon: Icon, title, description }) => (
-  <motion.div
-    whileHover={{
-      scale: 1.05,
-      boxShadow: `0 0 25px ${GLASS_ACCENT}60`,
-      transition: { duration: 0.4, ease: "easeOut" },
-    }}
-    className="p-6 rounded-2xl backdrop-blur-md border transition-all duration-300"
-    style={{
-      background: `linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(75, 137, 247, 0.1))`,
-      borderColor: `${GLASS_ACCENT}40`,
-      boxShadow: `0 4px 20px rgba(0, 0, 0, 0.3)`,
-    }}
-  >
-    <div
-      className="flex items-center justify-center w-14 h-14 rounded-xl mb-4"
-      style={{
-        background: `radial-gradient(circle at top left, ${GLASS_ACCENT}60, transparent 70%)`,
-        boxShadow: `0 0 15px ${GLASS_ACCENT}40`,
-      }}
-    >
-      <Icon className="w-8 h-8" style={{ color: BRIGHT_TEXT }} />
-    </div>
-
-    <h3
-      className="text-xl font-semibold mb-2"
-      style={{ color: BRIGHT_TEXT }}
-    >
-      {title}
-    </h3>
-    <p className="text-gray-300 leading-relaxed">{description}</p>
-  </motion.div>
-);
-
-const About = () => {
+const About = ({ COLORS }) => {
   return (
     <FadeInSection>
       <motion.section
         id="about"
         className="relative py-20 md:py-28 z-20 overflow-hidden"
         style={{
-          background: `linear-gradient(120deg, ${DARK_BG} 0%, #0E1C35 40%, ${GLASS_ACCENT}15 100%)`,
+          background: `linear-gradient(120deg, ${COLORS.BG} 0%, ${COLORS.ACCENT}15 100%)`,
         }}
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -586,7 +618,7 @@ const About = () => {
         <div
           className="absolute inset-0 opacity-10"
           style={{
-            background: `radial-gradient(circle at 20% 30%, ${GLASS_ACCENT}60, transparent 70%)`,
+            background: `radial-gradient(circle at 20% 30%, ${COLORS.ACCENT}60, transparent 70%)`,
           }}
         ></div>
 
@@ -594,15 +626,17 @@ const About = () => {
           <div className="text-center mb-12">
             <h2
               className="text-3xl md:text-4xl font-extrabold mb-4"
-              style={{ color: GLASS_ACCENT }}
+              style={{ color: COLORS.ACCENT }}
             >
               <ScrambleText
                 text="A Legacy of Trust and Excellence"
-                className="inline-block"
-                color={GLASS_ACCENT}
+                color={COLORS.ACCENT}
               />
             </h2>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+            <p
+              className="text-lg max-w-3xl mx-auto"
+              style={{ color: COLORS.SUBTEXT }}
+            >
               For over two decades, ARM Solutions has been the reliable partner
               for major industrial and construction projects — delivering manpower
               excellence, safety, and dependability.
@@ -610,31 +644,51 @@ const About = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={Globe}
-              title="Global Reach"
-              description="Sourcing and mobilizing top talent from key regions worldwide to meet localized project demands."
-            />
-            <FeatureCard
-              icon={Users}
-              title="Skilled Manpower"
-              description="Providing certified engineers, technicians, and specialized labor vetted for immediate deployment."
-            />
-            <FeatureCard
-              icon={TrendingUp}
-              title="Operational Efficiency"
-              description="Streamlining recruitment, logistics, and compliance processes to minimize project lead times."
-            />
+            {[
+              { icon: Globe, title: "Global Reach", description: "Sourcing and mobilizing top talent from key regions worldwide to meet localized project demands." },
+              { icon: Users, title: "Skilled Manpower", description: "Providing certified engineers, technicians, and specialized labor vetted for immediate deployment." },
+              { icon: TrendingUp, title: "Operational Efficiency", description: "Streamlining recruitment, logistics, and compliance processes to minimize project lead times." },
+            ].map((card, i) => (
+              <motion.div
+                key={i}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: `0 0 25px ${COLORS.ACCENT}60`,
+                }}
+                className="p-6 rounded-2xl backdrop-blur-md border transition-all duration-300"
+                style={{
+                  background: COLORS.GLASS_BG,
+                  border: COLORS.GLASS_BORDER,
+                  boxShadow: COLORS.SHADOW,
+                }}
+              >
+                <div
+                  className="flex items-center justify-center w-14 h-14 rounded-xl mb-4"
+                  style={{
+                    background: COLORS.ACCENT,
+                    boxShadow: `0 0 15px ${COLORS.ACCENT}40`,
+                  }}
+                >
+                  <card.icon className="w-8 h-8" style={{ color: COLORS.BG }} />
+                </div>
+
+                <h3 className="text-xl font-semibold mb-2" style={{ color: COLORS.TEXT }}>
+                  {card.title}
+                </h3>
+                <p style={{ color: COLORS.SUBTEXT }}>{card.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </motion.section>
     </FadeInSection>
   );
 };
+
 // ===================================
 // 4. Services Component
 // ===================================
-const Services = () => {
+const Services = ({ COLORS }) => {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
   const [scrollRange, setScrollRange] = useState(0);
@@ -692,18 +746,18 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-16 md:py-24" style={{ backgroundColor: DARK_BG }}>
+    <section id="services" className="py-16 md:py-24" style={{ backgroundColor: COLORS.BG }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <FramerFadeIn y={50}>
             <h2
               className="text-4xl md:text-5xl font-extrabold mb-4"
-              style={{ color: GLASS_ACCENT }}
+              style={{ color: COLORS.ACCENT  }}
             >
               <ScrambleText
                 text="Our Specialized Manpower Solutions"
                 className="inline-block"
-                color={GLASS_ACCENT}
+                color={COLORS.ACCENT }
               />
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl mx-auto">
@@ -711,7 +765,7 @@ const Services = () => {
             </p>
             <p
               className="text-sm text-gray-400 mt-2 font-bold"
-              style={{ color: GLASS_ACCENT }}
+              style={{ color: COLORS.ACCENT  }}
             >
               Scroll down — cards will move horizontally
             </p>
@@ -743,7 +797,8 @@ const Services = () => {
                     variants={itemVariants}
                     className="flex-shrink-0 w-64 sm:w-72 md:w-80 lg:w-96"
                   >
-                    <ServiceCard {...s} />
+             <ServiceCard {...s} COLORS={COLORS} />
+
                   </motion.div>
                 ))}
               </motion.div>
@@ -758,7 +813,7 @@ const Services = () => {
 // ===================================
 // 5. Directors Component
 // ===================================
-const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
+const DirectorCard = ({ name, title, bio, intro, imageUrl, index,COLORS }) => {
   const [flipped, setFlipped] = React.useState(false);
 
   return (
@@ -781,13 +836,11 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
         {/* FRONT SIDE */}
         <div
           className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col text-center"
-          style={{
-            background: "rgba(255, 255, 255, 0.05)",
-            border: `1px solid ${GLASS_ACCENT}30`,
-            boxShadow: `0 0 25px ${GLASS_ACCENT}40, inset 0 0 10px ${GLASS_ACCENT}20`,
-            backdropFilter: "blur(10px)",
-            backfaceVisibility: "hidden",
-          }}
+           style={{
+      background: COLORS.GLASS_BG,
+      border: COLORS.GLASS_BORDER,
+      boxShadow: COLORS.SHADOW,
+    }}
         >
           {/* Image container */}
           <div className="relative flex items-center justify-center bg-black/20" style={{ height: "220px" }}>
@@ -804,7 +857,7 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
             <div
               className="absolute inset-0 opacity-15"
               style={{
-                background: `radial-gradient(circle at 50% 0%, ${GLASS_ACCENT}50, transparent 70%)`,
+                background: `radial-gradient(circle at 50% 0%, ${COLORS.ACCENT }50, transparent 70%)`,
               }}
             ></div>
           </div>
@@ -812,10 +865,10 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
           {/* Text content */}
           <div className="p-5 flex flex-col flex-grow justify-between">
             <div>
-              <h3 className="text-lg font-bold mb-1" style={{ color: BRIGHT_TEXT }}>
+              <h3 className="text-lg font-bold mb-1" style={{ color: COLORS.TEXT }}>
                 {name}
               </h3>
-              <p className="text-sm font-medium mb-2" style={{ color: GLASS_ACCENT }}>
+              <p className="text-sm font-medium mb-2" style={{ color: COLORS.ACCENT  }}>
                 {title}
               </p>
               <p className="text-xs text-gray-400 italic line-clamp-3">{bio}</p>
@@ -828,7 +881,7 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
               transition={{ type: "spring", stiffness: 200 }}
               className="inline-block mt-3"
             >
-              <Linkedin className="w-5 h-5 mx-auto" style={{ color: GLASS_ACCENT }} />
+              <Linkedin className="w-5 h-5 mx-auto" style={{ color: COLORS.ACCENT  }} />
             </motion.a>
           </div>
         </div>
@@ -838,13 +891,13 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
           className="absolute inset-0 rounded-2xl backdrop-blur-lg border flex flex-col justify-center p-6 text-left overflow-hidden"
           style={{
             background: "rgba(255, 255, 255, 0.05)",
-            border: `1px solid ${GLASS_ACCENT}30`,
-            boxShadow: `0 0 30px ${GLASS_ACCENT}50, inset 0 0 10px ${GLASS_ACCENT}25`,
+            border: `1px solid ${COLORS.ACCENT }30`,
+            boxShadow: `0 0 30px ${COLORS.ACCENT }50, inset 0 0 10px ${COLORS.ACCENT }25`,
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
           }}
         >
-          <h3 className="text-lg font-bold mb-3 text-center" style={{ color: GLASS_ACCENT }}>
+          <h3 className="text-lg font-bold mb-3 text-center" style={{ color: COLORS.ACCENT  }}>
             {name}
           </h3>
           <p className="text-sm text-gray-300 leading-relaxed overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/30 scrollbar-track-transparent">
@@ -859,7 +912,7 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
         animate={{ opacity: [0.5, 0.8, 0.5] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         style={{
-          boxShadow: `0 0 30px 8px ${GLASS_ACCENT}40`,
+          boxShadow: `0 0 30px 8px ${COLORS.ACCENT }40`,
           filter: "blur(8px)",
         }}
       ></motion.div>
@@ -867,7 +920,7 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index }) => {
   );
 };
 
-const Directors = () => {
+const Directors = ({ COLORS }) => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 1000], [0, -200]);
 
@@ -918,11 +971,11 @@ const Directors = () => {
   ];
 
   return (
-    <section id="directors" className="relative py-20 md:py-28 overflow-hidden" style={{ backgroundColor: DARK_BG }}>
+    <section id="directors" className="relative py-20 md:py-28 overflow-hidden" style={{ backgroundColor: COLORS.BG }}>
       <motion.div
         className="absolute inset-0 opacity-20"
         style={{
-          background: `radial-gradient(circle at 50% 0%, ${GLASS_ACCENT}50, transparent 70%)`,
+          background: `radial-gradient(circle at 50% 0%, ${COLORS.ACCENT }50, transparent 70%)`,
           y,
         }}
       ></motion.div>
@@ -935,10 +988,10 @@ const Directors = () => {
         viewport={{ once: true, amount: 0.2 }}
       >
         <div className="mb-12">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: GLASS_ACCENT }}>
-            <ScrambleText text="Our Leadership" className="inline-block" color={GLASS_ACCENT} />
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: COLORS.ACCENT  }}>
+            <ScrambleText text="Our Leadership" className="inline-block" color={COLORS.ACCENT } />
           </h2>
-          <p className="text-lg max-w-3xl mx-auto" style={{ color: "rgba(255,255,255,0.6)" }}>
+          <p className="text-lg max-w-3xl mx-auto text-blue-400">
             Our leadership team combines experience, integrity, and innovation to shape Lucid’s success in manpower
             excellence.
           </p>
@@ -946,7 +999,7 @@ const Directors = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {directors.map((director, index) => (
-            <DirectorCard key={index} {...director} index={index} />
+            <DirectorCard key={index} {...director} index={index} COLORS={COLORS} />
           ))}
         </div>
       </motion.div>
@@ -958,30 +1011,29 @@ const Directors = () => {
 // ===================================
 // 6. Contact Form Component
 // ===================================
+const Contact = ({ COLORS }) => {
+  const [status, setStatus] = useState(null);
 
-const Contact = () => {
-    const [status, setStatus] = useState(null);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setStatus('success');
-        setTimeout(() => setStatus(null), 4000);
-        e.target.reset();
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setStatus("success");
+    setTimeout(() => setStatus(null), 4000);
+    e.target.reset();
+  };
 
   return (
     <FadeInSection>
       <section
         id="contact"
         className="relative py-20 md:py-28 overflow-hidden"
-        style={{ backgroundColor: DARK_BG }}
+        style={{ background: COLORS.GRADIENT }}
       >
         {/* Animated glowing background */}
         <motion.div
           className="absolute inset-0 opacity-30"
           style={{
-            background: `radial-gradient(circle at 30% 20%, ${GLASS_ACCENT}40, transparent 70%), 
-                         radial-gradient(circle at 80% 80%, ${GLASS_ACCENT}30, transparent 70%)`,
+            background: `radial-gradient(circle at 30% 20%, ${COLORS.ACCENT}40, transparent 70%),
+                         radial-gradient(circle at 80% 80%, ${COLORS.ACCENT}30, transparent 70%)`,
           }}
           animate={{ opacity: [0.25, 0.35, 0.25] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -992,20 +1044,17 @@ const Contact = () => {
           <div className="text-center mb-16">
             <p
               className="font-semibold uppercase mb-2 tracking-widest"
-              style={{ color: GLASS_ACCENT }}
+              style={{ color: COLORS.ACCENT }}
             >
               Connect With Us
             </p>
             <h2
               className="text-3xl md:text-5xl font-extrabold mb-6"
-              style={{ color: BRIGHT_TEXT }}
+              style={{ color: COLORS.TEXT }}
             >
               Ready to Build Your Team?
             </h2>
-            <p
-              className="text-gray-400 max-w-2xl mx-auto"
-              style={{ lineHeight: "1.6" }}
-            >
+            <p className="max-w-2xl mx-auto" style={{ color: COLORS.SUBTEXT }}>
               Reach out today and let’s create workforce solutions that move your projects forward.
             </p>
           </div>
@@ -1016,77 +1065,64 @@ const Contact = () => {
             <motion.div
               className="p-8 rounded-2xl backdrop-blur-lg border shadow-xl space-y-6"
               style={{
-                background: DARK_BG ,
-                // border: GLASS_BORDER,
-                boxShadow: GLASS_SHADOW,
+                background: COLORS.GLASS_BG,
+                border: COLORS.GLASS_BORDER,
+                boxShadow: COLORS.SHADOW,
               }}
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <h3
                 className="text-2xl font-bold mb-6 border-b pb-2"
-                style={{ color: BRIGHT_TEXT, borderColor: `${GLASS_ACCENT}40` }}
+                style={{ color: COLORS.TEXT, borderColor: COLORS.ACCENT }}
               >
                 Our Details
               </h3>
 
               <div className="space-y-6 text-left">
-                {/* Address */}
                 <div className="flex items-start space-x-4">
-                  <MapPin className="h-6 w-6" style={{ color: GLASS_ACCENT }} />
+                  <MapPin className="h-6 w-6" style={{ color: COLORS.ACCENT }} />
                   <div>
-                    <p className="font-semibold text-white">Headquarters</p>
-                    <p className="text-gray-400">Dammam, Kingdom of Saudi Arabia</p>
+                    <p className="font-semibold" style={{ color: COLORS.TEXT }}>Headquarters</p>
+                    <p style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
                   </div>
                 </div>
 
-                {/* Email */}
                 <div className="flex items-start space-x-4">
-                  <Mail className="h-6 w-6" style={{ color: GLASS_ACCENT }} />
+                  <Mail className="h-6 w-6" style={{ color: COLORS.ACCENT }} />
                   <div>
-                    <p className="font-semibold text-white">Email Us</p>
-                    <a
-                      href="mailto:info@armsolutions.sa"
-                      className="text-gray-400 hover:text-blue-400 transition"
-                    >
+                    <p className="font-semibold" style={{ color: COLORS.TEXT }}>Email Us</p>
+                    <a href="mailto:info@armsolutions.sa" style={{ color: COLORS.SUBTEXT }}>
                       info@armsolutions.sa
                     </a>
                   </div>
                 </div>
 
-                {/* Phone */}
                 <div className="flex items-start space-x-4">
-                  <Phone className="h-6 w-6" style={{ color: GLASS_ACCENT }} />
+                  <Phone className="h-6 w-6" style={{ color: COLORS.ACCENT }} />
                   <div>
-                    <p className="font-semibold text-white">Call Us</p>
-                    <a
-                      href="tel:+966500000000"
-                      className="text-gray-400 hover:text-blue-400 transition"
-                    >
+                    <p className="font-semibold" style={{ color: COLORS.TEXT }}>Call Us</p>
+                    <a href="tel:+966500000000" style={{ color: COLORS.SUBTEXT }}>
                       +966 50 000 0000
                     </a>
                   </div>
                 </div>
 
-                {/* Social Links */}
                 <div className="pt-4 flex space-x-4">
-                  {[Facebook, Linkedin, Twitter, MessageCircle].map(
-                    (Icon, i) => (
-                      <a
-                        key={i}
-                        href="#"
-                        className="p-2 rounded-full backdrop-blur-sm border transition-all hover:scale-110"
-                        style={{
-                          color: GLASS_ACCENT,
-                          borderColor: `${GLASS_ACCENT}30`,
-                        }}
-                      >
-                        <Icon className="h-5 w-5" />
-                      </a>
-                    )
-                  )}
+                  {[Facebook, Linkedin, Twitter, MessageCircle].map((Icon, i) => (
+                    <a
+                      key={i}
+                      href="#"
+                      className="p-2 rounded-full backdrop-blur-sm border transition-all hover:scale-110"
+                      style={{
+                        color: COLORS.ACCENT,
+                        border: COLORS.GLASS_BORDER,
+                      }}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </a>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -1095,87 +1131,54 @@ const Contact = () => {
             <motion.div
               className="p-8 rounded-2xl backdrop-blur-lg border shadow-xl"
               style={{
-                            background: DARK_BG ,
-                // border: GLASS_BORDER,
-                boxShadow: GLASS_SHADOW,
+                background: COLORS.GLASS_BG,
+                border: COLORS.GLASS_BORDER,
+                boxShadow: COLORS.SHADOW,
               }}
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h3
-                className="text-2xl font-bold mb-6"
-                style={{ color: BRIGHT_TEXT }}
-              >
+              <h3 className="text-2xl font-bold mb-6" style={{ color: COLORS.TEXT }}>
                 Send Us a Message
               </h3>
 
               <form className="space-y-5" onSubmit={handleSubmit}>
-                <input
-                  type="text"
-                  placeholder="Your Name"
-                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
-                  style={{
-                    color: BRIGHT_TEXT,
-                    borderColor: `${GLASS_ACCENT}40`,
-                    focusRingColor: GLASS_ACCENT,
-                  }}
-                  required
-                />
-                <input
-                  type="email"
-                  placeholder="Your Email"
-                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
-                  style={{
-                    color: BRIGHT_TEXT,
-                    borderColor: `${GLASS_ACCENT}40`,
-                    focusRingColor: GLASS_ACCENT,
-                  }}
-                  required
-                />
-                <input
-                  type="Phone"
-                  placeholder="Your Phone Number"
-                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
-                  style={{
-                    color: BRIGHT_TEXT,
-                    borderColor: `${GLASS_ACCENT}40`,
-                    focusRingColor: GLASS_ACCENT,
-                  }}
-                  required
-                />
-                <input
-                  type="Company"
-                  placeholder="Your Company Name"
-                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
-                  style={{
-                    color: BRIGHT_TEXT,
-                    borderColor: `${GLASS_ACCENT}40`,
-                    focusRingColor: GLASS_ACCENT,
-                  }}
-                  required
-                />
+                {["Name", "Email", "Phone", "Company"].map((placeholder, i) => (
+                  <input
+                    key={i}
+                    type="text"
+                    placeholder={`Your ${placeholder}`}
+                    className="w-full p-3 rounded-lg bg-transparent border focus:outline-none"
+                    style={{
+                      color: COLORS.TEXT,
+                      borderColor: COLORS.ACCENT,
+                    }}
+                    required
+                  />
+                ))}
                 <textarea
                   placeholder="How can we help you?"
                   rows="4"
-                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none focus:ring-2"
+                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none"
                   style={{
-                    color: BRIGHT_TEXT,
-                    borderColor: `${GLASS_ACCENT}40`,
-                    focusRingColor: GLASS_ACCENT,
+                    color: COLORS.TEXT,
+                    borderColor: COLORS.ACCENT,
                   }}
                   required
                 ></textarea>
 
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.05, boxShadow: `0 0 15px ${GLASS_ACCENT}` }}
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow: `0 0 15px ${COLORS.ACCENT}`,
+                  }}
                   transition={{ duration: 0.3 }}
                   className="w-full py-3 font-semibold rounded-lg transition-all"
                   style={{
-                    backgroundColor: GLASS_ACCENT,
-                    color: DARK_BG,
+                    backgroundColor: COLORS.ACCENT,
+                    color: COLORS.BG,
                   }}
                 >
                   Submit Inquiry
@@ -1183,7 +1186,7 @@ const Contact = () => {
               </form>
 
               {status === "success" && (
-                <p className="mt-4 text-green-400 text-center">
+                <p className="mt-4 text-center" style={{ color: "limegreen" }}>
                   ✅ Your message has been sent!
                 </p>
               )}
@@ -1192,101 +1195,85 @@ const Contact = () => {
         </div>
       </section>
     </FadeInSection>
-    
   );
-  
 };
+
 
 // ===================================
 // 7. Footer Component
 // ===================================
+const Footer = ({ COLORS }) => {
+  return (
+    <FadeInSection>
+      <footer
+        id="footer"
+        className="py-12"
+        style={{
+          backgroundColor: COLORS.BG,
+          borderTop: COLORS.GLASS_BORDER,
+          boxShadow: COLORS.SHADOW,
+          color: COLORS.SUBTEXT,
+        }}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div
+            className="grid grid-cols-1 md:grid-cols-4 gap-8 border-b pb-8 mb-8"
+            style={{ borderColor: COLORS.ACCENT }}
+          >
+            <div>
+              <h3 className="text-2xl font-bold mb-4" style={{ color: COLORS.ACCENT }}>
+                ARM Solutions
+              </h3>
+              <p>
+                Delivering skilled manpower solutions for infrastructure and industrial projects across the MENA region.
+              </p>
+            </div>
 
-const Footer = () => {
-    const geometricStyle = {
-        backgroundColor: DEEP_BROWN,
-        backgroundImage: `repeating-linear-gradient(
-            45deg,
-            ${DEEP_BROWN} 0%,
-            ${DEEP_BROWN} 1px,
-            rgba(255, 255, 255, 0.05) 2px,
-            rgba(255, 255, 255, 0.05) 3px
-        )`,
-    };
+            <div>
+              <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: COLORS.ACCENT }}>
+                Quick Links
+              </h4>
+              {["About", "Services", "Careers", "Privacy Policy"].map((text) => (
+                <p key={text} className="mb-2 hover:underline" style={{ color: COLORS.SUBTEXT }}>
+                  {text}
+                </p>
+              ))}
+            </div>
 
-    return (
-        <FadeInSection>
-            <footer id="footer" className="text-white py-12" style={geometricStyle}>
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 border-b pb-8 mb-8" style={{ borderColor: ACCENT_SAND }}>
-                        {/* Company Info */}
-                        <div className="transition duration-700">
-                            <h3 className="text-2xl font-bold mb-4" style={{ color: ACCENT_SAND }}>ARM Solutions</h3>
-                            <p className="text-sm text-gray-300">
-                                Delivering skilled manpower solutions for infrastructure and industrial projects across the MENA region.
-                            </p>
-                        </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: COLORS.ACCENT }}>
+                Contact
+              </h4>
+              <p style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
+              <p style={{ color: COLORS.SUBTEXT }}>+966 50 123 4567</p>
+              <p style={{ color: COLORS.SUBTEXT }}>info@arm-group.com</p>
+            </div>
 
-                        {/* Quick Links */}
-                        <div className="transition duration-700">
-                            <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: ACCENT_SAND }}>Quick Links</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><a href="#about" className="hover:text-ACCENT_SAND transition duration-200">About Us</a></li>
-                                <li><a href="#services" className="hover:text-ACCENT_SAND transition duration-200">Our Services</a></li>
-                                <li><a href="#" className="hover:text-ACCENT_SAND transition duration-200">Careers</a></li>
-                                <li><a href="#" className="hover:text-ACCENT_SAND transition duration-200">Privacy Policy</a></li>
-                            </ul>
-                        </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: COLORS.ACCENT }}>
+                Follow Us
+              </h4>
+              <div className="flex space-x-4">
+                {[Facebook, Twitter, Linkedin, MessageCircle].map((Icon, i) => (
+                  <a key={i} href="#" className="transition hover:scale-110">
+                    <Icon className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
 
-                        {/* Contact Info */}
-                        <div className="transition duration-700">
-                            <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: ACCENT_SAND }}>Contact Details</h4>
-                            <ul className="space-y-3 text-sm">
-                                <li className="flex items-center">
-                                    <MapPin className="w-5 h-5 mr-3" style={{ color: ACCENT_SAND }} />
-                                    Dammam, Kingdom of Saudi Arabia
-                                </li>
-                                <li className="flex items-center">
-                                    <Phone className="w-5 h-5 mr-3" style={{ color: ACCENT_SAND }} />
-                                    +966 50 123 4567
-                                </li>
-                                <li className="flex items-center">
-                                    <Mail className="w-5 h-5 mr-3" style={{ color: ACCENT_SAND }} />
-                                    info@arm-group.com
-                                </li>
-                            </ul>
-                        </div>
-
-                        {/* Social Media */}
-                        <div className="transition duration-700">
-                            <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: ACCENT_SAND }}>Follow Us</h4>
-                            <div className="flex space-x-4">
-                                <a href="#" target="_blank" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200"><Facebook className="w-6 h-6" /></a>
-                                <a href="#" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200"><Twitter className="w-6 h-6" /></a>
-                                <a href="#" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200"><Linkedin className="w-6 h-6" /></a>
-                                  {/* <a href="https://wa.me/XXXXXXXXXX" target="_blank" className="text-green-500 hover:text-green-300 transition" aria-label="WhatsApp">
-                                <MessageCircle  className="h-6 w-6" />
-                            </a> */}
-                              <a href="https://wa.me/+966500000000" target="_blank" className="text-gray-400 hover:text-ACCENT_SAND transition duration-200" aria-label="WhatsApp">
-                                <MessageCircle  className="h-6 w-6" />
-                            </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Copyright */}
-                    <div className="text-center text-sm text-gray-400 pt-4">
-                        &copy; 2025 ARM Solutions. All rights reserved.
-                    </div>
-                </div>
-            </footer>
-        </FadeInSection>
-    );
+          <div className="text-center text-sm pt-4" style={{ color: COLORS.SUBTEXT }}>
+            © 2025 ARM Solutions. All rights reserved.
+          </div>
+        </div>
+      </footer>
+    </FadeInSection>
+  );
 };
-//
-// Floating buttons
 
-const FloatingButtons = () => {
+//
+const FloatingButtons = ({ COLORS }) => {
   const [visible, setVisible] = useState(true);
 
   // Hide buttons when idle or not scrolling
@@ -1318,9 +1305,9 @@ const FloatingButtons = () => {
         rel="noopener noreferrer"
         className="p-3 sm:p-4 rounded-full backdrop-blur-md border transition-transform hover:scale-110 active:scale-95"
         style={{
-          background: "rgba(75,137,247,0.15)",
-          borderColor: `${GLASS_ACCENT}50`,
-          boxShadow: `0 0 20px ${GLASS_ACCENT}70`,
+          background: `${COLORS.ACCENT}20`,
+          borderColor: `${COLORS.ACCENT}50`,
+          boxShadow: `0 0 20px ${COLORS.ACCENT}70`,
         }}
         aria-label="Chat on WhatsApp"
       >
@@ -1332,10 +1319,10 @@ const FloatingButtons = () => {
         onClick={scrollToTop}
         className="p-3 sm:p-4 rounded-full backdrop-blur-md border transition-transform hover:scale-110 active:scale-95"
         style={{
-          background: "rgba(75,137,247,0.15)",
-          borderColor: `${GLASS_ACCENT}50`,
-          boxShadow: `0 0 20px ${GLASS_ACCENT}70`,
-          color: "#FAFAFA",
+          background: `${COLORS.ACCENT}20`,
+          borderColor: `${COLORS.ACCENT}50`,
+          boxShadow: `0 0 20px ${COLORS.ACCENT}70`,
+          color: COLORS.TEXT,
         }}
         aria-label="Scroll to Top"
       >
@@ -1347,10 +1334,10 @@ const FloatingButtons = () => {
         onClick={scrollToBottom}
         className="p-3 sm:p-4 rounded-full backdrop-blur-md border transition-transform hover:scale-110 active:scale-95"
         style={{
-          background: "rgba(75,137,247,0.15)",
-          borderColor: `${GLASS_ACCENT}50`,
-          boxShadow: `0 0 20px ${GLASS_ACCENT}70`,
-          color: "#FAFAFA",
+          background: `${COLORS.ACCENT}20`,
+          borderColor: `${COLORS.ACCENT}50`,
+          boxShadow: `0 0 20px ${COLORS.ACCENT}70`,
+          color: COLORS.TEXT,
         }}
         aria-label="Scroll to Bottom"
       >
@@ -1362,10 +1349,123 @@ const FloatingButtons = () => {
 
 //
 // ===================================
+// Client Marquee
+// ===================================
+
+
+const clients = [
+ { name: "NCC Group", logo: nccLogo },
+    { name: "Client Partner 1", logo: clientImage1 },
+    { name: "Client Partner 2", logo: clientImage2 },
+    { name: "Client Partner 3", logo: clientImage3 },
+    { name: "Client Partner 4", logo: clientImage4 },
+    { name: "Client Partner 5", logo: clientImage5 },
+    { name: "Client Partner 6", logo: clientImage6 },
+    { name: "Client Partner 7", logo: clientImage7 },
+    { name: "Client Partner 8", logo: clientImage8 },
+    { name: "Client Partner 9", logo: clientImage9 },
+    { name: "Client Partner 10", logo: clientImage10 },
+    { name: "Client Partner 11", logo: clientImage11 },
+    { name: "Client Partner 12", logo: clientImage12 },
+    { name: "Client Partner 13", logo: clientImage13 },
+    { name: "Client Partner 14", logo: clientImage14 },
+    { name: "Client Partner 15", logo: clientImage15 },
+    { name: "Client Partner 16", logo: clientImage16 },
+    { name: "Client Partner 17", logo: clientImage17 },
+    { name: "Client Partner 18", logo: clientImage18 },
+    { name: "Client Partner 19", logo: clientImage19 },
+    { name: "Client Partner 20", logo: clientImage20 },
+    { name: "Client Partner 21", logo: clientImage21 },
+    { name: "Client Partner 22", logo: clientImage22 },
+    { name: "Client Partner 23", logo: clientImage23 },
+    { name: "Client Partner 24", logo: clientImage24 },
+    { name: "Client Partner 25", logo: clientImage25 },
+];
+const duplicatedClients = [...clients, ...clients];
+
+const ClientLogo = ({ client }) => (
+    <div className="flex-shrink-0 mx-4 md:mx-6 lg:mx-8">
+        <img
+            src={client.logo}
+            alt={client.name}
+            className="h-10 md:h-12 lg:h-14 w-auto object-contain transition-all duration-300 filter  hover:grayscale-0 opacity-70 hover:opacity-100"
+            // Adding a placeholder fallback in case of loading error
+            onError={(e) => { e.target.onerror = null; e.target.src = mockLogo(client.name); }}
+        />
+    </div>
+);
+
+const ClientMarquee = () => {
+    return (
+        <section className="py-8 md:py-12 bg-gray-50 dark:bg-gray-900 overflow-hidden relative border-t border-b border-gray-200">
+            {/* Custom style block for the CSS keyframes */}
+    <style jsx="true">{`
+  /* Defines the keyframes for the continuous scroll */
+  @keyframes marquee {
+    0% {
+      transform: translateX(-50%); /* Start fully shifted left */
+    }
+    100% {
+      transform: translateX(0%); /* End at original position */
+    }
+  }
+
+  /* Apply the animation to the inner container */
+  .marquee-inner {
+    animation: marquee 50s linear infinite; /* Adjust speed as needed */
+  }
+
+  /* Fade effect on the edges */
+  .marquee-container::before,
+  .marquee-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 5rem;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .marquee-container::before {
+    left: 0;
+    background: linear-gradient(to right, #f9fafb, rgba(249, 250, 251, 0));
+  }
+
+  .marquee-container::after {
+    right: 0;
+    background: linear-gradient(to left, #f9fafb, rgba(249, 250, 251, 0));
+  }
+`}</style>
+            
+            {/* Outer container to hide overflow and apply fade effects */}
+            <div className="marquee-container relative w-full overflow-hidden">
+                
+                {/* Inner container that scrolls. Total width is 200% of the viewport width. */}
+                <div className="marquee-inner flex w-[200%] items-center">
+                    
+                    {/* Map the duplicated list to create the seamless loop */}
+                    {duplicatedClients.map((client, index) => (
+                        <ClientLogo key={index} client={client} />
+                    ))}
+                </div>
+            </div>
+            <div className="text-center mt-6">
+                <p className="text-sm text-gray-500 font-medium tracking-wider uppercase">
+                    Trusted by leading industry leaders globally
+                </p>
+            </div>
+        </section>
+    );
+};
+
+
+//
+// ===================================
 // 8. NEW OurClients Component (Now Defined Here)
 // ===================================
 
-const OurClients = () => {
+const OurClients = (COLORS) => {
   const [isPaused, setIsPaused] = useState(false);
   const [reverse, setReverse] = useState(false);
 
@@ -1461,12 +1561,11 @@ const OurClients = () => {
           <button 
                    
                         className="px-4 py-2 text-lg font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
-                        style={{ 
-                        backgroundColor: GLASS_ACCENT,
-                        color: DARK_BG,
-                        fontWeight: 700,
-                        boxShadow: `0 0 10px ${GLASS_ACCENT}50`,
-                        }}
+                   style={{
+    background: COLORS.GLASS_BG,
+    border: COLORS.GLASS_BORDER,
+    boxShadow: COLORS.SHADOW,
+  }}
                     >
                         Become our Client
                     </button>
@@ -1515,88 +1614,380 @@ const OurClients = () => {
 // ===================================
 // 9. Admin Dashboard Component (STATIC)
 // ===================================
-
-const AdminDashboard = ({ toggleView }) => {
-    return (
-        <div className="min-h-screen p-8 flex-grow" style={{ backgroundColor: SOFT_CREAM }}>
-            <div className="container mx-auto">
-                <div className="flex justify-between items-center mb-10">
-                    <h2 className="text-4xl font-extrabold" style={{ color: DEEP_BROWN }}>
-                        Admin Dashboard
-                    </h2>
-                    <button 
-                        onClick={() => toggleView && toggleView('public')}
-                        className="px-4 py-2 text-sm font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
-                        style={{ 
-                            backgroundColor: ACCENT_SAND, 
-                            color: DEEP_BROWN,
-                            border: `2px solid ${DEEP_BROWN}`
-                        }}
-                    >
-                        Back to Site
-                    </button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Stat Cards are static on the Admin page */}
-                    <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
-                        <p className="text-sm font-medium text-gray-500">Total Applications</p>
-                        <p className="text-3xl font-bold text-gray-900">1,250</p>
-                    </div>
-                    
-                    <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
-                        <p className="text-sm font-medium text-gray-500">Pending Reviews</p>
-                        <p className="text-3xl font-bold text-gray-900">45</p>
-                    </div>
-                    
-                    <div className="bg-white p-6 rounded-xl shadow-lg border-l-4" style={{ borderColor: ACCENT_SAND }}>
-                        <p className="text-sm font-medium text-gray-500">Active Contracts</p>
-                        <p className="text-3xl font-bold text-gray-900">32</p>
-                    </div>
-                </div>
-
-                <div className="mt-10 p-8 rounded-xl shadow-lg" style={{ backgroundColor: 'white' }}>
-                    <h3 className="text-2xl font-semibold text-gray-800 mb-6">Recent Activity</h3>
-                    <ul className="space-y-4">
-                        <li className="flex justify-between items-center text-gray-700 p-3 rounded-lg" style={{ backgroundColor: SOFT_CREAM }}>
-                            <span>New Engineer application from India</span>
-                            <span className="text-xs text-gray-500">2 hours ago</span>
-                        </li>
-                        <li className="flex justify-between items-center text-gray-700 p-3 rounded-lg" style={{ backgroundColor: SOFT_CREAM }}>
-                            <span>Contract #A901 renewed with PetroCorp</span>
-                            <span className="text-xs text-gray-500">Yesterday</span>
-                        </li>
-                        <li className="flex justify-between items-center text-gray-700 p-3 rounded-lg" style={{ backgroundColor: SOFT_CREAM }}>
-                            <span>System alert: Database backup successful</span>
-                            <span className="text-xs text-gray-500">5 minutes ago</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    );
-};
-
 // ===================================
-// 10. CompanyProfile Page Component (Dark Glassmorphic Version)
+//  Admin Dashboard (Theme-Aware)
 // ===================================
 
+const COLORS_PALETTE = ["#4B89F7", "#63B3ED", "#2B6CB0", "#9F7AEA"];
 
-
-const CompanyProfile = ({ toggleView }) => {
-  const { DARK_BG, GLASS_ACCENT, BRIGHT_TEXT, GLASS_BASE_BG, GLASS_BORDER, GLASS_SHADOW } = {
-    DARK_BG: "#08101F",
-    GLASS_ACCENT: "#4B89F7",
-    BRIGHT_TEXT: "#FAFAFA",
-    GLASS_BASE_BG: "rgba(255, 255, 255, 0.08)",
-    GLASS_BORDER: `1px solid #4B89F730`,
-    GLASS_SHADOW: `0 8px 32px 0 rgba(0, 0, 0, 0.37)`,
-  };
+export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
+  const [activeTab, setActiveTab] = useState("overview");
 
   return (
     <motion.div
       className="min-h-screen flex flex-col relative overflow-hidden"
-      style={{ backgroundColor: DARK_BG }}
+      style={{
+        background: `linear-gradient(135deg, ${COLORS.BG} 0%, ${COLORS.ACCENT}20 100%)`,
+        color: COLORS.TEXT,
+      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* HEADER */}
+      <header
+        className="w-full flex justify-between items-center px-6 py-4 sticky top-0 z-50 backdrop-blur-lg border-b shadow-lg"
+        style={{
+          background: COLORS.GLASS_BG,
+          borderColor: COLORS.GLASS_BORDER,
+          boxShadow: COLORS.SHADOW,
+        }}
+      >
+        <h1
+          className="text-2xl md:text-3xl font-bold tracking-wide"
+          style={{ color: COLORS.ACCENT }}
+        >
+          Admin Dashboard
+        </h1>
+
+        <div className="flex items-center gap-4">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full border transition duration-300 hover:scale-110"
+            style={{
+              backgroundColor: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
+              color: COLORS.ACCENT,
+            }}
+            title={
+              theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"
+            }
+          >
+            {theme === "dark" ? (
+              // 🌞 Sun Icon
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 3v1m0 16v1m9-9h1M3 12H2m16.95 4.95l.707.707M5.05 5.05l.707.707m12.728 12.728l.707.707M5.757 18.364l.707.707M12 5a7 7 0 100 14 7 7 0 000-14z"
+                />
+              </svg>
+            ) : (
+              // 🌙 Moon Icon
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+                />
+              </svg>
+            )}
+          </button>
+
+          {/* Back Button */}
+          <button
+            onClick={() => toggleView("public")}
+            className="px-4 py-2 text-sm md:text-base font-semibold rounded-full transition-transform hover:scale-105"
+            style={{
+              backgroundColor: COLORS.ACCENT,
+              color: COLORS.BG,
+              border: `2px solid ${COLORS.ACCENT}`,
+            }}
+          >
+            ← Back to Site
+          </button>
+        </div>
+      </header>
+
+      {/* MAIN CONTENT */}
+      <main className="flex-grow container mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* SIDEBAR */}
+          <aside
+            className="rounded-xl p-4 md:col-span-1 border backdrop-blur-md"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
+            }}
+          >
+            <h3
+              className="text-lg font-bold mb-4 border-b pb-2"
+              style={{ borderColor: COLORS.ACCENT, color: COLORS.ACCENT }}
+            >
+              Navigation
+            </h3>
+            {["overview", "analytics", "users", "settings"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`w-full text-left px-4 py-2 mb-2 rounded-lg transition-all ${
+                  activeTab === tab ? "font-bold scale-105" : ""
+                }`}
+                style={{
+                  background:
+                    activeTab === tab ? COLORS.ACCENT : COLORS.GLASS_BG,
+                  color: activeTab === tab ? COLORS.BG : COLORS.SUBTEXT,
+                  border: COLORS.GLASS_BORDER,
+                  boxShadow: activeTab === tab ? COLORS.SHADOW : "none",
+                }}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </aside>
+
+          {/* MAIN PANEL */}
+          <section
+            className="md:col-span-3 rounded-xl border backdrop-blur-md p-6 transition-all"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
+            }}
+          >
+            {activeTab === "overview" && <DashboardOverview COLORS={COLORS} />}
+            {activeTab === "analytics" && <DashboardAnalytics COLORS={COLORS} />}
+            {activeTab === "users" && <DashboardUsers COLORS={COLORS} />}
+            {activeTab === "settings" && <DashboardSettings COLORS={COLORS} />}
+          </section>
+        </div>
+      </main>
+    </motion.div>
+  );
+};
+
+/* =======================================================
+   OVERVIEW TAB (Animated KPIs + Line Chart)
+======================================================= */
+const DashboardOverview = ({ COLORS }) => {
+  const stats = [
+    { title: "Active Users", value: 1248 },
+    { title: "Projects Completed", value: 87 },
+    { title: "Pending Requests", value: 23 },
+    { title: "Revenue (SAR)", value: "1.2M" },
+  ];
+
+  const lineData = [
+    { month: "Jan", users: 400 },
+    { month: "Feb", users: 600 },
+    { month: "Mar", users: 800 },
+    { month: "Apr", users: 700 },
+    { month: "May", users: 1100 },
+    { month: "Jun", users: 950 },
+  ];
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6" style={{ color: COLORS.ACCENT }}>
+        Overview
+      </h2>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+        {stats.map((stat, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="p-4 rounded-xl text-center shadow-md"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
+            }}
+          >
+            <p className="text-sm font-medium" style={{ color: COLORS.SUBTEXT }}>
+              {stat.title}
+            </p>
+            <p className="text-2xl font-bold mt-2" style={{ color: COLORS.ACCENT }}>
+              {stat.value}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Line Chart */}
+      <div
+        className="w-full h-64 rounded-xl p-4"
+        style={{
+          background: COLORS.GLASS_BG,
+          border: COLORS.GLASS_BORDER,
+        }}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={lineData}>
+            <CartesianGrid strokeDasharray="3 3" stroke={COLORS.SUBTEXT} />
+            <XAxis dataKey="month" stroke={COLORS.SUBTEXT} />
+            <YAxis stroke={COLORS.SUBTEXT} />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: COLORS.GLASS_BG,
+                border: COLORS.GLASS_BORDER,
+                color: COLORS.TEXT,
+              }}
+            />
+            <Line
+              type="monotone"
+              dataKey="users"
+              stroke={COLORS.ACCENT}
+              strokeWidth={3}
+              dot={{ r: 5 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+
+/* =======================================================
+   ANALYTICS TAB (BAR + PIE CHART)
+======================================================= */
+const DashboardAnalytics = ({ COLORS }) => {
+  const barData = [
+    { name: "Construction", value: 240 },
+    { name: "Maintenance", value: 160 },
+    { name: "Technical", value: 320 },
+    { name: "Hospitality", value: 210 },
+    { name: "Oil & Gas", value: 180 },
+  ];
+
+  const pieData = [
+    { name: "Saudi", value: 400 },
+    { name: "India", value: 300 },
+    { name: "Bangladesh", value: 300 },
+    { name: "Nepal", value: 200 },
+  ];
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6" style={{ color: COLORS.ACCENT }}>
+        Analytics
+      </h2>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Bar Chart */}
+        <div
+          className="p-4 rounded-xl"
+          style={{
+            background: COLORS.GLASS_BG,
+            border: COLORS.GLASS_BORDER,
+          }}
+        >
+          <h3 className="text-lg font-semibold mb-4">Active Projects by Sector</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={barData}>
+              <XAxis dataKey="name" stroke={COLORS.SUBTEXT} />
+              <YAxis stroke={COLORS.SUBTEXT} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: COLORS.GLASS_BG,
+                  border: COLORS.GLASS_BORDER,
+                  color: COLORS.TEXT,
+                }}
+              />
+              <Bar dataKey="value" fill={COLORS.ACCENT} radius={[10, 10, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Pie Chart */}
+        <div
+          className="p-4 rounded-xl"
+          style={{
+            background: COLORS.GLASS_BG,
+            border: COLORS.GLASS_BORDER,
+          }}
+        >
+          <h3 className="text-lg font-semibold mb-4">Manpower Distribution</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={pieData}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={90}
+                fill={COLORS.ACCENT}
+                label
+              >
+                {pieData.map((_, index) => (
+                  <Cell
+                    key={index}
+                    fill={COLORS_PALETTE[index % COLORS_PALETTE.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: COLORS.GLASS_BG,
+                  border: COLORS.GLASS_BORDER,
+                  color: COLORS.TEXT,
+                }}
+              />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* =======================================================
+   USERS TAB
+======================================================= */
+const DashboardUsers = ({ COLORS }) => (
+  <div>
+    <h2 className="text-2xl font-bold mb-6" style={{ color: COLORS.ACCENT }}>
+      Users
+    </h2>
+    <p style={{ color: COLORS.SUBTEXT }}>
+      Manage user accounts and access controls. (Coming soon)
+    </p>
+  </div>
+);
+
+/* =======================================================
+   SETTINGS TAB
+======================================================= */
+const DashboardSettings = ({ COLORS }) => (
+  <div>
+    <h2 className="text-2xl font-bold mb-6" style={{ color: COLORS.ACCENT }}>
+      Settings
+    </h2>
+    <p style={{ color: COLORS.SUBTEXT }}>
+      Adjust dashboard appearance, theme, and configurations.
+    </p>
+  </div>
+);
+
+
+// ===================================
+// 10. CompanyProfile Page Component (Dark Glassmorphic Version)
+// ===================================
+const CompanyProfile = ({ toggleView, COLORS }) => {
+  return (
+    <motion.div
+      className="min-h-screen flex flex-col relative overflow-hidden"
+      style={{ backgroundColor: COLORS.BG, color: COLORS.TEXT }}
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, ease: "easeOut" }}
@@ -1605,8 +1996,8 @@ const CompanyProfile = ({ toggleView }) => {
       <motion.div
         className="absolute inset-0 opacity-30"
         style={{
-          background: `radial-gradient(circle at 20% 20%, ${GLASS_ACCENT}40, transparent 70%),
-                       radial-gradient(circle at 80% 80%, ${GLASS_ACCENT}30, transparent 70%)`,
+          background: `radial-gradient(circle at 20% 20%, ${COLORS.ACCENT}40, transparent 70%),
+                       radial-gradient(circle at 80% 80%, ${COLORS.ACCENT}30, transparent 70%)`,
         }}
         animate={{ opacity: [0.2, 0.35, 0.2] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -1616,53 +2007,70 @@ const CompanyProfile = ({ toggleView }) => {
         {/* Title */}
         <motion.h1
           className="text-4xl md:text-5xl font-extrabold mb-12 text-center"
-          style={{ color: BRIGHT_TEXT }}
+          style={{ color: COLORS.TEXT }}
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <ScrambleText text="ARM SOLUTIONS — Company Profile" color={DARK_GRADIENT} />
+          <ScrambleText
+            text="ARM SOLUTIONS — Company Profile"
+            color={COLORS.ACCENT}
+          />
         </motion.h1>
 
         {/* Top Grid (Image + Overview) */}
         <motion.div
           className="grid md:grid-cols-3 gap-10 mb-10"
-initial={{ opacity: 0.7, scale: 1 }}
-animate={{ opacity: 1, scale: 1 }}
-transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0.7, scale: 1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           {/* Company Image */}
           <div
             className="md:col-span-1 p-3 rounded-2xl backdrop-blur-md border flex flex-col items-center justify-center"
             style={{
-              background: GLASS_BASE_BG,
-              border: GLASS_BORDER,
-              boxShadow: GLASS_SHADOW,
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
             }}
           >
-           <img
-  src={arm2GroupPhoto}
-  alt="ARM Logo"
-  loading="lazy"
-  className="w-full h-auto object-contain rounded-md"
-/>
+            <img
+              src={arm2GroupPhoto}
+              alt="ARM Logo"
+              loading="lazy"
+              className="w-full h-auto object-contain rounded-md"
+            />
           </div>
 
           {/* Overview */}
           <div
             className="md:col-span-2 p-8 rounded-2xl backdrop-blur-md border shadow-xl"
             style={{
-              background: GLASS_BASE_BG,
-              border: GLASS_BORDER,
-              boxShadow: GLASS_SHADOW,
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
             }}
           >
-            <h2 className="text-3xl font-bold mb-4" style={{ color: GLASS_ACCENT }}>
+            <h2
+              className="text-3xl font-bold mb-4"
+              style={{ color: COLORS.ACCENT }}
+            >
               Overview
             </h2>
-            <p className="text-gray-300 leading-relaxed">
-              ARM Solutions specializes in providing <span className="text-white font-semibold">skilled manpower</span> on a rental and local transfer basis, as well as recruiting from overseas to meet diverse client requirements across multiple industries. Our services ensure that clients have access to qualified professionals whenever needed — helping them maintain efficiency, reduce operational costs, and achieve long-term success.
+            <p style={{ color: COLORS.SUBTEXT, lineHeight: "1.7" }}>
+              ARM Solutions specializes in providing{" "}
+              <span
+                className="font-semibold"
+                style={{ color: COLORS.TEXT }}
+              >
+                skilled manpower
+              </span>{" "}
+              on a rental and local transfer basis, as well as recruiting from
+              overseas to meet diverse client requirements across multiple
+              industries. Our services ensure that clients have access to
+              qualified professionals whenever needed — helping them maintain
+              efficiency, reduce operational costs, and achieve long-term
+              success.
             </p>
           </div>
         </motion.div>
@@ -1670,28 +2078,48 @@ transition={{ duration: 0.6, ease: "easeOut" }}
         {/* Vision & Mission */}
         <motion.div
           className="grid md:grid-cols-2 gap-10"
-   initial={{ opacity: 0.7, scale: 1 }}
-animate={{ opacity: 1, scale: 1 }}
-transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0.7, scale: 1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div
             className="p-8 rounded-2xl backdrop-blur-md border-t-4"
             style={{
-              background: GLASS_BASE_BG,
-              borderColor: GLASS_ACCENT,
-              boxShadow: GLASS_SHADOW,
+              background: COLORS.GLASS_BG,
+              borderColor: COLORS.ACCENT,
+              boxShadow: COLORS.SHADOW,
             }}
           >
-            <h2 className="text-2xl font-bold mb-4" style={{ color: GLASS_ACCENT }}>
+            <h2
+              className="text-2xl font-bold mb-4"
+              style={{ color: COLORS.ACCENT }}
+            >
               Vision & Mission
             </h2>
-            <ul className="space-y-4 text-gray-300">
+            <ul style={{ color: COLORS.SUBTEXT }} className="space-y-4">
               <li>
-                <span className="font-bold text-white">Vision:</span> To be the leading manpower solutions provider recognized for <span className="text-blue-400">excellence, reliability, and innovation</span> in workforce management.
+                <span
+                  className="font-bold"
+                  style={{ color: COLORS.TEXT }}
+                >
+                  Vision:
+                </span>{" "}
+                To be the leading manpower solutions provider recognized for{" "}
+                <span style={{ color: COLORS.ACCENT }}>
+                  excellence, reliability, and innovation
+                </span>{" "}
+                in workforce management.
               </li>
               <li>
-                <span className="font-bold text-white">Mission:</span> To deliver qualified, trained, and motivated manpower that drives our clients' success while fostering growth, safety, and satisfaction among our workforce.
+                <span
+                  className="font-bold"
+                  style={{ color: COLORS.TEXT }}
+                >
+                  Mission:
+                </span>{" "}
+                To deliver qualified, trained, and motivated manpower that drives
+                our clients' success while fostering growth, safety, and
+                satisfaction among our workforce.
               </li>
             </ul>
           </div>
@@ -1699,20 +2127,23 @@ transition={{ duration: 0.6, ease: "easeOut" }}
           <div
             className="p-6 rounded-2xl backdrop-blur-md border-b-4 flex flex-col items-center justify-center"
             style={{
-              background: GLASS_BASE_BG,
-              borderColor: GLASS_ACCENT,
-              boxShadow: GLASS_SHADOW,
+              background: COLORS.GLASS_BG,
+              borderColor: COLORS.ACCENT,
+              boxShadow: COLORS.SHADOW,
             }}
           >
-            <h3 className="text-xl font-bold mb-3" style={{ color: BRIGHT_TEXT }}>
+            <h3
+              className="text-xl font-bold mb-3"
+              style={{ color: COLORS.TEXT }}
+            >
               Group Photo
             </h3>
-           <img
-  src={armGroupPhoto}
-  alt="ARM Logo"
-  loading="lazy"
-  className="w-full h-auto object-contain rounded-md"
-/>
+            <img
+              src={armGroupPhoto}
+              alt="ARM Group"
+              loading="lazy"
+              className="w-full h-auto object-contain rounded-md"
+            />
           </div>
         </motion.div>
 
@@ -1720,33 +2151,53 @@ transition={{ duration: 0.6, ease: "easeOut" }}
         <motion.div
           className="mt-12 p-8 rounded-2xl backdrop-blur-md border shadow-2xl"
           style={{
-            background: GLASS_BASE_BG,
-            border: GLASS_BORDER,
-            boxShadow: GLASS_SHADOW,
+            background: COLORS.GLASS_BG,
+            border: COLORS.GLASS_BORDER,
+            boxShadow: COLORS.SHADOW,
           }}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl font-bold mb-8" style={{ color: GLASS_ACCENT }}>
+          <h2
+            className="text-3xl font-bold mb-8"
+            style={{ color: COLORS.ACCENT }}
+          >
             Core Values
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-300">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              ["Integrity", "We operate with transparency and honesty in all business dealings."],
-              ["Excellence", "We strive to deliver top-quality services that exceed expectations."],
-              ["Commitment", "We are dedicated to client satisfaction and continuous improvement."],
+              [
+                "Integrity",
+                "We operate with transparency and honesty in all business dealings.",
+              ],
+              [
+                "Excellence",
+                "We strive to deliver top-quality services that exceed expectations.",
+              ],
+              [
+                "Commitment",
+                "We are dedicated to client satisfaction and continuous improvement.",
+              ],
               ["Teamwork", "Collaboration is key to achieving collective goals."],
-              ["Innovation", "We continuously improve processes and training for better service delivery."],
+              [
+                "Innovation",
+                "We continuously improve processes and training for better service delivery.",
+              ],
             ].map(([title, desc], i) => (
               <motion.div
                 key={i}
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
-                <p className="font-bold mb-2 text-white">{title}</p>
-                <p className="text-sm">{desc}</p>
+                <p
+                  className="font-bold mb-2"
+                  style={{ color: COLORS.TEXT }}
+                >
+                  {title}
+                </p>
+                <p style={{ color: COLORS.SUBTEXT }}>{desc}</p>
               </motion.div>
             ))}
           </div>
@@ -1755,11 +2206,11 @@ transition={{ duration: 0.6, ease: "easeOut" }}
         {/* Clients + Directors */}
         <FadeInSection>
           <div className="mt-12">
-            <OurClients />
+            <OurClients COLORS={COLORS} />
           </div>
         </FadeInSection>
 
-        <Directors />
+        <Directors COLORS={COLORS} />
 
         {/* Back Button */}
         <motion.div
@@ -1775,9 +2226,9 @@ transition={{ duration: 0.6, ease: "easeOut" }}
             }}
             className="px-6 py-3 text-base font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
             style={{
-              backgroundColor: GLASS_ACCENT,
-              color: DARK_BG,
-              border: `2px solid ${GLASS_ACCENT}`,
+              backgroundColor: COLORS.ACCENT,
+              color: COLORS.BG,
+              border: `2px solid ${COLORS.ACCENT}`,
             }}
           >
             &larr; Back to Main Site
@@ -1785,29 +2236,28 @@ transition={{ duration: 0.6, ease: "easeOut" }}
         </motion.div>
       </div>
 
-      <Footer />
-      <FloatingButtons />
+      <Footer COLORS={COLORS} />
+      <FloatingButtons COLORS={COLORS} />
     </motion.div>
   );
 };
 
-
 // ===================================
 // 11. Public View Wrapper
 // ===================================
-const PublicView = ({ toggleView }) => (
-    <>
-        <main className="flex-grow">
-            <Hero /> 
-            <About /> 
-            <Services />
-            {/* Removed <OurClients /> from here */}
-            <Directors />
-            <Contact />
-        </main>
-        <Footer />
-        <FloatingButtons />
-    </>
+const PublicView = ({ toggleView, COLORS }) => (
+  <>
+    <main className="flex-grow">
+      <Hero COLORS={COLORS} />
+      <About COLORS={COLORS} />
+      <Services COLORS={COLORS} />
+      <ClientMarquee COLORS={COLORS} />
+      <Directors COLORS={COLORS}/>
+      <Contact COLORS={COLORS} />
+    </main>
+    <Footer COLORS={COLORS} />
+    <FloatingButtons COLORS={COLORS} />
+  </>
 );
 
 
@@ -1827,31 +2277,51 @@ const getInitialView = () => {
 export default function App() {
     // The view state can be 'public', 'admin', 'company-profile', or 'fading-out'
     const [view, setView] = useState(getInitialView());
-
+      const [theme, setTheme] = useState('dark');
+      const COLORS = THEMES[theme];
+const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    document.documentElement.classList.toggle("light", newTheme === "light");
+  };
     // Toggle view function: used by Navbar and AdminDashboard buttons
-    const toggleView = (targetView) => {
-        if (targetView !== 'public' && targetView !== 'admin' && targetView !== 'company-profile') {
-            return; 
-        }
+  const toggleView = (targetView) => {
+  // ✅ Validate the target view
+  if (
+    targetView !== "public" &&
+    targetView !== "admin" &&
+    targetView !== "company-profile"
+  ) {
+    return;
+  }
 
-        // Determine the hash for the target view
-        let targetHash = '';
-        if (targetView === 'admin') targetHash = ADMIN_HASH;
-        if (targetView === 'company-profile') targetHash = COMPANY_PROFILE_HASH;
+  // ✅ Determine hash
+  let targetHash = "";
+  if (targetView === "admin") targetHash = ADMIN_HASH;
+  if (targetView === "company-profile") targetHash = COMPANY_PROFILE_HASH;
 
-        // Apply fade-out effect when leaving the main public view
-        if (view === 'public' && (targetView === 'admin' || targetView === 'company-profile')) {
-            setView('fading-out'); 
-            setTimeout(() => {
-                window.location.hash = targetHash;
-                setView(targetView);
-            }, 500); // Wait for PageTransitionWrapper to fade out
-        } else {
-            // Instant switch (e.g., admin to public, or public to section scroll)
-            window.location.hash = targetHash;
-            setView(targetView);
-        }
-    };
+  // ✅ Handle fade-out when leaving public view
+  if (view === "public" && (targetView === "admin" || targetView === "company-profile")) {
+    setView("fading-out");
+
+    setTimeout(() => {
+      window.location.hash = targetHash;
+      setView(targetView);
+
+      // ✅ Scroll to top once new view is mounted
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 100);
+    }, 500); // Wait for fade-out to complete
+  } else {
+    // ✅ Instant switch for other transitions
+    window.location.hash = targetHash;
+    setView(targetView);
+
+    // ✅ Scroll to top
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
 
     // Listen for browser back/forward buttons or manual URL hash changes
     useEffect(() => {
@@ -1874,28 +2344,43 @@ export default function App() {
     const currentView = view === 'fading-out' ? 'public' : view;
 
     return (
-        <div className="font-sans min-h-screen flex flex-col" style={{ backgroundColor: SOFT_CREAM }}>
-            {/* Navbar is rendered for public and company-profile views */}
-            {currentView !== 'admin' && <Navbar toggleView={toggleView} currentView={currentView} />}
-            
-            <div className="flex-grow">
-                {currentView === 'admin' && (
-                    // The Admin Dashboard remains static
-                    <AdminDashboard toggleView={toggleView} />
-                )}
-                
-                {/* Render the CompanyProfile page */}
-                {currentView === 'company-profile' && (
-                    <CompanyProfile toggleView={toggleView} />
-                )}
+  <div
+    className="font-sans min-h-screen flex flex-col"
+    style={{ backgroundColor: COLORS.BG, color: COLORS.TEXT }}
+  >
+    {/* Navbar only once — visible on public & company profile views */}
+    {currentView !== 'admin' && (
+      <Navbar
+        toggleView={toggleView}
+        currentView={currentView}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        COLORS={COLORS}
+      />
+    )}
 
-                {(currentView === 'public' || view === 'fading-out') && (
-                    // The Public View is wrapped in the transition logic
-                    <PageTransitionWrapper isPublic={view === 'public'}>
-                        <PublicView toggleView={toggleView} />
-                    </PageTransitionWrapper>
-                )}
-            </div>
-        </div>
-    );
+    {/* Main dynamic content */}
+    <div className="flex-grow">
+      {currentView === 'admin' && (
+         <AdminDashboard
+    toggleView={toggleView}
+    COLORS={COLORS}
+    theme={theme}
+    toggleTheme={toggleTheme}
+  />
+        
+      )}
+
+      {currentView === 'company-profile' && (
+        <CompanyProfile toggleView={toggleView} COLORS={COLORS} />
+      )}
+
+      {(currentView === 'public' || view === 'fading-out') && (
+        <PageTransitionWrapper isPublic={view === 'public'}>
+          <PublicView toggleView={toggleView} COLORS={COLORS} />
+        </PageTransitionWrapper>
+      )}
+    </div>
+  </div>
+);
 }
