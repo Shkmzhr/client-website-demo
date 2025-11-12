@@ -1,13 +1,17 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import heroParallaxBg from './assets/clientimages/constructionparallax1.jpg'; 
+import React, { useState, useEffect, useCallback, useRef,useMemo  } from 'react';
+import kafdBg from './assets/clientimages/KAFFD_Hero1.webp'; // King Abdullah Financial District image
+import kafd2Bg from './assets/clientimages/kafd2Bg.jpg'; // Hero section2 image
+import aboutIcon from "./assets/clientimages/aboutIcon.jpg"; //
+import { ArrowLeft, ArrowRight,Wrench ,Zap ,Factory,Hotel ,Building , HeartPulse, Stethoscope, Activity, Users, Shield, Hospital, HardHat,Sparkles,Pause, Play, Repeat,ArrowUp, ArrowDown   } from "lucide-react";
+
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line, CartesianGrid, Legend
 } from "recharts";
-import { motion, useScroll, useTransform,useSpring,AnimatePresence   } from 'framer-motion'; 
-import { Menu, X, Globe, Users, TrendingUp, HardHat, Wrench, Zap, Shield, Linkedin, MapPin, Mail, Phone, Facebook, Twitter,MessageCircle  } from 'lucide-react';
-// NEW ICON IMPORTS: Ensure this line includes all 9 icons
-import {  Factory, Hotel, Truck, Building, HeartPulse, ShoppingCart, Mic, Pause, Play, Repeat,ArrowUp, ArrowDown  } from 'lucide-react';
+import { motion, useScroll, useTransform,useSpring,AnimatePresence,useInView    } from 'framer-motion'; 
+import { Menu, X, Linkedin, MapPin, Mail, Phone, Facebook, Twitter,MessageCircle  } from 'lucide-react';
+
+
 // ===================================
 // IMAGE IMPORTS (UPDATED PATHS and all client images)
 // ===================================
@@ -81,25 +85,31 @@ import EventsBg from './assets/clientimages/Events.jpg';
 // Theme Definitions
 // ===================================
 const THEMES = {
+light: {
+  BG: "#f9fafc", // soft off-white
+  TEXT: "#1a2233", // deep navy-gray
+  SUBTEXT: "#6b7b8c", // subtle gray-blue
+  ACCENT: "#2db5c9", // Musanadah aqua-teal
+  ACCENT_ALT: "#6dd3e8", // brighter cyan glow
+  GLASS_BG: "rgba(255,255,255,0.6)",
+  GLASS_BORDER: "1px solid rgba(45,181,201,0.25)",
+  SHADOW: "0 8px 32px rgba(45,181,201,0.1)",
+  GRADIENT: "linear-gradient(180deg, #ffffff 0%, #eaf5f7 100%)",
+},
+
   dark: {
-    BG: "#060B16",
-    TEXT: "#F5F7FA",
-    SUBTEXT: "rgba(240,240,240,0.7)",
-    ACCENT: "#4B89F7",
-    GLASS_BG: "rgba(255,255,255,0.12)",
-    GLASS_BORDER: "1px solid #4B89F750",
-    SHADOW: "0 8px 32px 0 rgba(75, 137, 247, 0.15)",
-  },
-  light: {
-    BG: "#F7F9FC",
-    TEXT: "#1A202C",
-    SUBTEXT: "rgba(0,0,0,0.7)",
-    ACCENT: "#2B6CB0",
-    GLASS_BG: "rgba(255, 255, 255, 0.6)",
-    GLASS_BORDER: "1px solid rgba(43, 108, 176, 0.2)",
-    SHADOW: "0 8px 32px 0 rgba(0, 0, 0, 0.15)",
+    BG: "#070a14", // very dark navy
+  TEXT: "#e6f9ff", // soft aqua white
+  SUBTEXT: "#a0b9cc", // subtle light steel blue
+  ACCENT: "#4cf3ff", // neon aqua highlight
+  ACCENT_ALT: "#9a6cff", // violet glow secondary
+  GLASS_BG: "rgba(76,243,255,0.08)",
+  GLASS_BORDER: "1px solid rgba(76,243,255,0.25)",
+  SHADOW: "0 8px 32px rgba(154,108,255,0.25)",
+  GRADIENT: "linear-gradient(180deg, #0a0f22 0%, #121e33 100%)",
   },
 };
+
 
 // Characters used for the scrambling effect
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=';
@@ -152,7 +162,7 @@ const ScrambleText = ({ text, className, color = DEEP_BROWN }) => {
             className={`${className} transition-all duration-300`} 
             style={{ 
                 color: color, 
-                fontFamily: isComplete ? 'Inter, sans-serif' : 'monospace', 
+       
             }}
         >
             {scrambledText}
@@ -247,53 +257,17 @@ const FadeInSection = ({ children }) => {
     );
 };
 
+//RANSITION THEME Component
 
-// Service Card Component (Used in Services section)
-const ServiceCard = ({ icon: Icon, title,COLORS, description, widthClass = "w-full" }) => (
-     <motion.div
-    whileHover={{
-      scale: 1.05,
-      boxShadow: `0 15px 40px ${COLORS.ACCENT}70`,
-      transition: { type: "spring", stiffness: 250, damping: 15 },
-    }}
-    className="group relative p-8 rounded-xl overflow-hidden cursor-pointer h-full backdrop-blur-sm flex-shrink-0 w-72 md:w-80"
-  style={{
-      backgroundColor: COLORS.GLASS_BG,
-      border: COLORS.GLASS_BORDER,
-      boxShadow: COLORS.SHADOW,
-    }}
-  >
-    <div className="relative z-10">
-      <div
-        className="flex items-center justify-center w-16 h-16 rounded-lg mb-6 transition duration-300 group-hover:scale-110 group-hover:rounded-2xl"
-      style={{
-          backgroundColor: COLORS.ACCENT,
-          boxShadow: `0 0 15px ${COLORS.ACCENT}80`,
-        }}
-      >
-        <Icon className="w-8 h-8" style={{ color: COLORS.BG }} />
-      </div>
-
-      <h3 className="text-2xl font-bold mb-3" style={{ color: COLORS.TEXT }}>
-        {title}
-      </h3>
-      <p style={{ color: COLORS.SUBTEXT }}>{description}</p>
-    </div>
-  </motion.div>
-);
-
-// Smooth scrolling NavLink helper
+//Transition theme Component
+//Navbar Component
 const NavLink = ({ to, children, setIsOpen }) => {
   const handleClick = (e) => {
     e.preventDefault();
-
-    // Find the target section and scroll to it smoothly
     const target = document.getElementById(to);
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-
-    // If on mobile menu, close it after clicking
     if (setIsOpen) setIsOpen(false);
   };
 
@@ -301,15 +275,32 @@ const NavLink = ({ to, children, setIsOpen }) => {
     <a
       href={`#${to}`}
       onClick={handleClick}
-      className="transition duration-300 block py-2 lg:py-0 lg:inline-block font-medium hover:scale-105"
+      className="relative group font-semibold tracking-wide transition-all duration-300 hover:text-blue-300"
     >
       {children}
+      <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-blue-400 transition-all duration-300 group-hover:w-full"></span>
     </a>
   );
 };
+
 const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
   const [isOpen, setIsOpen] = useState(false);
   const isPublicView = currentView === "public";
+
+  const menuVariants = {
+    hidden: { opacity: 0, y: -30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, staggerChildren: 0.08 },
+    },
+    exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  };
 
   const handleCompanyProfileClick = (e) => {
     e.preventDefault();
@@ -318,539 +309,713 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // ✨ Animation Variants
-  const menuVariants = {
-    hidden: { opacity: 0, y: -30, scaleY: 0.95 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scaleY: 1,
-      transition: {
-        duration: 0.4,
-        when: "beforeChildren",
-        staggerChildren: 0.08,
-      },
-    },
-    exit: { opacity: 0, y: -30, scaleY: 0.95, transition: { duration: 0.3 } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
-  };
-
   return (
     <header
-      className="sticky top-0 z-50 transition-all duration-300 backdrop-blur-md"
+      className="fixed top-0 w-full z-50 backdrop-blur-lg transition-all duration-500"
       style={{
-        backgroundColor:
-          theme === "dark"
-            ? "rgba(8, 16, 31, 0.8)"
-            : "rgba(255, 255, 255, 0.8)",
-        borderBottom: COLORS.GLASS_BORDER,
+        background: COLORS.GRADIENT,
         boxShadow: COLORS.SHADOW,
       }}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+      <div className="container mx-auto px-6 lg:px-12 py-3 flex justify-between items-center">
         {/* Logo */}
         <motion.div
-          className="text-2xl font-bold cursor-pointer"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          className="cursor-pointer text-2xl font-extrabold tracking-wide"
+          style={{ color: COLORS.TEXT }}
         >
-          <ScrambleText
-            text="ARM Solutions"
-            className="tracking-widest"
-            color={COLORS.TEXT}
-          />
+          ARM Solutions
         </motion.div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-8">
+        {/* Desktop Menu */}
+        <nav className="hidden lg:flex items-center space-x-10 font-medium">
           {isPublicView && (
             <>
               <NavLink to="hero">Home</NavLink>
-              <NavLink to="services">Services</NavLink>
+              <NavLink to="about">About</NavLink>
+              <NavLink to="services">Expertise</NavLink>
               <NavLink to="directors">Leadership</NavLink>
               <NavLink to="contact">Contact</NavLink>
               <a
                 href="#company-profile"
                 onClick={handleCompanyProfileClick}
-                className="transition duration-300 block py-2 font-medium hover:scale-110"
-                style={{ color: COLORS.TEXT }}
-                onMouseEnter={(e) => (e.target.style.color = COLORS.ACCENT)}
-                onMouseLeave={(e) => (e.target.style.color = COLORS.TEXT)}
+                className="hover:text-blue-300 transition duration-300"
               >
                 Company Profile
               </a>
             </>
           )}
 
-          {/* Admin Login Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() =>
-              toggleView && toggleView(isPublicView ? "admin" : "public")
-            }
-            className="px-4 py-2 text-sm font-semibold rounded-full shadow-md transition"
-            style={{
-              backgroundColor: isPublicView ? COLORS.ACCENT : COLORS.BG,
-              color: isPublicView ? COLORS.BG : COLORS.TEXT,
-              border: `2px solid ${COLORS.ACCENT}`,
-            }}
-          >
-            {isPublicView ? "Admin Login" : "Back to Site"}
-          </motion.button>
+          {/* Right Section: Theme Toggle + Admin Profile + Contact */}
+          <div className="flex items-center space-x-5 ml-6">
 
-          {/* Theme Toggle */}
-          <motion.button
-            whileHover={{ rotate: 180, scale: 1.2 }}
-            transition={{ duration: 0.6 }}
-            onClick={toggleTheme}
-            className="ml-4 p-2 rounded-full transition border"
-            style={{
-              backgroundColor: COLORS.GLASS_BG,
-              border: COLORS.GLASS_BORDER,
-              color: COLORS.ACCENT,
-            }}
-          >
-            {theme === "dark" ? "☀️" : "🌙"}
-          </motion.button>
+            {/* Theme Toggle */}
+            <motion.button
+              onClick={toggleTheme}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-full border backdrop-blur-md shadow-md transition"
+              style={{
+                background: COLORS.GLASS_BG,
+                border: COLORS.GLASS_BORDER,
+                boxShadow: COLORS.SHADOW,
+              }}
+              title={`Switch to ${theme === "light" ? "Dark" : "Light"} mode`}
+            >
+              {theme === "light" ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[#462d86]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m8.485-8.485h-1m-14.97 0H3m15.364 6.364l-.707-.707m-10.607 0l-.707.707m12.02-12.02l-.707.707m-10.607 0l-.707-.707" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[#60ddff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 0112.21 3 7 7 0 1012 21a9 9 0 009-8.21z" />
+                </svg>
+              )}
+            </motion.button>
+
+            {/* Admin Profile */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="relative flex items-center gap-3 px-3 py-1 rounded-full backdrop-blur-md border cursor-pointer"
+              style={{
+                background: COLORS.GLASS_BG,
+                border: COLORS.GLASS_BORDER,
+                boxShadow: COLORS.SHADOW,
+              }}
+              onClick={() => toggleView("admin")}
+            >
+              <img
+                src="https://placehold.co/40x40?text=A"
+                alt="Admin"
+                className="w-8 h-8 rounded-full border border-gray-300"
+              />
+              <span className="text-sm font-medium" style={{ color: COLORS.TEXT }}>
+                Admin
+              </span>
+            </motion.div>
+
+            {/* Contact Button */}
+            <motion.a
+              href="#contact"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-5 py-2 font-semibold rounded-full shadow-md transition-all"
+              style={{
+                backgroundColor: COLORS.ACCENT,
+                color: COLORS.BG,
+                boxShadow: COLORS.SHADOW,
+              }}
+            >
+              Contact
+            </motion.a>
+          </div>
         </nav>
 
         {/* Mobile Menu Toggle */}
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden p-2 rounded-md transition duration-200 hover:bg-opacity-20"
+          className="lg:hidden p-2 rounded-md border text-white hover:bg-white/10"
           style={{
-            color: COLORS.ACCENT,
-            background: `${COLORS.ACCENT}10`,
-            border: COLORS.GLASS_BORDER,
+            borderColor: COLORS.GLASS_BORDER,
+            color: COLORS.TEXT,
           }}
         >
-          <motion.div
-            initial={false}
-            animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </motion.div>
+          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </motion.button>
       </div>
 
-      {/*  Mobile Menu */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="lg:hidden origin-top"
+            className="lg:hidden origin-top px-8 py-5 space-y-4"
+            style={{
+              background: COLORS.GRADIENT,
+              color: COLORS.TEXT,
+              borderTop: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
+            }}
             initial="hidden"
             animate="visible"
             exit="exit"
             variants={menuVariants}
-            style={{
-              background: COLORS.GLASS_BG,
-              borderTop: COLORS.GLASS_BORDER,
-              boxShadow: `0 8px 32px ${COLORS.ACCENT}30`,
-              backdropFilter: "blur(15px)",
-            }}
           >
-            <motion.div
-              className="px-6 py-5 space-y-4 text-center"
-              variants={itemVariants}
-            >
-              {isPublicView && (
-                <>
-                  {["home", "services", "directors", "contact"].map((item) => (
+            {isPublicView && (
+              <>
+                {["hero", "about", "services", "directors", "contact"].map(
+                  (item) => (
                     <motion.a
                       key={item}
                       href={`#${item}`}
                       onClick={() => setIsOpen(false)}
-                      className="block text-lg font-medium tracking-wide hover:scale-105 transition"
-                      style={{ color: COLORS.TEXT }}
+                      className="block text-lg font-medium hover:text-blue-400 transition"
                       variants={itemVariants}
-                      whileHover={{ color: COLORS.ACCENT, scale: 1.1 }}
                     >
                       {item.charAt(0).toUpperCase() + item.slice(1)}
                     </motion.a>
-                  ))}
+                  )
+                )}
+                <motion.a
+                  href="#company-profile"
+                  onClick={handleCompanyProfileClick}
+                  className="block text-lg font-semibold text-blue-400"
+                  variants={itemVariants}
+                >
+                  Company Profile
+                </motion.a>
+              </>
+            )}
 
-                  <motion.a
-                    href="#company-profile"
-                    onClick={handleCompanyProfileClick}
-                    className="block text-lg font-semibold hover:scale-105"
-                    style={{ color: COLORS.ACCENT }}
-                    variants={itemVariants}
-                  >
-                    Company Profile
-                  </motion.a>
-                </>
-              )}
+            {/* Contact Button */}
+            <motion.a
+              href="#contact"
+              className="inline-flex items-center gap-2 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all"
+              style={{
+                backgroundColor: COLORS.ACCENT,
+              }}
+              variants={itemVariants}
+            >
+              Contact <ArrowRight className="w-4 h-4" />
+            </motion.a>
 
+            {/* Theme & Admin below */}
+            <div className="flex items-center justify-between pt-4 border-t border-white/10">
               <motion.button
-                variants={itemVariants}
+                onClick={toggleTheme}
+                className="p-2 rounded-full border"
+                style={{
+                  color: COLORS.TEXT,
+                  border: COLORS.GLASS_BORDER,
+                }}
+              >
+                {theme === "light" ? "☀️" : "🌙"}
+              </motion.button>
+
+              <motion.div
                 onClick={() => {
-                  toggleView && toggleView(isPublicView ? "admin" : "public");
+                  toggleView("admin");
                   setIsOpen(false);
                 }}
-                className="w-full py-2 rounded-full font-semibold shadow-lg transition transform hover:scale-105"
-                style={{
-                  backgroundColor: COLORS.ACCENT,
-                  color: COLORS.BG,
-                }}
+                className="flex items-center gap-2 cursor-pointer"
               >
-                {isPublicView ? "Admin Login" : "Back to Site"}
-              </motion.button>
-
-              {/* Theme Toggle */}
-              <motion.button
-                variants={itemVariants}
-                onClick={toggleTheme}
-                className="mt-2 p-2 w-full rounded-md border font-medium transition hover:scale-105"
-                style={{
-                  border: COLORS.GLASS_BORDER,
-                  color: COLORS.ACCENT,
-                  background: COLORS.GLASS_BG,
-                }}
-              >
-                {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
-              </motion.button>
-            </motion.div>
+                <img
+                  src="https://placehold.co/32x32?text=A"
+                  alt="Admin"
+                  className="w-8 h-8 rounded-full border border-gray-400"
+                />
+                <span className="text-sm font-medium">Admin</span>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </header>
   );
 };
+
 // ===================================
 // Hero section
 // ===================================
+
 const Hero = ({ COLORS }) => {
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 800], [0, -350]);
-  const scale = useTransform(scrollY, [0, 800], [1, 1.2]);
+  const y = useTransform(scrollY, [0, 800], [0, -200]);
+  const scale = useTransform(scrollY, [0, 800], [1, 1.15]);
+
+  const slides = [
+    {
+      id: 1,
+      image: kafdBg,
+      subtitle: "FOR A VIBRANT SOCIETY",
+      title: "Award-Winning Facility Management Services",
+      button: "Explore Solutions",
+    },
+    {
+      id: 2,
+      image: kafd2Bg,
+      subtitle: "EXCELLENCE IN EVERY DETAIL",
+      title: "Delivering Quality Across All Sectors",
+      button: "Discover Expertise",
+      
+    },
+  ];
+
+  const [active, setActive] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setActive((prev) => (prev + 1) % slides.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  const handleScrollToAbout = () => {
+    const about = document.getElementById("about");
+    if (about) about.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <section
       id="hero"
-      className="relative h-screen sm:h-screen flex items-center justify-center overflow-hidden"
-      style={{ background: COLORS.GRADIENT }}
+      className="relative h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Parallax Background */}
-      <motion.div
-        className="absolute inset-0 bg-cover bg-center will-change-transform"
-        style={{ backgroundImage: `url('${heroParallaxBg}')`, y, scale }}
-      ></motion.div>
-
-      {/* Dark/Light overlay */}
-      <div
-        className="absolute inset-0 opacity-80"
-        style={{ backgroundColor: COLORS.BG }}
-      ></div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
-          <ScrambleText text="Powering Infrastructure with" color={COLORS.TEXT} />
-          <span className="block" style={{ color: COLORS.ACCENT }}>
-            <ScrambleText text="Expert Manpower" color={COLORS.ACCENT} />
-          </span>
-        </h1>
-
-        <p
-          className="text-lg md:text-xl mb-8 max-w-3xl mx-auto transition duration-700"
-          style={{ color: COLORS.SUBTEXT }}
-        >
-          ARM Solutions delivers highly skilled technical, maintenance, and construction personnel across Saudi Arabia.
-        </p>
-
-        <motion.a
-          href="#services"
-          animate={{
-            boxShadow: [
-              `0 0 10px ${COLORS.ACCENT}50`,
-              `0 0 25px ${COLORS.ACCENT}90`,
-              `0 0 10px ${COLORS.ACCENT}50`,
-            ],
-          }}
-          transition={{
-            duration: 3,
-            ease: 'easeInOut',
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-          className="mt-10 inline-block px-8 py-3 text-lg font-semibold rounded-full shadow-lg transition duration-300 transform hover:scale-110"
+      {/* --- Background Carousel --- */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={slides[active].id}
+          className="absolute inset-0 bg-cover bg-center will-change-transform"
           style={{
-            backgroundColor: COLORS.ACCENT,
-            color: COLORS.BG,
-            boxShadow: `0 0 15px ${COLORS.ACCENT}`,
+            backgroundImage: `url(${slides[active].image})`,
+            y,
+            scale,
           }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+        />
+      </AnimatePresence>
+
+      {/* --- Purple Shade Overlay --- */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0.8 }}
+        animate={{
+          background:
+            "linear-gradient(180deg, rgba(99,51,109,0.85) 0%, rgba(10,10,25,0.9) 100%)",
+        }}
+      />
+
+      {/* --- Text Layer --- */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={slides[active].title}
+          className="relative z-10 text-center px-6"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -40 }}
+          transition={{ duration: 1.2, ease: [0.25, 0.8, 0.25, 1] }}
         >
-          Explore Our Services
-        </motion.a>
+          <motion.p
+            className="text-blue-300 font-semibold tracking-widest mb-3 text-sm md:text-base uppercase"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            {slides[active].subtitle}
+          </motion.p>
+
+          <motion.h1
+            className="text-white text-4xl md:text-6xl font-extrabold max-w-4xl mx-auto leading-tight"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 1 }}
+          >
+            {slides[active].title}
+          </motion.h1>
+
+          <motion.a
+            href="#services"
+            className="inline-flex items-center gap-2 mt-10 bg-gradient-to-r from-purple-500 to-teal-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            {slides[active].button}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 12h14M12 5l7 7-7 7"
+              />
+            </svg>
+          </motion.a>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* --- Scroll Indicator (mouse shape) --- */}
+      <motion.div
+        className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flex gap-3 z-20"
+        onClick={handleScrollToAbout}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 1 }}
+      >
+        <div className="w-6 h-10 border-2 border-white rounded-full flex items-start justify-center relative overflow-hidden">
+          <motion.div
+            className="w-1 h-2 bg-white rounded-full mt-1"
+            animate={{ y: [0, 16, 0], opacity: [1, 0.6, 1] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          ></motion.div>
+        </div>
+      </motion.div>
+
+      {/* --- Indicators --- */}
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            className={`w-4 h-2 rounded-full transition-all duration-300 ${
+              i === active ? "bg-blue-400 w-8" : "bg-white/50"
+            }`}
+          ></button>
+        ))}
       </div>
     </section>
   );
 };
 
+//About component
 
+const About = ({ COLORS, theme }) => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, amount: 0.3 });
 
+    // Custom spring transition for smooth movement
+    const springTransition = {
+        type: "spring",
+        damping: 18, // Adjusted damping for a good "settle" effect
+        stiffness: 120, // Adjusted stiffness for speed
+        restDelta: 0.001,
+    };
 
-// ===================================
-// 3. About Component 
-// ===================================
-const About = ({ COLORS }) => {
-  return (
-    <FadeInSection>
-      <motion.section
-        id="about"
-        className="relative py-20 md:py-28 z-20 overflow-hidden"
-        style={{
-          background: `linear-gradient(120deg, ${COLORS.BG} 0%, ${COLORS.ACCENT}15 100%)`,
-        }}
-        initial={{ opacity: 0, y: 60 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        {/* Glow Accent */}
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            background: `radial-gradient(circle at 20% 30%, ${COLORS.ACCENT}60, transparent 70%)`,
-          }}
-        ></div>
+    // Animation Variants with improved smoothness
+    const fadeLeft = {
+        hidden: { opacity: 0, x: -80, filter: "blur(6px)" },
+        show: { opacity: 1, x: 0, filter: "blur(0px)", transition: springTransition },
+    };
 
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2
-              className="text-3xl md:text-4xl font-extrabold mb-4"
-              style={{ color: COLORS.ACCENT }}
+    const fadeRight = {
+        hidden: { opacity: 0, x: 80, filter: "blur(6px)" },
+        show: { opacity: 1, x: 0, filter: "blur(0px)", transition: springTransition },
+    };
+
+    const fadeUp = (delay = 0) => ({
+        hidden: { opacity: 0, y: 60, filter: "blur(6px)" },
+        show: {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            transition: {
+                delay,
+                duration: 1.0, // Increased duration
+                ease: [0.22, 1, 0.36, 1] // Smoother custom ease
+            }
+        },
+    });
+
+    const isLight = theme === "light";
+    const sectionTextColor = isLight ? COLORS.TEXT : "#fff";
+    const sectionSubText = isLight ? COLORS.SUBTEXT : "rgba(255,255,255,0.85)";
+    // Kept user's hardcoded dark mode background color
+    const sectionBg = isLight ? COLORS.GRADIENT : "#3e1971";
+
+    // Replaced aboutIcon with Zap icon for the theme of vibrancy/energy
+    const IconComponent = Zap;
+
+    return (
+        <section id="about" ref={ref} className="relative overflow-hidden">
+            {/* ---------- Top Section ---------- */}
+            <motion.div
+                className="relative py-20 md:py-24 px-6 lg:px-16"
+                style={{ background: sectionBg, color: sectionTextColor, willChange: "transform, opacity" }}
+                initial="hidden"
+                animate={isInView ? "show" : "hidden"}
             >
-              <ScrambleText
-                text="A Legacy of Trust and Excellence"
-                color={COLORS.ACCENT}
-              />
-            </h2>
-            <p
-              className="text-lg max-w-3xl mx-auto"
-              style={{ color: COLORS.SUBTEXT }}
-            >
-              For over two decades, ARM Solutions has been the reliable partner
-              for major industrial and construction projects — delivering manpower
-              excellence, safety, and dependability.
-            </p>
-          </div>
+                {/* Animated Background Glow */}
+                <motion.div
+                    className="absolute inset-0 opacity-15 z-0"
+                    animate={{
+                        background: [
+                            `radial-gradient(circle at 25% 30%, ${COLORS.ACCENT}25, transparent 70%)`,
+                            `radial-gradient(circle at 70% 60%, ${COLORS.ACCENT}25, transparent 70%)`,
+                        ],
+                    }}
+                    transition={{ duration: 14, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+                />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { icon: Globe, title: "Global Reach", description: "Sourcing and mobilizing top talent from key regions worldwide to meet localized project demands." },
-              { icon: Users, title: "Skilled Manpower", description: "Providing certified engineers, technicians, and specialized labor vetted for immediate deployment." },
-              { icon: TrendingUp, title: "Operational Efficiency", description: "Streamlining recruitment, logistics, and compliance processes to minimize project lead times." },
-            ].map((card, i) => (
-              <motion.div
-                key={i}
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: `0 0 25px ${COLORS.ACCENT}60`,
-                }}
-                className="p-6 rounded-2xl backdrop-blur-md border transition-all duration-300"
-                style={{
-                  background: COLORS.GLASS_BG,
-                  border: COLORS.GLASS_BORDER,
-                  boxShadow: COLORS.SHADOW,
-                }}
-              >
-                <div
-                  className="flex items-center justify-center w-14 h-14 rounded-xl mb-4"
-                  style={{
-                    background: COLORS.ACCENT,
-                    boxShadow: `0 0 15px ${COLORS.ACCENT}40`,
-                  }}
-                >
-                  <card.icon className="w-8 h-8" style={{ color: COLORS.BG }} />
+                <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto relative z-10">
+                    {/* Left Side */}
+                    <motion.div variants={fadeLeft}>
+                        <div className="flex items-start space-x-4">
+                            {/* Icon replacement */}
+                            <IconComponent className="w-12 h-12" style={{ color: isLight ? COLORS.ACCENT : COLORS.ACCENT_LIGHT }} />
+                            <h2
+                                className="text-2xl md:text-3xl font-semibold leading-snug max-w-sm"
+                                style={{ color: sectionTextColor }}
+                            >
+                                Integrated facility management services to transform facilities and workspaces into healthy,
+                                vibrant living.
+                            </h2>
+                        </div>
+                    </motion.div>
+
+                    {/* Right Side */}
+                    <motion.div variants={fadeRight}>
+                        <p className="leading-relaxed text-base md:text-lg" style={{ color: sectionSubText }}>
+                            Founded in 2010, ARM Solutions is a leading manpower and facilities management company in Saudi Arabia.
+                            We deliver tailored workforce and maintenance solutions across industrial, residential, and commercial
+                            sectors with an unwavering focus on safety, performance, and efficiency.
+                        </p>
+
+                        <motion.a
+                            href="#services"
+                            className="inline-flex items-center font-semibold mt-6 group"
+                            style={{ color: isLight ? COLORS.ACCENT : COLORS.ACCENT_LIGHT }}
+                            whileHover={{ x: 6 }}
+                            transition={{ type: "spring", stiffness: 150 }}
+                        >
+                            Read more
+                            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </motion.a>
+                    </motion.div>
                 </div>
+            </motion.div>
 
-                <h3 className="text-xl font-semibold mb-2" style={{ color: COLORS.TEXT }}>
-                  {card.title}
-                </h3>
-                <p style={{ color: COLORS.SUBTEXT }}>{card.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-    </FadeInSection>
-  );
+            {/* ---------- Bottom Section ---------- */}
+            <motion.div
+                className="py-16 md:py-24 px-6 lg:px-16"
+                style={{ background: COLORS.BG, willChange: "transform, opacity" }}
+                initial="hidden"
+                animate={isInView ? "show" : "hidden"}
+            >
+                <div className="max-w-6xl mx-auto">
+                    <motion.div className="grid md:grid-cols-2 gap-8 mb-12">
+                        {/* Bottom Left */}
+                        <motion.div variants={fadeUp(0.2)}>
+                            <h3 className="text-2xl md:text-3xl font-extrabold mb-4" style={{ color: COLORS.TEXT }}>
+                                Serving diverse industries and sectors
+                            </h3>
+                            <div className="grid grid-cols-2 gap-2 font-medium text-lg" style={{ color: COLORS.ACCENT }}>
+                                <span>Retail</span>
+                                <span>Commercial Sector & Facilities</span>
+                                <span>Industrial & Oilfield</span>
+                                <span>Telecom</span>
+                            </div>
+
+                            <motion.a
+                                href="#services"
+                                className="inline-flex items-center font-semibold mt-5 group"
+                                style={{ color: COLORS.ACCENT }}
+                                whileHover={{ x: 6 }}
+                                transition={{ type: "spring", stiffness: 150 }}
+                            >
+                                Read more
+                                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </motion.a>
+                        </motion.div>
+
+                        {/* Bottom Right */}
+                        <motion.div className="grid grid-cols-3 gap-4 text-center md:text-left">
+                            {[
+                                { label: "Specialized Service Lines", value: "50+" },
+                                { label: "Qualified Workforce", value: "1400+" },
+                                { label: "Client Retention Rate", value: "98%" },
+                            ].map((stat, i) => (
+                                <motion.div
+                                    key={i}
+                                    variants={fadeUp(0.4 + i * 0.2)}
+                                >
+                                    <p className="text-sm uppercase tracking-wide" style={{ color: COLORS.SUBTEXT }}>
+                                        {stat.label}
+                                    </p>
+                                    <h4 className="text-4xl font-bold" style={{ color: COLORS.ACCENT }}>
+                                        {stat.value}
+                                    </h4>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    </motion.div>
+                </div>
+            </motion.div>
+        </section>
+    );
 };
 
 // ===================================
 // 4. Services Component
-const Services = ({ COLORS }) => {
-  const containerRef = useRef(null);
-  const trackRef = useRef(null);
-  const [scrollRange, setScrollRange] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+const servicesList = [
+  { icon: HardHat, title: "Construction", description: "Engineers, foremen, welders, and general labor for large-scale projects." },
+  { icon: Wrench, title: "Maintenance & Shutdown", description: "Skilled technicians for industrial plant maintenance and critical shutdown operations." },
+  { icon: Zap, title: "Technical & HVAC", description: "Experts in electrical systems, instrumentation, and HVAC services." },
+  { icon: Shield, title: "Support Staff", description: "Trained security personnel, drivers, and administrative support roles." },
+  { icon: Factory, title: "Oil & Gas", description: "Specialized manpower for oil rigs, refineries, and petrochemical plants." },
+  { icon: Hotel, title: "Hospitality", description: "Soft services personnel, housekeeping, and facility management experts." },
+  { icon: Building, title: "Manufacturing", description: "Assembly line workers, quality control inspectors, and logistics support." },
+  {
+    icon: Users,
+    title: "Nursing Services",
+    description:
+      "We offer nurses like OT Nurse, Home Care Nurse, Technician Nurse, ICU Nurse, ER Nurse, Dental Technician Nurse, Sterilization Nurse, and Derma Nurse — ensuring comprehensive medical care across diverse disciplines and environments.",
+  },
+];
 
-  useEffect(() => {
-    // Detect mobile screen width
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
+const Card = ({ icon: Icon, title, description }) => (
+  <motion.div
+    whileHover={{ scale: 1.05, y: -6 }}
+    transition={{ type: "spring", stiffness: 200, damping: 18 }}
+    className="group relative p-8 rounded-2xl overflow-hidden cursor-pointer h-full"
+    style={{
+      background: "rgba(75,0,130,0.12)",
+      border: "1px solid rgba(255,255,255,0.08)",
+      backdropFilter: "blur(10px)",
+      flex: "1 0 calc(33.333% - 16px)",
+      minWidth: "300px",
+      boxSizing: "border-box",
+    }}
+  >
+    <motion.div
+      className="absolute inset-0 rounded-2xl"
+      initial={{ opacity: 0 }}
+      whileHover={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(0,163,224,0.25), rgba(94,75,255,0.2))",
+        boxShadow: "0 0 25px rgba(0,163,224,0.25)",
+        pointerEvents: "none",
+      }}
+    />
+    <div className="relative z-10">
+      <div
+        className="flex items-center justify-center w-14 h-14 rounded-lg mb-5 transition-transform duration-300"
+        style={{ background: "rgba(0,163,224,0.2)" }}
+      >
+        <Icon className="w-7 h-7 text-blue-400" />
+      </div>
+      <h3 className="text-lg font-bold mb-2 text-blue-400">{title}</h3>
+      <p className="text-gray-200 text-sm leading-relaxed">{description}</p>
+    </div>
+  </motion.div>
+);
 
-    // Update horizontal scroll range
-    const updateRange = () => {
-      if (containerRef.current && trackRef.current) {
-        const contentWidth = trackRef.current.scrollWidth;
-        const containerWidth = containerRef.current.clientWidth;
-        const newRange =
-          contentWidth > containerWidth
-            ? -(contentWidth - containerWidth + 200)
-            : 0;
-        setScrollRange(newRange);
-      }
-    };
+const Services = () => {
+  const cardsPerPage = 3;
+  const [page, setPage] = useState(0);
 
-    updateRange();
-    window.addEventListener("resize", updateRange);
-    const timeout = setTimeout(updateRange, 150);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("resize", updateRange);
-      clearTimeout(timeout);
-    };
+  const pages = useMemo(() => {
+    const result = [];
+    for (let i = 0; i < servicesList.length; i += cardsPerPage) {
+      result.push(servicesList.slice(i, i + cardsPerPage));
+    }
+    return result;
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start 0.9", "end 0.3"],
-  });
-
-  const xRaw = useTransform(scrollYProgress, [0, 1], ["0px", `${scrollRange}px`]);
-  const x = useSpring(xRaw, { stiffness: 100, damping: 30, mass: 0.5 });
-
-  const itemVariants = {
-    hidden: { scale: 0.9, opacity: 0, y: 30, rotate: -1 },
-    show: {
-      scale: 1,
-      opacity: 1,
-      rotate: 0,
-      transition: { type: "spring", stiffness: 100, damping: 10 },
-    },
-  };
-
-  const services = [
-    { icon: HardHat, title: "Construction", description: "Engineers, Foremen, Welders, and general labor for large-scale projects." },
-    { icon: Wrench, title: "Maintenance & Shutdown", description: "Skilled technicians for industrial plant maintenance and critical shutdown operations." },
-    { icon: Zap, title: "Technical & HVAC", description: "Experts in electrical systems, instrumentation, and HVAC services." },
-    { icon: Shield, title: "Support Staff", description: "Trained security personnel, drivers, and administrative support roles." },
-    { icon: Factory, title: "Oil & Gas", description: "Specialized manpower for oil rigs, refineries, and petrochemical plants." },
-    { icon: Hotel, title: "Hospitality", description: "Soft services personnel, housekeeping, and facility management experts." },
-    { icon: Building, title: "Manufacturing", description: "Assembly line workers, quality control inspectors, and logistics support." },
-  ];
+  const totalPages = pages.length;
+  const next = () => setPage((p) => (p + 1) % totalPages);
+  const prev = () => setPage((p) => (p - 1 + totalPages) % totalPages);
 
   return (
-    <section id="services" className="py-16 md:py-24" style={{ backgroundColor: COLORS.BG }}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <FramerFadeIn y={50}>
-            <h2
-              className="text-4xl md:text-5xl font-extrabold mb-4"
-              style={{ color: COLORS.ACCENT }}
-            >
-              <ScrambleText
-                text="Our Specialized Manpower Solutions"
-                className="inline-block"
-                color={COLORS.ACCENT}
-              />
-            </h2>
-            <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-              We cover a full spectrum of workforce needs for capital-intensive industries.
-            </p>
-            {!isMobile && (
-              <p
-                className="text-sm text-gray-400 mt-2 font-bold"
-                style={{ color: COLORS.ACCENT }}
+    <section
+      id="services"
+      className="relative py-24 overflow-hidden"
+      style={{
+        backgroundImage: `linear-gradient(rgba(40,0,70,0.6), rgba(20,0,40,0.8)), url(${kafdBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="container mx-auto px-6 lg:px-12 relative z-10">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-12 max-w-4xl"
+        >
+          <h2 className="text-white text-4xl font-extrabold mb-4">Solutions</h2>
+          <p className="text-gray-300 text-lg">
+            A wide range of specialized and integrated FM services customized to
+            meet all your facility management needs to maintain a healthy and
+            productive environment.
+          </p>
+        </motion.div>
+
+        {/* Carousel */}
+        <div className="relative flex items-center justify-center">
+          {/* left arrow */}
+          <button
+            onClick={prev}
+            className="absolute -left-10 z-20 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full backdrop-blur-md"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+
+          {/* visible area */}
+          <div className="overflow-hidden w-full">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={page}
+                className="flex gap-6 justify-center"
+                initial={{ opacity: 0, x: 80 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -80 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
               >
-                Scroll down — cards will move horizontally
-              </p>
-            )}
-          </FramerFadeIn>
+                {pages[page].map((service, i) => (
+                  <Card key={i} {...service} />
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* right arrow */}
+          <button
+            onClick={next}
+            className="absolute -right-10 z-20 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full backdrop-blur-md"
+          >
+            <ArrowRight className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* indicators */}
+        <div className="flex justify-center mt-10 space-x-2">
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                i === page ? "bg-blue-400 w-6" : "bg-white/40"
+              }`}
+            ></button>
+          ))}
         </div>
       </div>
-
-      {/* 🔹 Desktop: Horizontal Scroll  */}
-      {!isMobile && (
-        <div ref={containerRef} className="relative z-0" style={{ height: "300vh" }}>
-          <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-            <div className="w-full relative">
-              {/* Gradient Edge Masks */}
-              <div className="absolute left-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-r from-[#08101F] to-transparent z-20"></div>
-              <div className="absolute right-0 top-0 h-full w-32 pointer-events-none bg-gradient-to-l from-[#08101F] to-transparent z-20"></div>
-
-              {/* Horizontal Track */}
-              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <motion.div
-                  ref={trackRef}
-                  style={{ x }}
-                  className="flex space-x-8 pb-8 md:pb-12 pl-32 pr-32"
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, amount: 0.1 }}
-                >
-                  {services.map((s, i) => (
-                    <motion.div
-                      key={i}
-                      variants={itemVariants}
-                      className="flex-shrink-0 w-64 sm:w-72 md:w-80 lg:w-96"
-                    >
-                      <ServiceCard {...s} COLORS={COLORS} />
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 🔹 Mobile: Simple Vertical List  */}
-      {isMobile && (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8">
-            {services.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1, duration: 0.4 }}
-              >
-                <ServiceCard {...s} COLORS={COLORS} />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      )}
     </section>
   );
 };
 
+
 // ===================================
 // 5. Directors Component
+// ===================================
+// ===================================
+// Directors Section (Theme Adaptive)
 // ===================================
 const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS }) => {
   const [flipped, setFlipped] = React.useState(false);
 
   return (
     <motion.div
-      className="relative w-full h-[420px] cursor-pointer perspective"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.2, duration: 0.6, ease: "easeOut" }}
+      className="relative w-full h-[430px] cursor-pointer perspective"
+      initial={{ opacity: 0, y: 40, scale: 0.9 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay: index * 0.15, duration: 0.7, ease: "easeOut" }}
       viewport={{ once: true, amount: 0.3 }}
       onMouseEnter={() => setFlipped(true)}
       onMouseLeave={() => setFlipped(false)}
@@ -858,113 +1023,89 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS }) => {
       {/* Inner 3D rotation wrapper */}
       <motion.div
         animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.8, ease: [0.25, 0.8, 0.25, 1] }}
+        transition={{ duration: 0.8, ease: [0.4, 0.1, 0.2, 1] }}
         className="relative w-full h-full rounded-2xl"
         style={{ transformStyle: "preserve-3d" }}
       >
-        {/* FRONT SIDE */}
+        {/* ---------- FRONT ---------- */}
         <div
-          className="absolute inset-0 rounded-2xl flex flex-col text-center overflow-hidden"
+          className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col items-center justify-between text-center backdrop-blur-md"
           style={{
-            background: `linear-gradient(180deg, ${COLORS.GLASS_BG}, ${COLORS.BG})`,
+            background: COLORS.GLASS_BG,
             border: COLORS.GLASS_BORDER,
             boxShadow: COLORS.SHADOW,
             backfaceVisibility: "hidden",
           }}
         >
-          {/* Image container */}
-          <div
-            className="relative flex items-center justify-center"
-            style={{
-              height: "210px",
-              background: `radial-gradient(circle at 50% 20%, ${COLORS.ACCENT}30, transparent 70%)`,
-            }}
-          >
+          <div className="flex flex-col items-center justify-center pt-6">
             <motion.img
               src={imageUrl}
               alt={name}
-              className="h-[190px] object-contain drop-shadow-lg transition-transform duration-500"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "https://placehold.co/400x300/0a0a0a/777?text=Director";
-              }}
+              className="h-[180px] w-[180px] object-cover rounded-lg shadow-lg border border-white/40"
               whileHover={{ scale: 1.05 }}
+              onError={(e) => {
+                e.target.src = "https://placehold.co/200x200/cccccc/333?text=No+Image";
+              }}
             />
           </div>
 
-          {/* Text content */}
-          <div className="flex flex-col justify-between flex-grow p-5">
-            <div>
-              <h3
-                className="text-lg font-semibold mb-1"
-                style={{ color: COLORS.TEXT }}
-              >
-                {name}
-              </h3>
-              <p
-                className="text-sm font-medium mb-2 uppercase tracking-wide"
-                style={{ color: COLORS.ACCENT }}
-              >
-                {title}
-              </p>
-              <p
-                className="text-xs opacity-80 italic leading-snug"
-                style={{ color: COLORS.SUBTEXT }}
-              >
-                {bio}
-              </p>
-            </div>
-
-            <motion.a
-              href="#"
-              whileHover={{ scale: 1.15 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 250 }}
-              className="mt-3 inline-block"
+          <div className="p-4">
+            <h3 className="text-lg font-semibold" style={{ color: COLORS.TEXT }}>
+              {name}
+            </h3>
+            <p
+              className="text-sm font-semibold uppercase mt-1 tracking-wide"
+              style={{ color: COLORS.ACCENT }}
             >
-              <Linkedin
-                className="w-5 h-5 mx-auto"
-                style={{ color: COLORS.ACCENT }}
-              />
-            </motion.a>
+              {title}
+            </p>
+            <p
+              className="text-xs italic mt-2 leading-snug"
+              style={{ color: COLORS.SUBTEXT }}
+            >
+              {bio}
+            </p>
           </div>
+
+          <motion.a
+            href="#"
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 250 }}
+            className="mb-4"
+          >
+            <Linkedin className="w-5 h-5" style={{ color: COLORS.ACCENT }} />
+          </motion.a>
         </div>
 
-        {/* BACK SIDE */}
+        {/* ---------- BACK ---------- */}
         <div
-          className="absolute inset-0 rounded-2xl flex flex-col justify-center items-center px-6 py-5 text-left"
+          className="absolute inset-0 rounded-2xl flex flex-col justify-center items-center px-6 py-5 text-center backdrop-blur-md"
           style={{
-            background: `linear-gradient(160deg, ${COLORS.BG}, ${COLORS.ACCENT}20)`,
-            border: `1px solid ${COLORS.ACCENT}50`,
-            boxShadow: `inset 0 0 20px ${COLORS.ACCENT}20, 0 0 25px ${COLORS.ACCENT}40`,
-            color: COLORS.TEXT,
+            background: COLORS.GLASS_BG,
+            border: COLORS.GLASS_BORDER,
+            boxShadow: COLORS.SHADOW,
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
           }}
         >
-          <h3
-            className="text-lg font-bold mb-2 text-center"
-            style={{ color: COLORS.ACCENT }}
-          >
+          <h3 className="text-lg font-bold mb-2" style={{ color: COLORS.ACCENT }}>
             {name}
           </h3>
-          <p
-            className="text-sm text-center leading-relaxed opacity-90"
-            style={{ color: COLORS.TEXT }}
-          >
+          <p className="text-sm leading-relaxed opacity-90" style={{ color: COLORS.TEXT }}>
             {intro}
           </p>
         </div>
       </motion.div>
 
-      {/* Outer Glow Aura */}
+      {/* Hover glow ring */}
       <motion.div
         className="absolute inset-0 rounded-2xl z-[-1]"
-        animate={{ opacity: [0.4, 0.8, 0.4] }}
+        animate={{ opacity: [0.3, 0.7, 0.3] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         style={{
-          boxShadow: `0 0 30px 8px ${COLORS.ACCENT}30`,
-          filter: "blur(8px)",
+          boxShadow: `0 0 40px 10px ${COLORS.ACCENT}25`,
+          filter: "blur(10px)",
         }}
       ></motion.div>
     </motion.div>
@@ -973,280 +1114,316 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS }) => {
 
 const Directors = ({ COLORS }) => {
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 1000], [0, -200]);
+  const y = useTransform(scrollY, [0, 600], [0, -150]);
 
   const directors = [
-    {
-      name: "Mr. Mohammed Rizwan Ahmed",
-      title: "Managing Director",
-      bio: "14+ years of leadership experience in manpower operations and strategic management.",
-      intro: `Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at Lucid Investment Company. With over 14 years of experience, he has led large-scale operations, optimized workforce strategies, and implemented effective process improvements contributing to organizational growth.`,
-      imageUrl: MrRizwan,
-    },
-    {
-      name: "Mr. Mujeeb Ullah",
-      title: "CEO",
-      bio: "A decade of experience in sales and workforce client relations.",
-      intro: `Mr. Mujeeb Ullah currently works as the Sales Manager at Lucid Investment Company. With over 10 years of experience in manpower solutions, he is known for his client relationship expertise, strategic sales vision, and ability to deliver tailored workforce solutions.`,
-      imageUrl: MrMujeeb,
-    },
-    {
-      name: "Mr. Mohammad Hamid Ansari",
-      title: "Founder and Business Development",
-      bio: "Expert recruiter skilled in strategic hiring and workforce planning.",
-      intro: `Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at Lucid Investment Company. With more than a decade of experience in recruitment and manpower solutions, he brings deep understanding of talent acquisition, strategic hiring practices, and workforce planning.`,
-      imageUrl: MohammedHamid,
-    },
-    {
-      name: "Mr. Mohammed Tajammul Ahmed",
-      title: "Administrator",
-      bio: "Expert in soft services training and staff development.",
-      intro: `Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel. With deep expertise in grooming workers for hospitality and facility management, he ensures service excellence and client satisfaction.`,
-      imageUrl: MrTajammul,
-    },
-    {
-      name: "Mr Abdullah",
-      title: "Deputy CEO",
-      bio: "Expert in soft services training and staff development.",
-      intro: 
-      `Mr. Abdullah specializes in the training and development of soft services personnel. With deep expertise in grooming workers for hospitality and facility management, he ensures service excellence and client satisfaction.`,
-      imageUrl: MrAbdullah,
-    },
-    {
-      name: "Mr. Palesh Rana",
-      title: "Senior Recruiter - Overseas and Local (Bangladesh)",
-      bio: "Expert in soft services training and staff development.",
-      intro: `Mr. Mr. Palesh Rana specializes in the training and development of soft services personnel. With deep expertise in grooming workers for hospitality and facility management, he ensures service excellence and client satisfaction.`,
-      imageUrl: MrPaleshRana,
-    },
+    { name: "Mr. Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at Lucid Investment Company...", imageUrl: MrRizwan },
+    { name: "Mr. Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at Lucid Investment Company...", imageUrl: MrMujeeb },
+    { name: "Mr. Mohammad Hamid Ansari", title: "Founder & Business Development", bio: "Expert recruiter skilled in strategic hiring and workforce planning.", intro: "Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at Lucid Investment Company...", imageUrl: MohammedHamid },
+    { name: "Mr. Mohammed Tajammul Ahmed", title: "Administrator", bio: "Expert in soft services training and staff development.", intro: "Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel...", imageUrl: MrTajammul },
+    { name: "Mr Abdullah", title: "Deputy CEO", bio: "Expert in soft services training and staff development.", intro: "Mr. Abdullah specializes in the training and development of soft services personnel...", imageUrl: MrAbdullah },
+    { name: "Mr. Palesh Rana", title: "Senior Recruiter - Overseas & Local (Bangladesh)", bio: "Expert in soft services training and staff development.", intro: "Mr. Palesh Rana specializes in the training and development of soft services personnel...", imageUrl: MrPaleshRana },
   ];
 
   return (
-    <section id="directors" className="relative py-20 md:py-28 overflow-hidden" style={{ backgroundColor: COLORS.BG }}>
+    <section
+      id="directors"
+      className="relative py-20 md:py-28 overflow-hidden"
+      style={{ background: COLORS.GRADIENT }}
+    >
+      {/* Abstract floating glow */}
       <motion.div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-25"
         style={{
-          background: `radial-gradient(circle at 50% 0%, ${COLORS.ACCENT }50, transparent 70%)`,
+          background: `radial-gradient(circle at 50% 10%, ${COLORS.ACCENT}30, transparent 70%)`,
           y,
         }}
       ></motion.div>
 
-      <motion.div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.2 }}
-      >
+      <div className="container mx-auto px-6 text-center relative z-10">
         <div className="mb-12">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: COLORS.ACCENT  }}>
-            <ScrambleText text="Our Leadership" className="inline-block" color={COLORS.ACCENT } />
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: COLORS.ACCENT }}>
+            Our Leadership
           </h2>
-          <p className="text-lg max-w-3xl mx-auto text-blue-400">
-            Our leadership team combines experience, integrity, and innovation to shape Lucid’s success in manpower
-            excellence.
+          <p className="text-lg max-w-3xl mx-auto" style={{ color: COLORS.SUBTEXT }}>
+            Our leadership team combines experience, integrity, and innovation to shape Lucid’s success in manpower excellence.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 max-w-7xl mx-auto">
           {directors.map((director, index) => (
             <DirectorCard key={index} {...director} index={index} COLORS={COLORS} />
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };
 
+// ===================================
+// Contact Form (Theme Adaptive)
+// ===================================
 
-// ===================================
-// 6. Contact Form Component
-// ===================================
+const CustomStyles = (COLORS) => (
+    <style jsx="true">
+        {`
+        @keyframes blob-move-one {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 40px) scale(0.9); }
+        }
+
+        @keyframes blob-move-two {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            40% { transform: translate(-40px, 60px) scale(0.95); }
+            80% { transform: translate(50px, -30px) scale(1.05); }
+        }
+
+        .animate-blob-slow {
+            animation: blob-move-one 20s infinite ease-in-out alternate;
+        }
+
+        .animate-blob-slower {
+            animation: blob-move-two 25s infinite ease-in-out alternate;
+        }
+        
+        /* Ensure inputs and textareas look good on dark/glass background */
+        input::placeholder, textarea::placeholder {
+            color: ${COLORS.SUBTEXT}80;
+        }
+        `}
+    </style>
+);
+
 const Contact = ({ COLORS }) => {
-  const [status, setStatus] = useState(null);
+    const [status, setStatus] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setStatus("success");
-    setTimeout(() => setStatus(null), 4000);
-    e.target.reset();
-  };
+    // Simple submission handler for UI feedback
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setStatus("success");
+        // Clear status after 4 seconds
+        setTimeout(() => setStatus(null), 4000); 
+        e.target.reset(); // Reset form fields
+    };
 
-  return (
-    <FadeInSection>
-      <section
-        id="contact"
-        className="relative py-20 md:py-28 overflow-hidden"
-        style={{ background: COLORS.GRADIENT }}
-      >
-        {/* Animated glowing background */}
-        <motion.div
-          className="absolute inset-0 opacity-30"
-          style={{
-            background: `radial-gradient(circle at 30% 20%, ${COLORS.ACCENT}40, transparent 70%),
-                         radial-gradient(circle at 80% 80%, ${COLORS.ACCENT}30, transparent 70%)`,
-          }}
-          animate={{ opacity: [0.25, 0.35, 0.25] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        ></motion.div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <p
-              className="font-semibold uppercase mb-2 tracking-widest"
-              style={{ color: COLORS.ACCENT }}
-            >
-              Connect With Us
-            </p>
-            <h2
-              className="text-3xl md:text-5xl font-extrabold mb-6"
-              style={{ color: COLORS.TEXT }}
-            >
-              Ready to Build Your Team?
-            </h2>
-            <p className="max-w-2xl mx-auto" style={{ color: COLORS.SUBTEXT }}>
-              Reach out today and let’s create workforce solutions that move your projects forward.
-            </p>
-          </div>
-
-          {/* Grid Layout */}
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Contact Info Card */}
-            <motion.div
-              className="p-8 rounded-2xl backdrop-blur-lg border shadow-xl space-y-6"
-              style={{
-                background: COLORS.GLASS_BG,
-                border: COLORS.GLASS_BORDER,
-                boxShadow: COLORS.SHADOW,
-              }}
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <h3
-                className="text-2xl font-bold mb-6 border-b pb-2"
-                style={{ color: COLORS.TEXT, borderColor: COLORS.ACCENT }}
-              >
-                Our Details
-              </h3>
-
-              <div className="space-y-6 text-left">
-                <div className="flex items-start space-x-4">
-                  <MapPin className="h-6 w-6" style={{ color: COLORS.ACCENT }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: COLORS.TEXT }}>Headquarters</p>
-                    <p style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <Mail className="h-6 w-6" style={{ color: COLORS.ACCENT }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: COLORS.TEXT }}>Email Us</p>
-                    <a href="mailto:info@armsolutions.sa" style={{ color: COLORS.SUBTEXT }}>
-                      info@armsolutions.sa
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <Phone className="h-6 w-6" style={{ color: COLORS.ACCENT }} />
-                  <div>
-                    <p className="font-semibold" style={{ color: COLORS.TEXT }}>Call Us</p>
-                    <a href="tel:+966500000000" style={{ color: COLORS.SUBTEXT }}>
-                      +966 50 000 0000
-                    </a>
-                  </div>
-                </div>
-
-                <div className="pt-4 flex space-x-4">
-                  {[Facebook, Linkedin, Twitter, MessageCircle].map((Icon, i) => (
-                    <a
-                      key={i}
-                      href="#"
-                      className="p-2 rounded-full backdrop-blur-sm border transition-all hover:scale-110"
-                      style={{
-                        color: COLORS.ACCENT,
-                        border: COLORS.GLASS_BORDER,
-                      }}
-                    >
-                      <Icon className="h-5 w-5" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Contact Form */}
-            <motion.div
-              className="p-8 rounded-2xl backdrop-blur-lg border shadow-xl"
-              style={{
-                background: COLORS.GLASS_BG,
-                border: COLORS.GLASS_BORDER,
-                boxShadow: COLORS.SHADOW,
-              }}
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <h3 className="text-2xl font-bold mb-6" style={{ color: COLORS.TEXT }}>
-                Send Us a Message
-              </h3>
-
-              <form className="space-y-5" onSubmit={handleSubmit}>
-                {["Name", "Email", "Phone", "Company"].map((placeholder, i) => (
-                  <input
-                    key={i}
-                    type="text"
-                    placeholder={`Your ${placeholder}`}
-                    className="w-full p-3 rounded-lg bg-transparent border focus:outline-none"
-                    style={{
-                      color: COLORS.TEXT,
-                      borderColor: COLORS.ACCENT,
-                    }}
-                    required
-                  />
-                ))}
-                <textarea
-                  placeholder="How can we help you?"
-                  rows="4"
-                  className="w-full p-3 rounded-lg bg-transparent border focus:outline-none"
-                  style={{
-                    color: COLORS.TEXT,
-                    borderColor: COLORS.ACCENT,
-                  }}
-                  required
-                ></textarea>
-
-                <motion.button
-                  type="submit"
-                  whileHover={{
-                    scale: 1.05,
-                    boxShadow: `0 0 15px ${COLORS.ACCENT}`,
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="w-full py-3 font-semibold rounded-lg transition-all"
-                  style={{
-                    backgroundColor: COLORS.ACCENT,
-                    color: COLORS.BG,
-                  }}
+    return (
+        <>
+            <CustomStyles /> {/* Inject custom CSS for blob animation */}
+            <FadeInSection>
+                <section
+                    id="contact"
+                    className="relative py-20 md:py-28 overflow-hidden min-h-screen flex items-center w-full"
+                    style={{ background: COLORS.GRADIENT }}
                 >
-                  Submit Inquiry
-                </motion.button>
-              </form>
+                    {/* Abstract Background Elements (Blobs) for Enhanced Design */}
+                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+                        {/* Blob 1: Top Left - Blue Accent */}
+                        <div 
+                            className="absolute top-[-50px] left-[-50px] w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-blob-slow" 
+                            style={{ background: COLORS.ACCENT }}
+                        ></div>
+                        {/* Blob 2: Bottom Right - Alt Accent (Red) */}
+                        <div 
+                            className="absolute bottom-[-50px] right-[-50px] w-[350px] h-[350px] md:w-[500px] md:h-[500px] rounded-full mix-blend-screen filter blur-[150px] opacity-35 animate-blob-slower" 
+                            style={{ background: COLORS.ACCENT_ALT }}
+                        ></div>
+                        {/* Blob 3: Center - More Subtle Blue */}
+                        <div 
+                            className="absolute top-1/4 right-[20%] w-64 h-64 rounded-full mix-blend-screen filter blur-[100px] opacity-30" 
+                            style={{ background: COLORS.ACCENT }}
+                        ></div>
+                    </div>
 
-              {status === "success" && (
-                <p className="mt-4 text-center" style={{ color: "limegreen" }}>
-                  ✅ Your message has been sent!
-                </p>
-              )}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-    </FadeInSection>
-  );
+
+                    {/* Existing Animated Radial Gradient (kept for motion flair) */}
+                    <motion.div
+                        className="absolute inset-0 z-0 overflow-hidden"
+                        animate={{
+                            background: [
+                                `radial-gradient(circle at 20% 30%, ${COLORS.ACCENT}10, transparent 70%), radial-gradient(circle at 80% 70%, ${COLORS.ACCENT_ALT}15, transparent 70%)`,
+                                `radial-gradient(circle at 25% 25%, ${COLORS.ACCENT}15, transparent 70%), radial-gradient(circle at 85% 75%, ${COLORS.ACCENT_ALT}20, transparent 70%)`,
+                            ],
+                        }}
+                        transition={{
+                            duration: 20,
+                            repeat: Infinity,
+                            repeatType: "mirror",
+                            ease: "easeInOut",
+                        }}
+                    ></motion.div>
+
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+                        <div className="text-center mb-16">
+                            <p className="font-semibold uppercase mb-2 tracking-widest" style={{ color: COLORS.ACCENT }}>
+                                Connect With Us
+                            </p>
+                            <h2 className="text-4xl md:text-5xl font-extrabold mb-6" style={{ color: COLORS.TEXT }}>
+                                Ready to Build Your Team?
+                            </h2>
+                            <p className="max-w-2xl mx-auto text-lg" style={{ color: COLORS.SUBTEXT }}>
+                                Reach out today and let’s create workforce solutions that move your projects forward.
+                            </p>
+                        </div>
+
+                        {/* Contact Layout */}
+                        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+                            
+                            {/* Contact Info Card (Glassmorphism) */}
+                            <motion.div
+                                className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl transition-all duration-500 hover:shadow-3xl"
+                                style={{
+                                    background: COLORS.GLASS_BG,
+                                    border: COLORS.GLASS_BORDER,
+                                    boxShadow: COLORS.SHADOW,
+                                    // Added an explicit backdrop filter for cross-browser consistency
+                                    backdropFilter: 'blur(20px)', 
+                                }}
+                                initial={{ opacity: 0, x: -60, rotateY: 10 }}
+                                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                                transition={{ duration: 1.0, ease: "easeOut" }}
+                                viewport={{ once: true, amount: 0.3 }}
+                            >
+                                <h3 className="text-2xl font-bold mb-6 border-b pb-3" style={{ color: COLORS.TEXT, borderColor: COLORS.ACCENT + '40' }}>
+                                    Our Details
+                                </h3>
+
+                                <div className="space-y-8 text-left">
+                                    <div className="flex items-start space-x-4">
+                                        <MapPin className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
+                                        <div>
+                                            <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>
+                                                Headquarters
+                                            </p>
+                                            <p className="text-base" style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start space-x-4">
+                                        <Mail className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
+                                        <div>
+                                            <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>Email Us</p>
+                                            <a href="mailto:info@armsolutions.sa" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
+                                                info@armsolutions.sa
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start space-x-4">
+                                        <Phone className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
+                                        <div>
+                                            <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>Call Us</p>
+                                            <a href="tel:+966500000000" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
+                                                +966 50 000 0000
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    {/* Social Icons */}
+                                    <div className="pt-6 flex space-x-4">
+                                        {[Facebook, Linkedin, Twitter, MessageCircle].map((Icon, i) => (
+                                            <motion.a
+                                                key={i}
+                                                href="#"
+                                                className="p-3 rounded-full border transition-all duration-300 backdrop-blur-sm cursor-pointer"
+                                                whileHover={{ scale: 1.2, rotate: 10, backgroundColor: COLORS.ACCENT + '30' }}
+                                                style={{
+                                                    color: COLORS.ACCENT,
+                                                    border: COLORS.GLASS_BORDER,
+                                                    background: 'rgba(255, 255, 255, 0.05)',
+                                                }}
+                                            >
+                                                <Icon className="h-6 w-6" />
+                                            </motion.a>
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            {/* Contact Form (Glassmorphism) */}
+                            <motion.div
+                                className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl"
+                                style={{
+                                    background: COLORS.GLASS_BG,
+                                    border: COLORS.GLASS_BORDER,
+                                    boxShadow: COLORS.SHADOW,
+                                    backdropFilter: 'blur(20px)',
+                                }}
+                                initial={{ opacity: 0, x: 60, rotateY: -10 }}
+                                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                                transition={{ duration: 1.0, ease: "easeOut" }}
+                                viewport={{ once: true, amount: 0.3 }}
+                            >
+                                <h3 className="text-2xl font-bold mb-6" style={{ color: COLORS.TEXT }}>
+                                    Send Us a Message
+                                </h3>
+
+                                <form className="space-y-5" onSubmit={handleSubmit}>
+                                    {["Name", "Email", "Phone", "Company"].map((placeholder, i) => (
+                                        <input
+                                            key={i}
+                                            type={placeholder === "Email" ? "email" : "text"}
+                                            placeholder={`Your ${placeholder}`}
+                                            className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
+                                            style={{
+                                                borderColor: COLORS.ACCENT + '80', // Slightly transparent border when unfocused
+                                                color: COLORS.TEXT,
+                                                background: 'rgba(255, 255, 255, 0.02)', // Very subtle internal background for contrast
+                                                '--tw-ring-color': COLORS.ACCENT + '80',
+                                            }}
+                                            required
+                                        />
+                                    ))}
+                                    <textarea
+                                        placeholder="How can we help you?"
+                                        rows="4"
+                                        className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
+                                        style={{
+                                            borderColor: COLORS.ACCENT + '80',
+                                            color: COLORS.TEXT,
+                                            background: 'rgba(255, 255, 255, 0.02)',
+                                            '--tw-ring-color': COLORS.ACCENT + '80',
+                                        }}
+                                        required
+                                    ></textarea>
+
+                                    <motion.button
+                                        type="submit"
+                                        whileHover={{
+                                            scale: 1.02,
+                                            boxShadow: `0 0 20px ${COLORS.ACCENT}`,
+                                        }}
+                                        whileTap={{ scale: 0.98 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="w-full py-4 text-lg font-bold rounded-xl transition-all border-2"
+                                        style={{
+                                            backgroundColor: COLORS.ACCENT,
+                                            color: COLORS.BG,
+                                            borderColor: COLORS.ACCENT,
+                                        }}
+                                    >
+                                        Submit Inquiry
+                                    </motion.button>
+                                </form>
+
+                                {status === "success" && (
+                                    <motion.p 
+                                        className="mt-6 text-center text-lg font-medium p-3 rounded-xl" 
+                                        style={{ color: COLORS.TEXT, background: COLORS.ACCENT + '20' }}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                    >
+                                        <Zap className="inline h-5 w-5 mr-2" style={{ color: COLORS.ACCENT }} />
+                                        Your message has been sent successfully! We'll be in touch.
+                                    </motion.p>
+                                )}
+                            </motion.div>
+                        </div>
+                    </div>
+                </section>
+            </FadeInSection>
+        </>
+    );
 };
 
 
@@ -1402,10 +1579,9 @@ const FloatingButtons = ({ COLORS }) => {
 // ===================================
 // Client Marquee
 // ===================================
-
-
-const clients = [
- { name: "NCC Group", logo: nccLogo },
+const ClientMarquee = ({ COLORS, theme }) => {
+  const clients = [
+    { name: "NCC Group", logo: nccLogo },
     { name: "Client Partner 1", logo: clientImage1 },
     { name: "Client Partner 2", logo: clientImage2 },
     { name: "Client Partner 3", logo: clientImage3 },
@@ -1416,101 +1592,153 @@ const clients = [
     { name: "Client Partner 8", logo: clientImage8 },
     { name: "Client Partner 9", logo: clientImage9 },
     { name: "Client Partner 10", logo: clientImage10 },
-    { name: "Client Partner 11", logo: clientImage11 },
-    { name: "Client Partner 12", logo: clientImage12 },
-    { name: "Client Partner 13", logo: clientImage13 },
-    { name: "Client Partner 14", logo: clientImage14 },
-    { name: "Client Partner 15", logo: clientImage15 },
-    { name: "Client Partner 16", logo: clientImage16 },
-    { name: "Client Partner 17", logo: clientImage17 },
-    { name: "Client Partner 18", logo: clientImage18 },
-    { name: "Client Partner 19", logo: clientImage19 },
-    { name: "Client Partner 20", logo: clientImage20 },
-    { name: "Client Partner 21", logo: clientImage21 },
-    { name: "Client Partner 22", logo: clientImage22 },
-    { name: "Client Partner 23", logo: clientImage23 },
-    { name: "Client Partner 24", logo: clientImage24 },
-    { name: "Client Partner 25", logo: clientImage25 },
-];
-const duplicatedClients = [...clients, ...clients];
+  ];
 
-const ClientLogo = ({ client }) => (
-    <div className="flex-shrink-0 mx-4 md:mx-6 lg:mx-8">
-        <img
-            src={client.logo}
-            alt={client.name}
-            className="h-10 md:h-12 lg:h-14 w-auto object-contain transition-all duration-300 filter  hover:grayscale-0 opacity-70 hover:opacity-100"
-            // Adding a placeholder fallback in case of loading error
-            onError={(e) => { e.target.onerror = null; e.target.src = mockLogo(client.name); }}
-        />
-    </div>
-);
+  const duplicatedClients = [...clients, ...clients];
+  const isLight = theme === "light";
 
-const ClientMarquee = () => {
-    return (
-        <section className="py-8 md:py-12 bg-gray-50 dark:bg-gray-900 overflow-hidden relative border-t border-b border-gray-200">
-            {/* Custom style block for the CSS keyframes */}
-    <style jsx="true">{`
-  /* Defines the keyframes for the continuous scroll */
-  @keyframes marquee {
-    0% {
-      transform: translateX(-50%); /* Start fully shifted left */
-    }
-    100% {
-      transform: translateX(0%); /* End at original position */
-    }
-  }
+  const bgColor = isLight
+    ? "linear-gradient(90deg, #100025 0%, #b793d2 100%)"
+    : "linear-gradient(90deg, #100025 0%, #1a0038 100%)";
 
-  /* Apply the animation to the inner container */
-  .marquee-inner {
-    animation: marquee 50s linear infinite; /* Adjust speed as needed */
-  }
+  const fadeLeft = isLight
+    ? "linear-gradient(to right, rgba(242,231,245,0.9), rgba(242,231,245,0))"
+    : "linear-gradient(to right, rgba(16,0,37,0.9), rgba(16,0,37,0))";
+  const fadeRight = isLight
+    ? "linear-gradient(to left, rgba(242,231,245,0.9), rgba(242,231,245,0))"
+    : "linear-gradient(to left, rgba(16,0,37,0.9), rgba(16,0,37,0))";
 
-  /* Fade effect on the edges */
-  .marquee-container::before,
-  .marquee-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 5rem;
-    height: 100%;
-    z-index: 10;
-    pointer-events: none;
-  }
+  return (
+    <section
+      className="py-12 md:py-16 overflow-hidden relative border-t border-b"
+      style={{
+        background: bgColor,
+        borderColor: isLight ? "#e5e0ec" : "rgba(255,255,255,0.08)",
+      }}
+    >
+      <style jsx="true">{`
+        @keyframes marqueeScroll {
+          0% {
+            transform: translateX(0%);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
 
-  .marquee-container::before {
-    left: 0;
-    background: linear-gradient(to right, #f9fafb, rgba(249, 250, 251, 0));
-  }
+        .marquee-track {
+          animation: marqueeScroll 25s linear infinite; /* ⏩ Increased speed */
+          will-change: transform;
+        }
 
-  .marquee-container::after {
-    right: 0;
-    background: linear-gradient(to left, #f9fafb, rgba(249, 250, 251, 0));
-  }
-`}</style>
-            
-            {/* Outer container to hide overflow and apply fade effects */}
-            <div className="marquee-container relative w-full overflow-hidden">
-                
-                {/* Inner container that scrolls. Total width is 200% of the viewport width. */}
-                <div className="marquee-inner flex w-[200%] items-center">
-                    
-                    {/* Map the duplicated list to create the seamless loop */}
-                    {duplicatedClients.map((client, index) => (
-                        <ClientLogo key={index} client={client} />
-                    ))}
-                </div>
+        .marquee-container:hover .marquee-track {
+          animation-play-state: paused;
+        }
+
+        .marquee-container::before,
+        .marquee-container::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 4rem;
+          height: 100%;
+          z-index: 3;
+          pointer-events: none;
+        }
+
+        .marquee-container::before {
+          left: 0;
+          background: ${fadeLeft};
+        }
+
+        .marquee-container::after {
+          right: 0;
+          background: ${fadeRight};
+        }
+      `}</style>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-10">
+        {/* -------- Left Section -------- */}
+        <motion.div
+          className="w-full md:w-1/3 text-center md:text-left"
+          initial={{ opacity: 0, x: -60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
+          <h2
+            className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3"
+            style={{
+              color: isLight ? COLORS.BG : "#ffffff",
+            }}
+          >
+            Our Clients
+          </h2>
+          <p
+            className="text-sm font-medium uppercase tracking-wider"
+            style={{
+              color: isLight ? COLORS.SUBTEXT : "rgba(255,255,255,0.7)",
+            }}
+          >
+            Trusted by industry leaders globally
+          </p>
+        </motion.div>
+
+        {/* -------- Right Marquee Section -------- */}
+        <div className="w-full md:w-2/3 relative overflow-hidden">
+          <div className="marquee-container relative w-full overflow-hidden">
+            <div className="marquee-track flex w-[200%] items-center">
+              {duplicatedClients.map((client, index) => (
+                <motion.div
+                  key={index}
+                  className="flex-shrink-0 mx-6 md:mx-8 lg:mx-10 relative"
+                  whileHover={{ scale: 1.08 }}
+                >
+                  <motion.img
+                    src={client.logo}
+                    alt={client.name}
+                    className="h-10 md:h-12 lg:h-14 w-auto object-contain opacity-70 hover:opacity-100 transition-all duration-500"
+                    style={{
+                      filter: isLight
+                        ? "none"
+                        : `drop-shadow(0 0 6px ${COLORS.ACCENT}80)`,
+                    }}
+                    animate={
+                      !isLight
+                        ? {
+                            opacity: [0.85, 1, 0.85],
+                            scale: [1, 1.03, 1],
+                            filter: [
+                              `drop-shadow(0 0 4px ${COLORS.ACCENT}50)`,
+                              `drop-shadow(0 0 8px ${COLORS.ACCENT}90)`,
+                              `drop-shadow(0 0 4px ${COLORS.ACCENT}50)`,
+                            ],
+                          }
+                        : {}
+                    }
+                    transition={
+                      !isLight
+                        ? {
+                            duration: 5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }
+                        : {}
+                    }
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://placehold.co/120x40/cccccc/333333?text=Logo";
+                    }}
+                  />
+                </motion.div>
+              ))}
             </div>
-            <div className="text-center mt-6">
-                <p className="text-sm text-gray-500 font-medium tracking-wider uppercase">
-                    Trusted by leading industry leaders globally
-                </p>
-            </div>
-        </section>
-    );
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
-
-
 //
 // ===================================
 // 8. NEW OurClients Component (Now Defined Here)
@@ -2296,13 +2524,13 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
 // ===================================
 // 11. Public View Wrapper
 // ===================================
-const PublicView = ({ toggleView, COLORS }) => (
+const PublicView = ({ toggleView, COLORS, theme }) => (
   <>
     <main className="flex-grow">
       <Hero COLORS={COLORS} />
       <About COLORS={COLORS} />
       <Services COLORS={COLORS} />
-      <ClientMarquee COLORS={COLORS} />
+      <ClientMarquee COLORS={COLORS} theme={theme} />
       <Directors COLORS={COLORS}/>
       <Contact COLORS={COLORS} />
     </main>
@@ -2328,13 +2556,11 @@ const getInitialView = () => {
 export default function App() {
     // The view state can be 'public', 'admin', 'company-profile', or 'fading-out'
     const [view, setView] = useState(getInitialView());
-      const [theme, setTheme] = useState('dark');
+   const [theme, setTheme] = useState("light");
       const COLORS = THEMES[theme];
 const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    document.documentElement.classList.toggle("light", newTheme === "light");
-  };
+  setTheme((prev) => (prev === "light" ? "dark" : "light"));
+};
     // Toggle view function: used by Navbar and AdminDashboard buttons
   const toggleView = (targetView) => {
   // ✅ Validate the target view
@@ -2427,9 +2653,9 @@ const toggleTheme = () => {
       )}
 
       {(currentView === 'public' || view === 'fading-out') && (
-        <PageTransitionWrapper isPublic={view === 'public'}>
-          <PublicView toggleView={toggleView} COLORS={COLORS} />
-        </PageTransitionWrapper>
+   <PageTransitionWrapper isPublic={view === 'public'}>
+  <PublicView toggleView={toggleView} COLORS={COLORS} theme={theme} />
+</PageTransitionWrapper>
       )}
     </div>
   </div>
