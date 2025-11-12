@@ -3,6 +3,8 @@ Since we are loading Tailwind via CDN in index.html,
 we mainly use this file to ensure basic typography reset.
 */
 
+
+
 @keyframes marquee {
   0% {
     transform: translateX(0);
@@ -36,4 +38,10 @@ we mainly use this file to ensure basic typography reset.
 html.light {
   background-color: #f8f9fa;
   color: #222;
+
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.3px;
 }
