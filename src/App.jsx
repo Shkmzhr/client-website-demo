@@ -665,7 +665,7 @@ const Hero = ({ COLORS }) => {
       </motion.div>
 
       {/* --- Indicators --- */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
+      <div className="absolute bottom-10 left-10 flex gap-3 z-20">
         {slides.map((_, i) => (
           <button
             key={i}
@@ -683,8 +683,8 @@ const Hero = ({ COLORS }) => {
 //About component
 
 const About = ({ COLORS, theme }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, amount: 0.3 });
+    // The useRef and useInView hooks are no longer strictly necessary here.
+    // We use the simpler and more reliable `whileInView` prop directly on the motion components.
 
     // Custom spring transition for smooth movement
     const springTransition = {
@@ -695,14 +695,25 @@ const About = ({ COLORS, theme }) => {
     };
 
     // Animation Variants with improved smoothness
+    // Added a slight delay to ensure a clean stagger after the parent section is triggered
     const fadeLeft = {
         hidden: { opacity: 0, x: -80, filter: "blur(6px)" },
-        show: { opacity: 1, x: 0, filter: "blur(0px)", transition: springTransition },
+        show: { 
+            opacity: 1, 
+            x: 0, 
+            filter: "blur(0px)", 
+            transition: { ...springTransition, delay: 0.1 } // Staggered start
+        },
     };
 
     const fadeRight = {
         hidden: { opacity: 0, x: 80, filter: "blur(6px)" },
-        show: { opacity: 1, x: 0, filter: "blur(0px)", transition: springTransition },
+        show: { 
+            opacity: 1, 
+            x: 0, 
+            filter: "blur(0px)", 
+            transition: { ...springTransition, delay: 0.2 } // Staggered start
+        },
     };
 
     const fadeUp = (delay = 0) => ({
@@ -729,13 +740,14 @@ const About = ({ COLORS, theme }) => {
     const IconComponent = Zap;
 
     return (
-        <section id="about" ref={ref} className="relative overflow-hidden">
+        <section id="about" className="relative overflow-hidden">
             {/* ---------- Top Section ---------- */}
             <motion.div
                 className="relative py-20 md:py-24 px-6 lg:px-16"
                 style={{ background: sectionBg, color: sectionTextColor, willChange: "transform, opacity" }}
                 initial="hidden"
-                animate={isInView ? "show" : "hidden"}
+                whileInView="show" // FIX: Triggers animation when section enters view
+                viewport={{ once: true, amount: 0.3 }} // Animation triggers when 30% is visible
             >
                 {/* Animated Background Glow */}
                 <motion.div
@@ -774,7 +786,7 @@ const About = ({ COLORS, theme }) => {
                         </p>
 
                         <motion.a
-                            href="#services"
+                            href="#company-profile"
                             className="inline-flex items-center font-semibold mt-6 group"
                             style={{ color: isLight ? COLORS.ACCENT : COLORS.ACCENT_LIGHT }}
                             whileHover={{ x: 6 }}
@@ -792,7 +804,8 @@ const About = ({ COLORS, theme }) => {
                 className="py-16 md:py-24 px-6 lg:px-16"
                 style={{ background: COLORS.BG, willChange: "transform, opacity" }}
                 initial="hidden"
-                animate={isInView ? "show" : "hidden"}
+                whileInView="show" // FIX: Triggers animation when section enters view
+                viewport={{ once: true, amount: 0.3 }}
             >
                 <div className="max-w-6xl mx-auto">
                     <motion.div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -820,7 +833,7 @@ const About = ({ COLORS, theme }) => {
                             </motion.a>
                         </motion.div>
 
-                        {/* Bottom Right */}
+                        {/* Bottom Right - Stats */}
                         <motion.div className="grid grid-cols-3 gap-4 text-center md:text-left">
                             {[
                                 { label: "Specialized Service Lines", value: "50+" },
@@ -846,7 +859,6 @@ const About = ({ COLORS, theme }) => {
         </section>
     );
 };
-
 // ===================================
 // 4. Services Component
 const servicesList = [
