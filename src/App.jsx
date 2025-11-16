@@ -1703,8 +1703,8 @@ const Directors = ({ COLORS }) => {
 
   const directors = [
     { name: "Mr. Mohammad Hamid Ansari", title: "Founder & Business Development", bio: "Expert recruiter skilled in strategic hiring and workforce planning.", intro: "Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at   Investment Company...", imageUrl: MohammedHamid },
-    { name: "Mr. Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at   Investment Company...", imageUrl: MrRizwan },
     { name: "Mr. Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at   Investment Company...", imageUrl: MrMujeeb },
+    { name: "Mr. Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at   Investment Company...", imageUrl: MrRizwan },
     { name: "Mr Abdullah", title: "Deputy CEO", bio: "Expert in soft services training and staff development.", intro: "Mr. Abdullah specializes in the training and development of soft services personnel...", imageUrl: MrAbdullah },
     { name: "Mr. Mohammed Tajammul Ahmed", title: "Administrator", bio: "Expert in soft services training and staff development.", intro: "Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel...", imageUrl: MrTajammul },
     { name: "Mr. Palesh Rana", title: "Senior Recruiter - Overseas & Local (Bangladesh)", bio: "Expert in soft services training and staff development.", intro: "Mr. Palesh Rana specializes in the training and development of soft services personnel...", imageUrl: MrPaleshRana },
