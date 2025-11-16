@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef,useMemo  } from 'react';
 import kafdBg from './assets/clientimages/KAFFD_Hero1.webp'; // King Abdullah Financial District image
 import kafd2Bg from './assets/clientimages/kafd2Bg.jpg'; // Hero section2 image
-import aboutIcon from "./assets/clientimages/aboutIcon.jpg"; //
 import { 
     Menu, X, Globe, Users, TrendingUp, Shield, Linkedin, MapPin, Mail, Phone, 
     Facebook, Twitter, MessageCircle, Factory, Hotel, Truck, Building, HeartPulse, 
@@ -30,8 +29,8 @@ import clientImage7 from './assets/clientimages/alrajhi.jpeg';
 import clientImage8 from './assets/clientimages/annasban.jpeg';
 import clientImage9 from './assets/clientimages/flashdiamond.jpeg';
 import clientImage10 from './assets/clientimages/gulfaar.jpeg';
-import clientImage11 from './assets/clientimages/ARM-Group-screenshot.jpg';
-import clientImage12 from './assets/clientimages/gulfaar.jpeg';
+// import clientImage11 from './assets/clientimages/ARM-Group-screenshot.jpg';
+// import clientImage12 from './assets/clientimages/gulfaar.jpeg';
 import clientImage13 from './assets/clientimages/integratedhr.jpeg';
 import clientImage14 from './assets/clientimages/kamps.jpeg';
 import clientImage15 from './assets/clientimages/karanint.jpeg';
@@ -1430,6 +1429,7 @@ const ServiceDetailsView = ({ service, toggleView, COLORS }) => {
             Inquire About {service.title}
           </motion.button>
         </motion.div>
+        
       </div>
     </motion.div>
   );
@@ -1549,9 +1549,9 @@ const Directors = ({ COLORS }) => {
   const y = useTransform(scrollY, [0, 600], [0, -150]);
 
   const directors = [
-    { name: "Mr. Mohammad Hamid Ansari", title: "Founder & Business Development", bio: "Expert recruiter skilled in strategic hiring and workforce planning.", intro: "Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at Lucid Investment Company...", imageUrl: MohammedHamid },
-    { name: "Mr. Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at Lucid Investment Company...", imageUrl: MrRizwan },
-    { name: "Mr. Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at Lucid Investment Company...", imageUrl: MrMujeeb },
+    { name: "Mr. Mohammad Hamid Ansari", title: "Founder & Business Development", bio: "Expert recruiter skilled in strategic hiring and workforce planning.", intro: "Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at   Investment Company...", imageUrl: MohammedHamid },
+    { name: "Mr. Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at   Investment Company...", imageUrl: MrRizwan },
+    { name: "Mr. Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at   Investment Company...", imageUrl: MrMujeeb },
     { name: "Mr Abdullah", title: "Deputy CEO", bio: "Expert in soft services training and staff development.", intro: "Mr. Abdullah specializes in the training and development of soft services personnel...", imageUrl: MrAbdullah },
     { name: "Mr. Mohammed Tajammul Ahmed", title: "Administrator", bio: "Expert in soft services training and staff development.", intro: "Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel...", imageUrl: MrTajammul },
     { name: "Mr. Palesh Rana", title: "Senior Recruiter - Overseas & Local (Bangladesh)", bio: "Expert in soft services training and staff development.", intro: "Mr. Palesh Rana specializes in the training and development of soft services personnel...", imageUrl: MrPaleshRana },
@@ -1578,7 +1578,7 @@ const Directors = ({ COLORS }) => {
             Our Leadership
           </h2>
           <p className="text-lg max-w-3xl mx-auto" style={{ color: COLORS.SUBTEXT }}>
-            Our leadership team combines experience, integrity, and innovation to shape Lucid’s success in manpower excellence.
+            Our leadership team combines experience, integrity, and innovation to shape  ’s success in manpower excellence.
           </p>
         </div>
 
@@ -2038,8 +2038,8 @@ const Contact = ({ COLORS }) => {
                                         <Phone className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
                                         <div>
                                             <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>Call Us</p>
-                                            <a href="tel:+966500000000" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
-                                                +966 50 000 0000
+                                            <a href="tel:+966536514449" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
+                                               +966 53 651 4449
                                             </a>
                                         </div>
                                     </div>
@@ -2198,7 +2198,7 @@ const Footer = ({ COLORS }) => {
                 Contact
               </h4>
               <p style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
-              <p style={{ color: COLORS.SUBTEXT }}>+966 50 123 4567</p>
+              <p style={{ color: COLORS.SUBTEXT }}>+966536514449</p>
               <p style={{ color: COLORS.SUBTEXT }}>info@arm-group.com</p>
             </div>
 
@@ -2485,8 +2485,8 @@ const OurClients = (COLORS) => {
     { name: "Client Partner 8", logo: clientImage8 },
     { name: "Client Partner 9", logo: clientImage9 },
     { name: "Client Partner 10", logo: clientImage10 },
-    { name: "Client Partner 11", logo: clientImage11 },
-    { name: "Client Partner 12", logo: clientImage12 },
+    // { name: "Client Partner 11", logo: clientImage11 },
+    // { name: "Client Partner 12", logo: clientImage12 },
     { name: "Client Partner 13", logo: clientImage13 },
     { name: "Client Partner 14", logo: clientImage14 },
     { name: "Client Partner 15", logo: clientImage15 },
