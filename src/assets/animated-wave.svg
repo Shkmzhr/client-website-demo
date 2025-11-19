@@ -1,0 +1,30 @@
+<svg viewBox="0 0 1440 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a0ca3"></stop>
+      <stop offset="50%" stop-color="#7209b7"></stop>
+      <stop offset="100%" stop-color="#b5179e"></stop>
+    </linearGradient>
+
+    <style>
+      @keyframes moveWave {
+        0%   { transform: translateX(0); }
+        50%  { transform: translateX(-200px); }
+        100% { transform: translateX(0); }
+      }
+      .wave {
+        animation: moveWave 6s ease-in-out infinite;
+      }
+    </style>
+  </defs>
+
+  <rect width="1440" height="600" fill="#0a0714"></rect>
+
+  <g class="wave" opacity="0.4">
+    <path d="M0 350C200 300 350 420 550 395C750 370 940 300 1200 325C1350 340 1440 405 1440 405V600H0z" fill="url(#grad)"></path>
+  </g>
+
+  <g class="wave" opacity="0.25" style="animation-delay: -3s;">
+    <path d="M0 420C250 380 400 480 700 450C1000 420 1120 340 1400 360C1500 370 1600 430 1600 430V600H0z" fill="url(#grad)"></path>
+  </g>
+</svg>
