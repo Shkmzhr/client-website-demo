@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef,useMemo  } from 'react';
 import kafdBg from './assets/clientimages/KAFFD_Hero1.webp'; // King Abdullah Financial District image
 import kafd2Bg from './assets/clientimages/kafd2Bg.jpg'; // Hero section2 image
+import HalftoneBG from './assets/halftone-purple.svg'; // Director section image
+import AnimatedWave from "./assets/animated-wave.svg";
 import { 
   Menu, X, Globe, Users, TrendingUp, Shield, Linkedin, MapPin, Mail, Phone, 
   Facebook, Twitter, MessageCircle, Factory, Hotel, Truck, Building, HeartPulse, 
@@ -61,7 +63,9 @@ import MrAbdullah from './assets/clientimages/Abdullah.jpg';
 import MrPaleshRana from './assets/clientimages/Palash.jpg';
 // import MrPaleshRana from './assets/clientimages/dummyProfile.png';
 import MrMannan from './assets/clientimages/Mannan.jpeg';
+import MrFarooq from './assets/clientimages/farooqi.jpeg';
 import MrImtiyaz from './assets/clientimages/imtiyaz.jpeg';
+import MrZafar from './assets/clientimages/zafarimam.jpg';
 import dummyServiceBg from './assets/clientimages/womenwashingdish.jpeg';
 import ConstructionBg from './assets/clientimages/Construction.jpg';
 import HvacBg from './assets/clientimages/HVAC.jpg';
@@ -108,21 +112,30 @@ light: {
   SHADOW: "0 8px 32px rgba(45,181,201,0.1)",
   GRADIENT: "linear-gradient(180deg, #ffffff 0%, #eaf5f7 100%)",
 },
-
-  dark: {
-    BG: "#070a14", // very dark navy
-  TEXT: "#e6f9ff", // soft aqua white
-  SUBTEXT: "#a0b9cc", // subtle light steel blue
-  ACCENT: "#4cf3ff", // neon aqua highlight
-  PRIMARY: "#00d3f2", // cyan aqua highlight
-  ACCENT_ALT: "#9a6cff", // violet glow secondary
-  GLASS_BG: "rgba(76,243,255,0.08)",
-  GLASS_BORDER: "1px solid rgba(76,243,255,0.25)",
-  SHADOW: "0 8px 32px rgba(154,108,255,0.25)",
-  GRADIENT: "linear-gradient(180deg, #0a0f22 0%, #121e33 100%)",
-  },
+dark: {
+  BG: "#0a0714",              // deep dark purple / black
+  TEXT: "#f2eaff",           // soft lavender white
+  SUBTEXT: "#b8a6d9",        // muted lilac / dusty purple
+  ACCENT: "#bb86ff",         // bright lavender highlight (buttons, icons)
+  PRIMARY: "#a56bff",        // main purple brand color
+  ACCENT_ALT: "#6b4cff",     // deep violet accent
+  GLASS_BG: "rgba(155, 108, 255, 0.12)",   // subtle purple-glass background
+  GLASS_BORDER: "1px solid rgba(155, 108, 255, 0.28)",    
+  SHADOW: "0 8px 32px rgba(94, 44, 255, 0.35)",           // violet glow shadow
+  GRADIENT: "linear-gradient(180deg, #120b2c 0%, #1a1038 100%)", 
+},
 };
-
+const MockUsers = Users;
+const MockArrowLeft = ArrowLeft;
+const MockArrowRight = ArrowRight;
+const MockFactory = Factory;
+const MockHotel = Hotel;
+const MockTruck = Truck;
+const MockBuilding = Building;
+const MockHeartPulse = HeartPulse;
+const MockWrench = Wrench;
+const MockZap = Zap;
+const MockStethoscope = Stethoscope;
 
 // Characters used for the scrambling effect
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=';
@@ -334,6 +347,7 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
       style={{
         background: COLORS.GRADIENT,
         boxShadow: COLORS.SHADOW,
+        
       }}
     >
       <div className="container mx-auto px-6 lg:px-12 py-3 flex justify-between items-center">
@@ -343,14 +357,34 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
   initial={{ opacity: 0, y: -10 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.6 }}
-  className="cursor-pointer text-2xl font-extrabold tracking-wide bg-gradient-to-r from-teal-300 via-cyan-400 via-purple-400 to-blue-600 bg-[length:300%_300%] animate-gradient"
-  style={{
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-  }}
+  className="cursor-pointer inline-block"
+
 >
-  ARM Solutions
+<motion.img
+  src={ArmGroup}
+  alt="ARM Group Logo"
+  className="h-20 w-20 object-cover rounded-full"
+  style={{
+    border: "0px solid rgba(155,108,255,0.9)",
+  }}
+  animate={{
+    boxShadow: [
+      "0 0 10px rgba(155,108,255,0.4)",   // start (soft)
+      "0 0 22px rgba(155,108,255,0.9)",   // mid (bright)
+      "0 0 10px rgba(155,108,255,0.4)",   // end (same as start → smooth loop)
+    ],
+  }}
+  transition={{
+    duration: 3.5,
+    repeat: Infinity,
+    ease: "easeInOut",
+  }}
+/>
+
+
+
 </motion.div>
+
 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex items-center space-x-10 font-medium">
@@ -701,7 +735,7 @@ const Hero = () => {
 
                     <motion.a
                         href="#services"
-                        className="inline-flex items-center gap-2 mt-10 bg-gradient-to-r from-cyan-500 to-teal-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
+                        className="inline-flex items-center gap-2 mt-10 bg-gradient-to-r from-indigo-500 to-fuchsia-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.9 }}
@@ -814,227 +848,257 @@ const About = ({ COLORS, theme }) => {
     const subText = isLight ? COLORS.SUBTEXT : "#e6e6e6";
 
     return (
-        <section id="about" className="relative overflow-hidden">
+        // Main wrapper with dark background
+        <section 
+            id="about" 
+            className="relative overflow-hidden min-h-screen font-inter"
+            style={{ backgroundColor: COLORS.BG, color: COLORS.TEXT }}
+        >
 
             {/* ---------------------------------------------------------------- */}
-            {/*                     ⭐ 1. TOP SECTION (WHITE)                     */}
-            {/* ---------------------------------------------------------------- */}
- <motion.div
-  className="py-20 md:py-28 px-6 lg:px-20"
-  style={{ background: COLORS.BG }}
-  initial="hidden"
-  whileInView="show"
-  viewport={{ once: true, amount: 0.3 }}
->
-  <div className="max-w-7xl mx-auto">
-
-    {/* GRID WRAPPER */}
-    <motion.div
-      className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start"
-      variants={{
-        hidden: {},
-        show: {
-          transition: { staggerChildren: 0.15 },
-        },
-      }}
-    >
-
-      {/* ========================================================
-          LEFT — INDUSTRIES LIST (TAG STYLE)
-      ======================================================== */}
-      <motion.div variants={fadeUp(0)}>
-        <h3
-          className="text-3xl md:text-4xl font-extrabold mb-6"
-          style={{ color: COLORS.TEXT }}
-        >
-          Industries We Serve
-        </h3>
-
-        {/* TAGS — MOBILE SCROLL + WRAP */}
-        <div
-          className="flex flex-wrap md:flex-wrap gap-3 md:gap-3 overflow-x-auto pb-2 md:pb-0"
-          style={{ scrollbarWidth: "none" }}
-        >
-          {[
-            "Healthcare",
-            "Retail",
-            "Construction",
-            "Industrial & Oilfield",
-            "Skilled Worker",
-            "Logistics",
-            "Management",
-            "Events",
-          ].map((item, i) => (
-            <motion.span
-              key={i}
-              className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap shadow-sm"
-              style={{
-                background: COLORS.ACCENT + "22",
-                color: COLORS.ACCENT,
-              }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05, duration: 0.4 }}
-            >
-              {item}
-            </motion.span>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <motion.a
-          href="#services"
-          className="inline-flex items-center font-semibold mt-6 group"
-          style={{ color: COLORS.ACCENT }}
-          whileHover={{ x: 6 }}
-          transition={{ type: "spring", stiffness: 150 }}
-        >
-          Read more
-          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-        </motion.a>
-      </motion.div>
-
-
-      {/* ========================================================
-          RIGHT — CORPORATE PARAGRAPH + STATS
-      ======================================================== */}
-      <motion.div
-        variants={fadeUp(0.2)}
-        className="space-y-10"
-      >
-        {/* Corporate Paragraph */}
-        <motion.div
-          className="text-base md:text-lg leading-relaxed tracking-wide"
-          style={{ color: COLORS.SUBTEXT }}
-          variants={fadeUp(0.3)}
-        >
-          Our agency provides strategic manpower and workforce solutions across
-          key industry sectors, delivering professionals who uphold the highest
-          standards of performance, compliance, and reliability. We support
-          healthcare organizations with qualified medical support teams, empower
-          the retail sector with trained service personnel, and strengthen
-          construction and infrastructure projects with site workers. We also
-          serve industrial and oilfield operations with safety-driven technical
-          specialists, supply certified skilled workers across multiple trades,
-          and enhance supply chain efficiency through logistics manpower.
-          Additionally, we offer management-level professionals and dedicated
-          event manpower to meet diverse operational demands.
-        </motion.div>
-
-        {/* Stats Grid */}
-        <motion.div
-          className="grid grid-cols-3 gap-6 md:gap-12 text-center md:text-left"
-          variants={{
-            show: {
-              transition: { staggerChildren: 0.2 },
-            },
-          }}
-        >
-          {[
-            { label: "Service Lines", value: "50+" },
-            { label: "Workforce", value: "1400+" },
-            { label: "Retention", value: "98%" },
-          ].map((stat, i) => (
-            <motion.div
-              key={i}
-              className=""
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 + i * 0.1 }}
-            >
-              <p
-                className="text-xs uppercase tracking-wide mb-1"
-                style={{ color: COLORS.SUBTEXT }}
-              >
-                {stat.label}
-              </p>
-              <h4
-                className="text-3xl md:text-4xl font-extrabold"
-                style={{ color: COLORS.ACCENT }}
-              >
-                {stat.value}
-              </h4>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
-
-    </motion.div> {/* end grid */}
-
-  </div>
-</motion.div>
-
-{/* Divider Transition */}
-<div
-  className="h-14 w-full"
-  style={{
-    background: `linear-gradient(to bottom, ${COLORS.BG}00, ${COLORS.ACCENT}22)`
-  }}
-/>
-
-
-            {/* ---------------------------------------------------------------- */}
-            {/*                 ⭐ 2. BOTTOM SECTION (PURPLE)                     */}
+            {/* ⭐ 1. TOP SECTION (INDUSTRIES & STATS) 	 	 	 	 	 */}
             {/* ---------------------------------------------------------------- */}
             <motion.div
-                className="relative py-20 md:py-28 px-6 lg:px-20"
-                style={{ background: "#3e1971", color: "#fff" }}
+                className="relative py-20 md:py-28 px-6 lg:px-20 overflow-hidden"
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.3 }}
             >
-                {/* Animated purple waves */}
+                {/* Abstract Background Element 1: Faded Neon Blob */}
+                <div
+                    className="absolute top-0 left-0 w-96 h-96 rounded-full mix-blend-screen opacity-30 blur-3xl z-0"
+                    style={{ background: `radial-gradient(circle, ${COLORS.ACCENT} 0%, transparent 70%)` }}
+                />
+
+                <div className="max-w-7xl mx-auto relative z-10">
+
+                    {/* GRID WRAPPER */}
+                    <motion.div
+                        className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start"
+                        variants={{
+                            hidden: {},
+                            show: {
+                                transition: { staggerChildren: 0.15 },
+                            },
+                        }}
+                    >
+
+                        {/* ========================================================
+                            LEFT — INDUSTRIES LIST (TAG STYLE)
+                        ======================================================== */}
+                        <motion.div variants={fadeUp(0)}>
+                            <h3
+                                className="text-3xl md:text-4xl font-extrabold mb-6"
+                                style={{ color: COLORS.TEXT }}
+                            >
+                                Industries We Serve
+                            </h3>
+
+                            {/* TAGS — WRAP AND GLOW */}
+                            <div
+                                className="flex flex-wrap gap-3 pb-2"
+                                style={{ scrollbarWidth: "none" }}
+                            >
+                                {[
+                                    "Healthcare",
+                                    "Retail",
+                                    "Construction",
+                                    "Industrial & Oilfield",
+                                    "Skilled Worker",
+                                    "Logistics",
+                                    "Management",
+                                    "Events",
+                                ].map((item, i) => (
+                                    <motion.span
+                                        key={i}
+                                        className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg border"
+                                        style={{
+                                            background: 'rgba(255, 255, 255, 0.05)', // Subtle dark glass effect
+                                            color: COLORS.NEON_CYAN,
+                                            borderColor: COLORS.NEON_CYAN + '33',
+                                            textShadow: `0 0 4px ${COLORS.NEON_CYAN}55`,
+                                        }}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.05, duration: 0.4 }}
+                                    >
+                                        {item}
+                                    </motion.span>
+                                ))}
+                            </div>
+
+                            {/* CTA with Neon Underline Effect */}
+                            <motion.a
+                                href="#services"
+                                className="inline-flex items-center font-bold text-lg mt-8 group relative"
+                                style={{ color: COLORS.ACCENT }}
+                                whileHover={{ x: 6 }}
+                                transition={{ type: "spring", stiffness: 150 }}
+                            >
+                                Read more about our solutions
+                                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                {/* Neon underline */}
+                                <span 
+                                    className="absolute bottom-0 left-0 w-full h-0.5 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                                    style={{ backgroundColor: COLORS.ACCENT, boxShadow: `0 0 5px ${COLORS.ACCENT}` }}
+                                />
+                            </motion.a>
+                        </motion.div>
+
+
+                        {/* ========================================================
+                            RIGHT — CORPORATE PARAGRAPH + STATS
+                        ======================================================== */}
+                        <motion.div
+                            variants={fadeUp(0.2)}
+                            className="space-y-10"
+                        >
+                            {/* Corporate Paragraph */}
+                            <motion.div
+                                className="text-base md:text-lg leading-relaxed tracking-wide"
+                                style={{ color: COLORS.SUBTEXT }}
+                                variants={fadeUp(0.3)}
+                            >
+                                Our agency provides strategic manpower and workforce solutions across
+                                key industry sectors, delivering professionals who uphold the highest
+                                standards of performance, compliance, and reliability. We support
+                                healthcare organizations with qualified medical support teams, empower
+                                the retail sector with trained service personnel, and strengthen
+                                construction and infrastructure projects with site workers. We also
+                                serve industrial and oilfield operations with safety-driven technical
+                                specialists, supply certified skilled workers across multiple trades,
+                                and enhance supply chain efficiency through logistics manpower.
+                                Additionally, we offer management-level professionals and dedicated
+                                event manpower to meet diverse operational demands.
+                            </motion.div>
+
+                            {/* Stats Grid with Neon Text */}
+                            <motion.div
+                                className="grid grid-cols-3 gap-6 md:gap-12 text-center md:text-left p-6 rounded-xl shadow-inner"
+                                style={{ 
+                                    background: 'rgba(255, 255, 255, 0.03)', // Subtle dark card background
+                                    border: `1px solid ${COLORS.ACCENT}22`,
+                                }}
+                                variants={{
+                                    show: {
+                                        transition: { staggerChildren: 0.2 },
+                                    },
+                                }}
+                            >
+                                {[
+                                    { icon: Users, label: "Workforce", value: "600+" },
+                                    { icon: Factory, label: "Service Lines", value: "50+" },
+                                    { icon: TrendingUp, label: "Retention", value: "98%" },
+                                ].map((stat, i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="relative"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.6, delay: 0.3 + i * 0.1 }}
+                                    >
+                                        <stat.icon className="w-6 h-6 mb-2 mx-auto md:mx-0" style={{ color: COLORS.NEON_CYAN }}/>
+                                        <h4
+                                            className="text-3xl md:text-4xl font-extrabold"
+                                            style={{ color: COLORS.ACCENT, textShadow: `0 0 8px ${COLORS.ACCENT}88` }} // Neon glow
+                                        >
+                                            {stat.value}
+                                        </h4>
+                                        <p
+                                            className="text-xs uppercase tracking-widest mt-1"
+                                            style={{ color: COLORS.SUBTEXT }}
+                                        >
+                                            {stat.label}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+                        </motion.div>
+
+                    </motion.div> {/* end grid */}
+
+                </div>
+            </motion.div>
+
+            {/* Divider Transition - More pronounced neon effect */}
+            <div
+                className="h-10 w-full"
+                style={{
+                    background: `linear-gradient(to bottom, ${COLORS.BG} 0%, ${COLORS.ACCENT}11 50%, ${COLORS.ACCENT}00 100%)`,
+                    boxShadow: `0 0 10px ${COLORS.ACCENT}33`,
+                }}
+            />
+
+
+            {/* ---------------------------------------------------------------- */}
+            {/* ⭐ 2. BOTTOM SECTION (COMPANY FOCUS) 	 	 	 	 	 */}
+            {/* ---------------------------------------------------------------- */}
+            <motion.div
+                className="relative py-20 md:py-28 px-6 lg:px-20 overflow-hidden"
+                style={{ background: "#210d3f", color: "#fff" }} // Slightly different dark purple for contrast
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.3 }}
+            >
+                {/* Abstract Background Element 2: Animated Line Pattern */}
                 <motion.div
                     className="absolute inset-0 opacity-20 z-0"
                     animate={{
-                        background: [
-                            `linear-gradient(130deg, ${COLORS.ACCENT}20 0%, transparent 70%)`,
-                            `linear-gradient(200deg, ${COLORS.ACCENT}25 10%, transparent 80%)`
+                        backgroundPosition: ["0% 0%", "100% 100%"],
+                        backgroundImage: [
+                            `repeating-linear-gradient(45deg, ${COLORS.ACCENT}22 0, ${COLORS.ACCENT}22 1px, transparent 1px, transparent 20px)`,
+                            `repeating-linear-gradient(135deg, ${COLORS.ACCENT}22 0, ${COLORS.ACCENT}22 1px, transparent 1px, transparent 20px)`,
                         ],
                     }}
-                    transition={{ duration: 12, repeat: Infinity, repeatType: "mirror" }}
+                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
                 />
 
                 <div className="grid md:grid-cols-[1.3fr_1fr] gap-16 max-w-7xl mx-auto relative z-10 items-center">
 
-                    {/* Right content becomes left visually (swapped) */}
+                    {/* Left content: Title and CTA */}
                     <motion.div variants={fadeLeft}>
-                        <h2 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4">
-                            Transforming Workspaces  
-                            <span style={{ color: COLORS.ACCENT }}> with Reliability & Expertise</span>
+                        <h2 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+                            Transforming Workspaces
+                            <span style={{ color: COLORS.NEON_CYAN }} className="block"> with Reliability & Expertise</span>
                         </h2>
 
-                        <p className="text-lg mt-4 leading-relaxed" style={{ color: subText }}>
+                        <p className="text-lg mt-4 leading-relaxed" style={{ color: COLORS.TEXT }}>
                             We create environments where businesses thrive—delivering manpower and integrated facility
                             services that elevate comfort, safety, and operational excellence across all sectors.
                         </p>
 
                         <motion.a
                             href="#company-profile"
-                            className="inline-flex items-center font-semibold mt-6 group"
-                            style={{ color: COLORS.ACCENT }}
+                            className="inline-flex items-center font-bold text-lg mt-8 group relative"
+                            style={{ color: COLORS.NEON_CYAN }}
                             whileHover={{ x: 6 }}
                             transition={{ type: "spring", stiffness: 150 }}
                         >
-                            Explore more
+                            Explore Our Company Profile
                             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            {/* Neon underline */}
+                            <span 
+                                className="absolute bottom-0 left-0 w-full h-0.5 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                                style={{ backgroundColor: COLORS.NEON_CYAN, boxShadow: `0 0 5px ${COLORS.NEON_CYAN}` }}
+                            />
                         </motion.a>
                     </motion.div>
 
-                    {/* Glass card goes to the right now */}
+                    {/* Right content: Glass Card */}
                     <motion.div
                         variants={fadeRight}
-                        className="p-8 rounded-2xl backdrop-blur-md border shadow-xl"
+                        className="p-8 rounded-2xl shadow-2xl relative overflow-hidden"
                         style={{
-                        background: "rgba(75,0,130,0.12)",
-      border: "1px solid rgba(113, 231, 255, 0.08)",
-      backdropFilter: "blur(10px)",
-      minWidth: "260px",
+                            background: "rgba(255, 255, 255, 0.05)",
+                            border: `1px solid ${COLORS.ACCENT}`, // Stronger neon border
+                            backdropFilter: "blur(15px)",
+                            boxShadow: `0 0 20px ${COLORS.ACCENT}44, inset 0 0 8px ${COLORS.ACCENT}33`, // Inner and outer glow
+                            minWidth: "260px",
                         }}
                     >
                         <p className="leading-relaxed text-gray-100 font-bold md:text-lg">
-                            Founded in 2010, ARM Solutions has grown into a trusted partner <span className="text-cyan-500"> delivering skilled manpower,
+                            Founded in 2010, ARM Solutions has grown into a trusted partner <span className="text-cyan-400" style={{ textShadow: `0 0 5px ${COLORS.NEON_CYAN}99` }}> delivering skilled manpower,
                             FM solutions, and operational support across Saudi Arabia.</span> Our mission is built around quality,
                             consistency, and strong customer relationships.
                         </p>
@@ -1054,126 +1118,200 @@ const About = ({ COLORS, theme }) => {
 // ---------------------------
 // ICON-BASED HOMEPAGE LIST
 // ---------------------------
-const servicesList = [
-  { icon: HardHat, title: "Construction", description: "Engineers, foremen, welders, and labor for large-scale projects." },
-  { icon: Wrench, title: "Maintenance & Shutdown", description: "Technicians for plant maintenance and shutdown operations." },
-  { icon: Zap, title: "Technical & HVAC", description: "Experts in electrical, instrumentation, and HVAC services." },
-  { icon: Shield, title: "Support Staff", description: "Security personnel, drivers, helpers, and admin staff." },
-  { icon: Factory, title: "Oil & Gas", description: "Manpower for oil rigs, refineries, and petrochemical sites." },
-  { icon: Hotel, title: "Hospitality", description: "Housekeeping, soft services, and facility attendants." },
-  { icon: Building, title: "Manufacturing", description: "Quality controllers, assembly labor, and machine operators." },
-  {
-    icon: Users,
-    title: "Nursing Services",
-    description:
-      "OT, ICU, ER, Homecare nurses, technicians, sterilization & dental support.",
-  },
-];
+// const servicesList = [
+//   { icon: HardHat, title: "Construction", description: "Engineers, foremen, welders, and labor for large-scale projects." },
+//   { icon: Wrench, title: "Maintenance & Shutdown", description: "Technicians for plant maintenance and shutdown operations." },
+//   { icon: Zap, title: "Technical & HVAC", description: "Experts in electrical, instrumentation, and HVAC services." },
+//   { icon: Shield, title: "Support Staff", description: "Security personnel, drivers, helpers, and admin staff." },
+//   { icon: Factory, title: "Oil & Gas", description: "Manpower for oil rigs, refineries, and petrochemical sites." },
+//   { icon: Hotel, title: "Hospitality", description: "Housekeeping, soft services, and facility attendants." },
+//   { icon: Building, title: "Manufacturing", description: "Quality controllers, assembly labor, and machine operators." },
+//   {
+//     icon: Users,
+//     title: "Nursing Services",
+//     description:
+//       "OT, ICU, ER, Homecare nurses, technicians, sterilization & dental support.",
+//   },
+// ];
 
 // =======================================================
 // PART 1 — HOMEPAGE SERVICES CAROUSEL
 // =======================================================
+const servicesList = [
+    { icon: MockFactory, title: "Industrial & Manufacturing", description: "Providing skilled labor for assembly lines, quality control, and machinery operation." },
+    { icon: MockWrench, title: "Oil & Gas Operations", description: "Specialized engineers, technicians, and field workers compliant with international safety standards." },
+    { icon: MockBuilding, title: "Construction & Infrastructure", description: "Supplying certified tradesmen, project managers, and site supervisors." },
+    { icon: MockHotel, title: "Hospitality & Tourism", description: "Manpower for hotel management, food & beverage services, and guest relations." },
+    { icon: MockTruck, title: "Logistics & Supply Chain", description: "Drivers, warehouse staff, and supply chain managers for efficient operations." },
+    { icon: MockHeartPulse, title: "Healthcare Support", description: "Trained medical assistants, administrative staff, and facility support personnel." },
+    { icon: MockStethoscope, title: "IT & Technology", description: "Tech talent for software development, network administration, and data analysis." },
+];
+
+/**
+ * Card Component (Styled for Dark/Vibrant Theme)
+ */
 const Card = ({ icon: Icon, title, description, onExplore }) => (
-  <motion.div
-    whileHover={{ scale: 1.05, y: -6 }}
-    transition={{ type: "spring", stiffness: 200, damping: 18 }}
-    className="group relative p-6 rounded-2xl overflow-hidden h-full flex flex-col justify-between"
-    style={{
-      background: "rgba(75,0,130,0.12)",
-      border: "1px solid rgba(255,255,255,0.08)",
-      backdropFilter: "blur(10px)",
-      minWidth: "260px",
-    }}
-  >
-    {/* Icon */}
-    <div
-      className="flex items-center justify-center w-14 h-14 rounded-lg mb-4"
-      style={{ background: "rgba(0,163,224,0.20)" }}
+    <motion.div
+        whileHover={{ scale: 1.05, y: -6 }}
+        transition={{ type: "spring", stiffness: 200, damping: 18 }}
+        className="group relative p-6 rounded-2xl overflow-hidden flex flex-col justify-between w-full h-full"
+        style={{
+            background: "rgba(75,0,130,0.12)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            backdropFilter: "blur(10px)",
+        }}
     >
-      {Icon ? <Icon className="w-7 h-7 text-blue-400" /> : <Users className="w-7 h-7 text-blue-400" />}
-    </div>
+        {/* Icon */}
+        <div
+            className="flex items-center justify-center w-14 h-14 rounded-xl mb-4"
+            style={{ background: "rgba(0,163,224,0.20)" }}
+        >
+            {/* Using MockUsers as default fallback */}
+            {Icon ? <Icon className="w-7 h-7 text-blue-400" /> : <MockUsers className="w-7 h-7 text-blue-400" />}
+        </div>
 
-    {/* Title & text */}
-    <h3 className="text-lg font-semibold mb-2 text-blue-300">{title}</h3>
-    <p className="text-gray-200 text-sm">{description}</p>
+        {/* Title & text */}
+        <h3 className="text-xl font-semibold mb-2 text-blue-300">{title}</h3>
+        <p className="text-gray-300 text-sm">{description}</p>
 
-    {/* Button */}
-    {/* <button
-      onClick={onExplore}
-      className="mt-6 w-full text-sm font-semibold py-2 rounded-lg text-white"
-      style={{ backgroundColor: "rgba(0,163,224,0.6)", border: "1px solid rgba(0,163,224,0.85)" }}
-    >
-      Explore Services <ArrowRight className="w-4 h-4 inline ml-1" />
-    </button> */}
-  </motion.div>
+        {/* Button (Commented out as in original) */}
+        {/* <button
+            onClick={onExplore}
+            className="mt-6 w-full text-sm font-semibold py-2 rounded-lg text-white"
+            style={{ backgroundColor: "rgba(0,163,224,0.6)", border: "1px solid rgba(0,163,224,0.85)" }}
+        >
+            Explore Services <MockArrowRight className="w-4 h-4 inline ml-1" />
+        </button> */}
+    </motion.div>
 );
 
-// MAIN HOMEPAGE SERVICES COMPONENT
+/**
+ * Main Services Component (Responsive Carousel Logic)
+ */
 const Services = ({ goToServiceDetails }) => {
-  const cardsPerPage = 3;
-  const [page, setPage] = useState(0);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [page, setPage] = useState(0);
 
-  const pages = useMemo(() => {
-    const out = [];
-    for (let i = 0; i < servicesList.length; i += cardsPerPage) {
-      out.push(servicesList.slice(i, i + cardsPerPage));
-    }
-    return out;
-  }, []);
+    // 1. Dynamic cardsPerPage based on screen size
+    const getCardsPerPage = useCallback((width) => {
+        if (width < 640) return 1;    // Mobile
+        if (width < 1024) return 2;   // Tablet
+        return 3;                     // Desktop
+    }, []);
 
-  const next = () => setPage((p) => (p + 1) % pages.length);
-  const prev = () => setPage((p) => (p - 1 + pages.length) % pages.length);
+    const cardsPerPage = getCardsPerPage(windowWidth);
 
-  return (
-    <section
-      id="services"
-      className="relative py-24 overflow-hidden"
-      style={{
-        backgroundImage: `linear-gradient(rgba(40,0,70,0.6), rgba(20,0,40,0.8)), url(${kafdBg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="container mx-auto px-6 lg:px-12 relative z-10">
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <h2 className="text-white text-4xl font-bold mb-4">Our Service Sectors</h2>
-          <p className="text-gray-300 text-lg">Skilled manpower across multiple industries.</p>
-        </motion.div>
+    // 2. Recalculate pages whenever windowWidth (and thus cardsPerPage) changes
+    const pages = useMemo(() => {
+        const out = [];
+        // Reset page to 0 if the total number of pages changes drastically
+        // This prevents the carousel from landing on a page that no longer exists
+        if (page >= Math.ceil(servicesList.length / cardsPerPage) && cardsPerPage > 0) {
+            setPage(0);
+        }
+        for (let i = 0; i < servicesList.length; i += cardsPerPage) {
+            out.push(servicesList.slice(i, i + cardsPerPage));
+        }
+        return out;
+    }, [cardsPerPage, page]); // Dependency on 'page' is necessary for the reset logic
 
-        {/* Carousel */}
-        <div className="relative flex items-center justify-center mt-10">
-          {pages.length > 1 && (
-            <button onClick={prev} className="absolute -left-10 bg-white/10 p-3 rounded-full text-white">
-              <ArrowLeft />
-            </button>
-          )}
+    // 3. Handle window resize event
+    useEffect(() => {
+        const handleResize = () => {
+            // Only update if the breakpoint actually changes
+            if (getCardsPerPage(window.innerWidth) !== getCardsPerPage(windowWidth)) {
+                setWindowWidth(window.innerWidth);
+            }
+        };
 
-          <div className="overflow-hidden w-full">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={page}
-                className="flex gap-6 justify-center"
-                initial={{ opacity: 0, x: 80 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -80 }}
-                transition={{ duration: 0.5 }}
-              >
-                {pages[page].map((service, i) => (
-                  <Card key={i} {...service} onExplore={() => goToServiceDetails(service)} />
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [windowWidth, getCardsPerPage]);
 
-          {pages.length > 1 && (
-            <button onClick={next} className="absolute -right-10 bg-white/10 p-3 rounded-full text-white">
-              <ArrowRight />
-            </button>
-          )}
-        </div>
-      </div>
-    </section>
-  );
+
+    const next = () => setPage((p) => (p + 1) % pages.length);
+    const prev = () => setPage((p) => (p - 1 + pages.length) % pages.length);
+
+    if (pages.length === 0) return null; // Handle empty list
+
+    return (
+        <section
+            id="services"
+            className="relative py-24 overflow-hidden"
+            style={{
+                backgroundImage: `linear-gradient(rgba(40,0,70,0.6), rgba(20,0,40,0.8)), url(${kafdBg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}
+        >
+            <div className="container mx-auto px-6 lg:px-12 relative z-10">
+                <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                    <h2 className="text-white text-4xl font-bold mb-4">Our Service Sectors</h2>
+                    <p className="text-gray-300 text-lg">Skilled manpower across multiple industries.</p>
+                </motion.div>
+
+                {/* Carousel - Responsive Structure */}
+                <div className="relative mt-10">
+                    <div className="overflow-hidden w-full px-12 sm:px-16 md:px-20 lg:px-0"> {/* Add padding for arrow space on smaller screens */}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={page}
+                                // Card layout adapts using gap and flex
+                                className="flex gap-6 items-stretch" 
+                                initial={{ opacity: 0, x: 80 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -80 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                {pages[page].map((service, i) => (
+                                    <div key={i} className="w-full">
+                                        <Card {...service} onExplore={() => goToServiceDetails && goToServiceDetails(service)} />
+                                    </div>
+                                ))}
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Navigation Arrows - Positioning is now relative to the carousel area */}
+                    {pages.length > 1 && (
+                        <>
+                            {/* Previous Button */}
+                            <button
+                                onClick={prev}
+                                className="absolute top-1/2 -translate-y-1/2 left-0 z-20 bg-black/30 hover:bg-black/50 p-3 rounded-full text-white transition-all duration-300 hidden sm:block" // Hide on xs screens, show on small screens and up
+                            >
+                                <MockArrowLeft className="w-5 h-5" />
+                            </button>
+                            {/* Next Button */}
+                            <button
+                                onClick={next}
+                                className="absolute top-1/2 -translate-y-1/2 right-0 z-20 bg-black/30 hover:bg-black/50 p-3 rounded-full text-white transition-all duration-300 hidden sm:block" // Hide on xs screens, show on small screens and up
+                            >
+                                <MockArrowRight className="w-5 h-5" />
+                            </button>
+                            
+                            {/* Mobile arrows (smaller and positioned below the cards) */}
+                            <div className="flex justify-center space-x-4 mt-8 sm:hidden">
+                                <button
+                                    onClick={prev}
+                                    className="bg-white/10 p-2 rounded-full text-white hover:bg-white/20 transition"
+                                >
+                                    <MockArrowLeft className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={next}
+                                    className="bg-white/10 p-2 rounded-full text-white hover:bg-white/20 transition"
+                                >
+                                    <MockArrowRight className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+
+            </div>
+        </section>
+    );
 };
 
 // =======================================================
@@ -1616,7 +1754,12 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS }) => {
         <div
           className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col items-center justify-between text-center backdrop-blur-md"
           style={{
-            background: COLORS.GLASS_BG,
+            backgroundImage: `url(${HalftoneBG})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    // opacity: 0.25,
+    mixBlendMode: "overlay",
+            // background: COLORS.GLASS_BG,
             border: COLORS.GLASS_BORDER,
             boxShadow: COLORS.SHADOW,
             backfaceVisibility: "hidden",
@@ -1702,12 +1845,12 @@ const Directors = ({ COLORS }) => {
   const y = useTransform(scrollY, [0, 600], [0, -150]);
 
   const directors = [
-    { name: "Mr. Mohammad Hamid Ansari", title: "Founder & Business Development", bio: "Expert recruiter skilled in strategic hiring and workforce planning.", intro: "Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at   Investment Company...", imageUrl: MohammedHamid },
-    { name: "Mr. Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at   Investment Company...", imageUrl: MrMujeeb },
-    { name: "Mr. Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at   Investment Company...", imageUrl: MrRizwan },
-    { name: "Mr Abdullah", title: "Deputy CEO", bio: "Expert in soft services training and staff development.", intro: "Mr. Abdullah specializes in the training and development of soft services personnel...", imageUrl: MrAbdullah },
-    { name: "Mr. Mohammed Tajammul Ahmed", title: "Administrator", bio: "Expert in soft services training and staff development.", intro: "Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel...", imageUrl: MrTajammul },
-    { name: "Mr. Palesh Rana", title: "Senior Recruiter - Overseas & Local (Bangladesh)", bio: "Expert in soft services training and staff development.", intro: "Mr. Palesh Rana specializes in the training and development of soft services personnel...", imageUrl: MrPaleshRana },
+    { name: "Mohammad Hamid Ansari", title: "Founder & Business Development", bio: "Expert recruiter skilled in strategic hiring and workforce planning.", intro: "Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at   Investment Company...", imageUrl: MohammedHamid },
+    { name: "Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at   Investment Company...", imageUrl: MrMujeeb },
+    { name: "Abdullah Masoud Ghazi Alotaib", title: "Deputy CEO", bio: "Expert in soft services training and staff development.", intro: "Mr. Abdullah specializes in the training and development of soft services personnel...", imageUrl: MrAbdullah },
+    { name: " Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at   Investment Company...", imageUrl: MrRizwan },
+    { name: "Mohammed Tajammul Ahmed", title: "Administrator", bio: "Expert in soft services training and staff development.", intro: "Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel...", imageUrl: MrTajammul },
+    { name: "Palesh Rana", title: "Senior Recruiter - Overseas & Local (Bangladesh)", bio: "Expert in soft services training and staff development.", intro: "Mr. Palesh Rana specializes in the training and development of soft services personnel...", imageUrl: MrPaleshRana },
   ];
 
   return (
@@ -1725,7 +1868,9 @@ const Directors = ({ COLORS }) => {
         }}
       ></motion.div>
 
-      <div className="container mx-auto px-6 text-center relative z-10">
+      <div className="container mx-auto px-6 text-center relative z-10"
+
+      >
         <div className="mb-12">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: COLORS.ACCENT }}>
             Our Leadership
@@ -1852,21 +1997,28 @@ const Management = ({ COLORS }) => {
     // =========================================
     const boardOfDirectors = [
         { 
-            name: "Mr. Mohammad Hamid Ansari", 
+            name: "Mohammad Hamid Ansari", 
             title: "Founder & Group Vice Chairman",
             bio: "Over 20 years of experience in the GCC and GCC markets, specializing in strategic planning and long-term project management.", 
             intro: "Mr. Mohammad Hamid Ansari is the Founder and Group Vice Chairman. With over 20 years of experience in the GCC markets, he specializes in strategic planning and long-term project management. His vision and profound expertise are the driving force behind ARM Solutions' continuous expansion and success.",
             imageUrl: MohammedHamid 
         },
         { 
-            name: "Mr. Mujeeb Ullah", 
+            name: "Mujeeb Ullah", 
             title: "Chief Executive Officer (CEO)",
             bio: "A decade of experience in strategic business development, client relations, and financial oversight.", 
             intro: "Mr. Mujeeb Ullah, the Chief Executive Officer (CEO), brings a decade of experience in strategic business development, client relations, and financial oversight. He is instrumental in shaping the company's client-centric approach and ensuring operational excellence across all departments.",
             imageUrl: MrMujeeb 
         },
         { 
-            name: "Mr. Mohammed Rizwan Ahmed", 
+       name: "Abdullah Masoud Ghazi Alotaibi", 
+       title: "Deputy CEO", 
+       bio: "Oversight of cross-departmental operations and strategic implementation.", 
+       intro: "Mr Abdullah, the Deputy CEO, plays a crucial role in overseeing cross-departmental operations and ensuring seamless coordination between project teams and executive management.", 
+       imageUrl: MrAbdullah 
+   },
+        { 
+            name: "Mohammed Rizwan Ahmed", 
             title: "Managing Director", 
             bio: "14+ years of robust leadership experience in manpower operations and strategic management.", 
             intro: "Mr. Mohammed Rizwan Ahmed serves as the Managing Director, leveraging 14+ years of robust leadership experience in manpower operations, regulatory compliance, and international standards enforcement. His leadership is pivotal in maintaining high-quality project delivery and sustained client satisfaction.",
@@ -1878,36 +2030,45 @@ const Management = ({ COLORS }) => {
     // Operational Management
     // =========================================
     const operationalManagement = [
+   
         { 
-            name: "Mr Abdullah", 
-            title: "Deputy CEO", 
-            bio: "Oversight of cross-departmental operations and strategic implementation.", 
-            intro: "Mr Abdullah, the Deputy CEO, plays a crucial role in overseeing cross-departmental operations and ensuring seamless coordination between project teams and executive management.", 
-            imageUrl: MrAbdullah 
-        },
-        { 
-            name: "Mr. Mohammed Tajammul Ahmed", 
+            name: "Mohammed Tajammul Ahmed", 
             title: "Administrator", 
             bio: "Specialist in soft services training and continuous staff development.", 
             intro: "Mr. Mohammed Tajammul Ahmed excels as our Administrator, specializing in soft services training and continuous staff development.", 
             imageUrl: MrTajammul 
         },
-        { 
-            name: "Mr. Palesh Rana", 
-            title: "Senior Recruiter - Overseas & Local (Bangladesh)", 
-            bio: "Expert in regional talent acquisition and large-scale project sourcing.", 
-            intro: "Mr. Palesh Rana is our Senior Recruiter, focusing on both overseas and local talent acquisition from Bangladesh.", 
-            imageUrl: MrPaleshRana 
-        },
-        { 
-            name: "Mr. Mohammed Abdul Mannan", 
+            { 
+            name: "Mohammed Abdul Mannan", 
             title: "Payroll Officer", 
             bio: "Manages all payroll operations and workforce compensation compliance.", 
             intro: "Mr. Mohammed Abdul Mannan ensures accurate and timely compensation across the workforce.", 
             imageUrl: MrMannan 
         },
         { 
-            name: "Mr. Imtiyaz Alam", 
+            name: "Palesh Rana", 
+            title: "Senior Recruiter - Overseas & Local (Bangladesh)", 
+            bio: "Expert in regional talent acquisition and large-scale project sourcing.", 
+            intro: "Mr. Palesh Rana is our Senior Recruiter, focusing on both overseas and local talent acquisition from Bangladesh.", 
+            imageUrl: MrPaleshRana 
+        },
+    
+        { 
+            name: "Farooq Nawaz", 
+            title: "Operations Supervisor", 
+            bio: "ensuring smooth workflow, high productivity, and consistent achievement of organizational goals..", 
+            intro: "Mr. Farooq Nawaz is an Operations Supervisor with extensive experience in managing daily operations and workforce performance, ensuring smooth workflow, high productivity, and consistent achievement of organizational goals.", 
+            imageUrl: MrFarooq 
+        },
+        { 
+            name: "Zafar Imam", 
+            title: "Procurement manager ", 
+            bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.", 
+            intro: "Mr.Zafar Imam brings over 12 years of hands-on expertise in procurement and supply chain operations, specializing in strategic sourcing, vendor negotiations, and contract management.", 
+            imageUrl: MrZafar
+        },
+        { 
+            name: "Imtiyaz Alam", 
             title: "Finance Manager", 
             bio: "Oversees all financial reporting, budgeting, and fiscal strategy.", 
             intro: "Mr. Imtiyaz Alam manages all financial reporting, budgeting, and fiscal operations.", 
@@ -2176,6 +2337,20 @@ const Contact = ({ COLORS }) => {
                                             <p className="text-base" style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
                                         </div>
                                     </div>
+                                    <div className="flex items-start space-x-4">
+                                        <MapPin className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
+                                        <div>
+                                            <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>
+                                                Branches
+                                            </p>
+                                            <ul className="text-base" style={{ color: COLORS.SUBTEXT }}>
+                                              <li>Riyadh, Kingdom of Saudi Arabia</li>
+                                              <li>Jeddah, Kingdom of Saudi Arabia</li>
+                                              <li>Madina, Kingdom of Saudi Arabia</li>
+                                              <li>Najran, Kingdom of Saudi Arabia</li>
+                                              </ul>
+                                        </div>
+                                    </div>
 
                                     <div className="flex items-start space-x-4">
                                         <Mail className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
@@ -2313,7 +2488,7 @@ const Footer = ({ COLORS }) => {
     <FadeInSection>
       <footer
         id="footer"
-        className="py-12"
+        className="relative py-12 overflow-hidden"
         style={{
           backgroundColor: COLORS.BG,
           borderTop: COLORS.GLASS_BORDER,
@@ -2321,13 +2496,43 @@ const Footer = ({ COLORS }) => {
           color: COLORS.SUBTEXT,
         }}
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* =============================== */}
+        {/*  ANIMATED WAVES BACKGROUND      */}
+        {/* =============================== */}
+        <div
+          className="absolute inset-0 z-0 opacity-30 pointer-events-none"
+          style={{
+            backgroundImage: `url(${AnimatedWave})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            animation: "waveMove 12s ease-in-out infinite",
+            // mixBlendMode: "overlay",
+          }}
+        ></div>
+
+        {/* CUSTOM KEYFRAME ANIMATION */}
+        <style>{`
+          @keyframes waveMove {
+            0%   { background-position-x: 0%; }
+            50%  { background-position-x: 40%; }
+            100% { background-position-x: 0%; }
+          }
+        `}</style>
+
+        {/* =============================== */}
+        {/*  FOOTER CONTENT                 */}
+        {/* =============================== */}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
           <div
             className="grid grid-cols-1 md:grid-cols-4 gap-8 border-b pb-8 mb-8"
             style={{ borderColor: COLORS.ACCENT }}
           >
             <div>
-              <h3 className="text-2xl font-bold mb-4" style={{ color: COLORS.ACCENT }}>
+              <h3
+                className="text-2xl font-bold mb-4"
+                style={{ color: COLORS.ACCENT }}
+              >
                 ARM Solutions
               </h3>
               <p>
@@ -2336,27 +2541,40 @@ const Footer = ({ COLORS }) => {
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: COLORS.ACCENT }}>
+              <h4
+                className="text-lg font-semibold mb-4 border-b pb-2"
+                style={{ borderColor: COLORS.ACCENT }}
+              >
                 Quick Links
               </h4>
               {["About", "Services", "Careers", "Privacy Policy"].map((text) => (
-                <p key={text} className="mb-2 hover:underline" style={{ color: COLORS.SUBTEXT }}>
+                <p
+                  key={text}
+                  className="mb-2 hover:underline"
+                  style={{ color: COLORS.SUBTEXT }}
+                >
                   {text}
                 </p>
               ))}
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: COLORS.ACCENT }}>
+              <h4
+                className="text-lg font-semibold mb-4 border-b pb-2"
+                style={{ borderColor: COLORS.ACCENT }}
+              >
                 Contact
               </h4>
-              <p style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
-              <p style={{ color: COLORS.SUBTEXT }}>+966536514449</p>
-              <p style={{ color: COLORS.SUBTEXT }}>info@arm-group.com</p>
+              <p>Dammam, Kingdom of Saudi Arabia</p>
+              <p>+966536514449</p>
+              <p>admin@armgroup.org</p>
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ borderColor: COLORS.ACCENT }}>
+              <h4
+                className="text-lg font-semibold mb-4 border-b pb-2"
+                style={{ borderColor: COLORS.ACCENT }}
+              >
                 Follow Us
               </h4>
               <div className="flex space-x-4">
@@ -2369,7 +2587,7 @@ const Footer = ({ COLORS }) => {
             </div>
           </div>
 
-          <div className="text-center text-sm pt-4" style={{ color: COLORS.SUBTEXT }}>
+          <div className="text-center text-sm pt-4">
             © 2025 ARM Solutions. All rights reserved.
           </div>
         </div>
@@ -3167,7 +3385,7 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
         {/* ===================================================== */}
 
         <motion.h1
-          className="text-4xl md:text-5xl font-extrabold mb-12 text-center"
+          className="text-4xl md:text-5xl font-extrabold mb-12 mt-12 text-center"
           style={{ color: COLORS.TEXT }}
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -3182,7 +3400,11 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
         <motion.div
           className="p-8 rounded-2xl backdrop-blur-md border shadow-xl mb-16"
           style={{
-            background: COLORS.GLASS_BG,
+      
+    backgroundImage: `url(${HalftoneBG})`,
+    backgroundSize: "cover",
+    backgroundPosition: "right center",
+    mixBlendMode: "overlay",
             border: COLORS.GLASS_BORDER,
             boxShadow: COLORS.SHADOW,
           }}
@@ -3192,7 +3414,9 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
         >
           <h2
             className="text-3xl font-bold mb-4"
-            style={{ color: COLORS.ACCENT }}
+            style={{ color: COLORS.ACCENT,
+              
+             }}
           >
             Company Overview
           </h2>
@@ -3226,7 +3450,8 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
           >
             Leadership
           </h2> */}
-          <Management COLORS={COLORS} />
+          <Management COLORS={COLORS}
+           />
         </motion.div>
 
         {/* ===================================================== */}
@@ -3244,6 +3469,7 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
             className="p-8 rounded-2xl backdrop-blur-md border shadow-xl"
             style={{
               background: COLORS.GLASS_BG,
+              
               borderColor: COLORS.ACCENT,
               boxShadow: COLORS.SHADOW,
             }}
@@ -3259,11 +3485,9 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
               <li>
                 <span className="font-bold" style={{ color: COLORS.TEXT }}>
                   Vision:
-                </span>{" "}
-                To be the leading manpower solutions provider known for{" "}
-                <span style={{ color: COLORS.ACCENT }}>
-                  excellence, reliability, and innovation
                 </span>
+                {" "}
+            To become the most trusted and sought-after manpower solutions provider, recognized not only for excellence, reliability, and innovation, but also for our ability to transform workforce management across industries. We aspire to set new benchmarks in quality, safety, and operational efficiency by continuously elevating the standards of manpower supply—locally and internationally. Our vision is to empower organizations with a highly skilled and motivated workforce while contributing to regional development, sustainable business growth, and long-term industry leadership.
                 .
               </li>
 
@@ -3271,8 +3495,8 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
                 <span className="font-bold" style={{ color: COLORS.TEXT }}>
                   Mission:
                 </span>{" "}
-                To supply skilled, trained, and motivated manpower that supports
-                client success while nurturing workforce growth.
+             To deliver qualified, trained, and motivated manpower that strengthens our clients’ operational success while fostering the professional growth and well-being of our workforce. We are committed to supplying industry-ready personnel equipped with international safety standards, strong work ethics, and specialized technical skills.
+Our mission is to create a seamless and efficient manpower ecosystem—bridging talent with opportunity—while upholding excellence, transparency, safety, and continuous improvement
               </li>
             </ul>
           </div>
@@ -3310,6 +3534,11 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
           className="mt-20 p-8 rounded-2xl backdrop-blur-md border shadow-2xl"
           style={{
             background: COLORS.GLASS_BG,
+                   backgroundImage: `url(${HalftoneBG})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    // opacity: 0.25,
+    // mixBlendMode: "overlay",
             border: COLORS.GLASS_BORDER,
             boxShadow: COLORS.SHADOW,
           }}
@@ -3327,11 +3556,26 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              ["Integrity", "We operate with transparency and honesty in all business dealings."],
-              ["Excellence", "We strive to deliver top-quality services that exceed expectations."],
-              ["Commitment", "We focus on client satisfaction and continuous improvement."],
-              ["Teamwork", "Collaboration drives us toward shared goals."],
-              ["Innovation", "We adopt modern methods to ensure better workforce delivery."],
+               [
+    "Integrity",
+    "We conduct all operations with honesty, transparency, and ethical responsibility, ensuring trust and long-term partnerships with our clients and workforce."
+  ],
+  [
+    "Excellence",
+    "We are committed to delivering superior manpower solutions by maintaining high standards of quality, safety, training, and continuous performance improvement."
+  ],
+  [
+    "Commitment",
+    "We remain dedicated to client satisfaction, operational efficiency, and timely workforce mobilization, ensuring reliable support across all sectors."
+  ],
+  [
+    "Teamwork",
+    "We believe in a collaborative environment where employees, management, and clients work together to achieve shared goals and sustainable success."
+  ],
+  [
+    "Innovation",
+    "We continuously adopt new technologies, training methods, and modern workforce practices to enhance service delivery and meet evolving industry demands."
+  ],
             ].map(([title, desc], i) => (
               <motion.div key={i} whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
                 <p className="font-bold mb-2" style={{ color: COLORS.TEXT }}>
@@ -3417,7 +3661,7 @@ export default function App() {
 
   const [view, setView] = useState(getInitialView());
   const [selectedService, setSelectedService] = useState(null);
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark"); //Default theme
   const COLORS = THEMES[theme];
 
   const toggleTheme = () => setTheme((p) => (p === "light" ? "dark" : "light"));
