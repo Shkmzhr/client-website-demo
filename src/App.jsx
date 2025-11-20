@@ -1364,8 +1364,7 @@ facilities safe, clean, and operational at all times.`,
       key: "healthcare",
       title: "Healthcare",
       subtitle: "Nurses • Patient Care • Medical Support",
-      text: `We provide nursing assistants, patient care teams, and medical administrative staff to support 
-hospitals, clinics, and home-care environments.`,
+      text: `We provide nursing assistants, patient care teams, and medical administrative staff to support hospitals, clinics, and home-care environments, including specialized roles such as OT nurse, Home care nurse, Technician nurse, ICU nurse, ER nurse, Dental technician nurse, Sterilization nurse, and Derma nurse.`,
       image: Nurses,
     },
     {
@@ -1845,10 +1844,10 @@ const Directors = ({ COLORS }) => {
   const y = useTransform(scrollY, [0, 600], [0, -150]);
 
   const directors = [
-    { name: "Mohammad Hamid Ansari", title: "Founder & Business Development", bio: "Expert recruiter skilled in strategic hiring and workforce planning.", intro: "Mr. Mohammad Hamid Ansari serves as the Recruitment Manager at   Investment Company...", imageUrl: MohammedHamid },
-    { name: "Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at   Investment Company...", imageUrl: MrMujeeb },
+    { name: "Mohammad Hamid Ansari", title: "Founder & Chairman", bio: "Expert recruiter skilled in strategic hiring and workforce planning.", intro: "Mr. Mohammad Hamid Ansari is the visionary Founder & Chairman of Investment Company...", imageUrl: MohammedHamid },
+    { name: "Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at Investment Company...", imageUrl: MrMujeeb },
     { name: "Abdullah Masoud Ghazi Alotaib", title: "Deputy CEO", bio: "Expert in soft services training and staff development.", intro: "Mr. Abdullah specializes in the training and development of soft services personnel...", imageUrl: MrAbdullah },
-    { name: " Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at   Investment Company...", imageUrl: MrRizwan },
+    { name: " Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at Investment Company...", imageUrl: MrRizwan },
     { name: "Mohammed Tajammul Ahmed", title: "Administrator", bio: "Expert in soft services training and staff development.", intro: "Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel...", imageUrl: MrTajammul },
     { name: "Palesh Rana", title: "Senior Recruiter - Overseas & Local (Bangladesh)", bio: "Expert in soft services training and staff development.", intro: "Mr. Palesh Rana specializes in the training and development of soft services personnel...", imageUrl: MrPaleshRana },
   ];
@@ -1868,15 +1867,13 @@ const Directors = ({ COLORS }) => {
         }}
       ></motion.div>
 
-      <div className="container mx-auto px-6 text-center relative z-10"
-
-      >
+      <div className="container mx-auto px-6 text-center relative z-10">
         <div className="mb-12">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4" style={{ color: COLORS.ACCENT }}>
             Our Leadership
           </h2>
           <p className="text-lg max-w-3xl mx-auto" style={{ color: COLORS.SUBTEXT }}>
-            Our leadership team combines experience, integrity, and innovation to shape  ’s success in manpower excellence.
+            Our leadership team combines experience, integrity, and innovation to shape 's success in manpower excellence.
           </p>
         </div>
 
@@ -1885,6 +1882,43 @@ const Directors = ({ COLORS }) => {
             <DirectorCard key={index} {...director} index={index} COLORS={COLORS} />
           ))}
         </div>
+
+        {/* Know More Button */}
+        <motion.div
+          className="mt-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <a
+            href="#about" // Change this to your About Us page route
+            className="inline-flex items-center px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            style={{
+              background: COLORS.ACCENT,
+              color: '#ffffff',
+              boxShadow: `0 8px 32px ${COLORS.ACCENT}40`,
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = COLORS.PRIMARY;
+              e.target.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = COLORS.ACCENT;
+              e.target.style.transform = 'translateY(0px)';
+            }}
+          >
+            Explore More
+            <svg 
+              className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </motion.div>
       </div>
     </section>
   );
@@ -1892,7 +1926,7 @@ const Directors = ({ COLORS }) => {
 
 
 // ================Management section===================
-const ManagerCard = ({ name, title, bio, intro, imageUrl, COLORS, index, layoutType }) => {
+const ManagerCard = ({ name, title, bio, intro, imageUrl, COLORS, index, layoutType, linkedinUrl}) => {
     const description = intro || bio;
     const isDirector = layoutType === 'director';
 
@@ -1962,19 +1996,21 @@ const ManagerCard = ({ name, title, bio, intro, imageUrl, COLORS, index, layoutT
                 </div>
             </div>
             
-            {/* LinkedIn Icon - Moved to the corner */}
-            <div className={`mt-6 pt-4 border-t border-white/10 ${isDirector ? 'flex justify-end' : 'flex justify-center'}`}>
-                <motion.a
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-full bg-white/10 hover:bg-white/30 transition-colors"
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                >
-                    <Linkedin className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
-                </motion.a>
-            </div>
+            {/* LinkedIn Icon - Only show if linkedinUrl exists */}
+            {linkedinUrl && (
+                <div className={`mt-6 pt-4 border-t border-white/10 ${isDirector ? 'flex justify-end' : 'flex justify-center'}`}>
+                    <motion.a
+                        href={linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-full bg-white/10 hover:bg-white/30 transition-colors"
+                        whileHover={{ scale: 1.2, rotate: 5 }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <Linkedin className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
+                    </motion.a>
+                </div>
+            )}
         </motion.div>
     );
 };
@@ -1999,30 +2035,34 @@ const Management = ({ COLORS }) => {
         { 
             name: "Mohammad Hamid Ansari", 
             title: "Founder & Group Vice Chairman",
-            bio: "Over 20 years of experience in the GCC and GCC markets, specializing in strategic planning and long-term project management.", 
-            intro: "Mr. Mohammad Hamid Ansari is the Founder and Group Vice Chairman. With over 20 years of experience in the GCC markets, he specializes in strategic planning and long-term project management. His vision and profound expertise are the driving force behind ARM Solutions' continuous expansion and success.",
+            bio: "Over 12 years of experience in the GCC and GCC markets, specializing in strategic planning and long-term project management.", 
+            intro: "Mr. Mohammad Hamid Ansari stands as the distinguished Founder and Chairman of ARM Solutions, guiding the organization with a clear and unwavering strategic direction. His leadership is not merely administrative; it is the driving force and the very foundation upon which ARM Solutions' continuous expansion and notable success have been built. Possessing a profound and comprehensive level of expertise, Mr. Ansari's professional journey spans over twelve years of intensive and highly successful engagement within the competitive and dynamic GCC (Gulf Cooperation Council) markets.",
             imageUrl: MohammedHamid 
+            // linkedinUrl:
         },
         { 
             name: "Mujeeb Ullah", 
             title: "Chief Executive Officer (CEO)",
             bio: "A decade of experience in strategic business development, client relations, and financial oversight.", 
-            intro: "Mr. Mujeeb Ullah, the Chief Executive Officer (CEO), brings a decade of experience in strategic business development, client relations, and financial oversight. He is instrumental in shaping the company's client-centric approach and ensuring operational excellence across all departments.",
+            intro: "Mr. Mujeeb Ullah, the dynamic Chief Executive Officer (CEO), brings a highly valuable decade of experience in key areas including comprehensive strategic business development, sophisticated client relations management, and meticulous financial oversight. He plays an absolutely instrumental and indispensable role in shaping the company's deeply client-centric approach. Furthermore, he is essential for consistently ensuring operational excellence and adherence to the highest standards across all organizational departments, successfully driving the company's growth and stability.",
             imageUrl: MrMujeeb 
+            // linkedinUrl:
         },
         { 
        name: "Abdullah Masoud Ghazi Alotaibi", 
        title: "Deputy CEO", 
        bio: "Oversight of cross-departmental operations and strategic implementation.", 
-       intro: "Mr Abdullah, the Deputy CEO, plays a crucial role in overseeing cross-departmental operations and ensuring seamless coordination between project teams and executive management.", 
+       intro: "As the Deputy CEO, Mr. Abdullah performs a truly crucial role in maintaining organizational synergy and efficiency. He is specifically tasked with the oversight of cross-departmental operations, ensuring that workflows and activities are perfectly aligned. His focus is on guaranteeing seamless coordination and effective communication between all project teams and the executive management. This vital function ensures that strategies are executed smoothly and that all projects remain on track, directly supporting the firm's overall operational success.", 
        imageUrl: MrAbdullah 
+      //linkedinUrl:
    },
         { 
             name: "Mohammed Rizwan Ahmed", 
             title: "Managing Director", 
             bio: "14+ years of robust leadership experience in manpower operations and strategic management.", 
-            intro: "Mr. Mohammed Rizwan Ahmed serves as the Managing Director, leveraging 14+ years of robust leadership experience in manpower operations, regulatory compliance, and international standards enforcement. His leadership is pivotal in maintaining high-quality project delivery and sustained client satisfaction.",
-            imageUrl: MrRizwan 
+            intro: "Serving as the Managing Director, Mr. Mohammed Rizwan Ahmed leverages an impressive 14+ years of robust leadership experience. His specialization spans critical areas, including complex manpower operations, rigorous regulatory compliance, and stringent international standards enforcement. His leadership is absolutely pivotal to the organization, directly enabling the consistent maintenance of high-quality project delivery and guaranteeing sustained and high levels of client satisfaction across all operations. His expertise ensures operational integrity and market trust.",
+            imageUrl: MrRizwan,
+            linkedinUrl: "https://www.linkedin.com/in/rizwan-ahmed-07636182/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
         },
     ];
 
@@ -2030,49 +2070,57 @@ const Management = ({ COLORS }) => {
     // Operational Management
     // =========================================
     const operationalManagement = [
-   
+
+
+        { 
+            name: "Zafar Imam", 
+            title: "Procurement manager ", 
+            bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.", 
+            intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.", 
+            imageUrl: MrZafar
+            // linkedinUrl:
+        },
         { 
             name: "Mohammed Tajammul Ahmed", 
             title: "Administrator", 
             bio: "Specialist in soft services training and continuous staff development.", 
-            intro: "Mr. Mohammed Tajammul Ahmed excels as our Administrator, specializing in soft services training and continuous staff development.", 
-            imageUrl: MrTajammul 
+            intro: "We proudly introduce Mr. Mohammed Tajammul Ahmed, an expert in the training and development of soft services personnel for housekeeping, hospitality, and facility management. He ensures teams deliver service excellence in diverse environments. Highly skilled in building strong client relationships, he tailors solutions based on operational needs, consistently enhancing efficiency, performance, and long-term client trust.", 
+            imageUrl: MrTajammul
+            // linkedinUrl: 
         },
             { 
             name: "Mohammed Abdul Mannan", 
             title: "Payroll Officer", 
             bio: "Manages all payroll operations and workforce compensation compliance.", 
-            intro: "Mr. Mohammed Abdul Mannan ensures accurate and timely compensation across the workforce.", 
-            imageUrl: MrMannan 
+            intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.", 
+            imageUrl: MrMannan
+            // linkedinUrl: 
         },
         { 
             name: "Palesh Rana", 
             title: "Senior Recruiter - Overseas & Local (Bangladesh)", 
             bio: "Expert in regional talent acquisition and large-scale project sourcing.", 
-            intro: "Mr. Palesh Rana is our Senior Recruiter, focusing on both overseas and local talent acquisition from Bangladesh.", 
+            intro: "Mr. Palesh Rana serves as our indispensable Senior Recruiter, specializing in crucial talent acquisition efforts. His scope encompasses securing both overseas and local talent from the vital recruitment market of Bangladesh. With a keen focus on sourcing and engaging top professionals, he plays an essential role in expanding our workforce and ensuring the successful placement of well-vetted candidates into key roles.", 
             imageUrl: MrPaleshRana 
+            // linkedinUrl:
         },
     
         { 
             name: "Farooq Nawaz", 
             title: "Operations Supervisor", 
             bio: "ensuring smooth workflow, high productivity, and consistent achievement of organizational goals..", 
-            intro: "Mr. Farooq Nawaz is an Operations Supervisor with extensive experience in managing daily operations and workforce performance, ensuring smooth workflow, high productivity, and consistent achievement of organizational goals.", 
+            intro: "Mr. Farooq Nawaz, the Operations Supervisor, possesses extensive experience in the comprehensive management of daily operations and diligent workforce performance. He is crucial for ensuring a smooth workflow and maintaining consistently high productivity. His dedicated efforts directly contribute to the consistent achievement of all organizational goals and operational efficiency.", 
             imageUrl: MrFarooq 
+            // linkedinUrl:
         },
-        { 
-            name: "Zafar Imam", 
-            title: "Procurement manager ", 
-            bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.", 
-            intro: "Mr.Zafar Imam brings over 12 years of hands-on expertise in procurement and supply chain operations, specializing in strategic sourcing, vendor negotiations, and contract management.", 
-            imageUrl: MrZafar
-        },
+        
         { 
             name: "Imtiyaz Alam", 
             title: "Finance Manager", 
             bio: "Oversees all financial reporting, budgeting, and fiscal strategy.", 
-            intro: "Mr. Imtiyaz Alam manages all financial reporting, budgeting, and fiscal operations.", 
+            intro: "Mr. Imtiyaz Alam efficiently manages the comprehensive scope of the organization's fiscal operations. His primary responsibilities include meticulous oversight of all financial reporting, strategic budgeting processes, and the day-to-day fiscal activities. His expertise ensures the financial health, accuracy, and regulatory compliance of the company's entire monetary structure.", 
             imageUrl: MrImtiyaz 
+            // linkedinUrl:
         },
     ];
 
@@ -2175,7 +2223,8 @@ const Management = ({ COLORS }) => {
                     Operational Management
                 </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+                {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl mx-auto"> */}
+                <div className="grid grid-cols-1 gap-10 max-w-6xl mx-auto mb-20">
                     {operationalManagement.map((manager, index) => (
                         <motion.div
                             key={`staff-${index}`}
@@ -2188,7 +2237,7 @@ const Management = ({ COLORS }) => {
                                 {...manager}
                                 index={index + boardOfDirectors.length}
                                 COLORS={COLORS}
-                                layoutType="operational"
+                                layoutType="director"
                                 glass
                             />
                         </motion.div>
@@ -2624,7 +2673,7 @@ const FloatingButtons = ({ COLORS }) => {
     >
       {/* WhatsApp Button */}
       <motion.a
-        href="https://wa.me/966500000000"
+        href="https://wa.me/966538274449"
         target="_blank"
         rel="noopener noreferrer"
         className="p-3 sm:p-4 rounded-full backdrop-blur-md border transition-transform hover:scale-110 active:scale-95"

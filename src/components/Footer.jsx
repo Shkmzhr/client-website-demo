@@ -53,7 +53,7 @@ const Footer = () => {
                     <div>
                         <h4 className="text-lg font-semibold text-white mb-4">Contact Us</h4>
                         <div className="space-y-3">
-                            <ContactLink Icon={Phone} text="+966 50 XXX XXXX" href="tel:+96650XXXXXXX" />
+                            <ContactLink Icon={Phone} text="++966 53 827 4449" href="tel:+966 53 827 4449" />
                             <ContactLink Icon={Mail} text="info@armgroup.com" href="mailto:info@armgroup.com" />
                             <ContactLink Icon={MapPin} text="Riyadh, Saudi Arabia" href="#" />
                         </div>
