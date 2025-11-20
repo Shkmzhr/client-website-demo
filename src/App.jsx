@@ -1729,7 +1729,7 @@ const ServiceDetailsView = ({ service, toggleView, COLORS }) => {
 // ===================================
 // 5. Directors Component
 // ===================================
-const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS }) => {
+const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS  }) => {
   const [flipped, setFlipped] = React.useState(false);
 
   return (
@@ -1839,7 +1839,7 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS }) => {
   );
 };
 
-const Directors = ({ COLORS }) => {
+const Directors = ({ COLORS, handleCompanyProfileClick }) => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 600], [0, -150]);
 
@@ -1892,7 +1892,9 @@ const Directors = ({ COLORS }) => {
           transition={{ duration: 0.6 }}
         >
           <a
-            href="#about" // Change this to your About Us page route
+            onClick={handleCompanyProfileClick}
+            
+            href="#company-profile"// Change this to your About Us page route
             className="inline-flex items-center px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             style={{
               background: COLORS.ACCENT,
@@ -3671,7 +3673,7 @@ Our mission is to create a seamless and efficient manpower ecosystem—bridging 
 // ===================================
 // 11. Public View Wrapper
 // ===================================
-const PublicView = ({ toggleView, COLORS, theme,goToServiceDetails }) => (
+const PublicView = ({ toggleView, COLORS, theme,goToServiceDetails,handleCompanyProfileClick  }) => (
   <>
     <main className="flex-grow">
       <Hero COLORS={COLORS} />
@@ -3679,7 +3681,8 @@ const PublicView = ({ toggleView, COLORS, theme,goToServiceDetails }) => (
     <Services goToServiceDetails={goToServiceDetails} COLORS={COLORS} />
       {/* <ServiceItem COLORS={COLORS} /> */}
       <ClientMarquee COLORS={COLORS} theme={theme} />
-      <Directors COLORS={COLORS}/>
+      <Directors COLORS={COLORS}   handleCompanyProfileClick={handleCompanyProfileClick}
+/>
       <Contact COLORS={COLORS} />
     </main>
     <Footer COLORS={COLORS} />
@@ -3714,6 +3717,12 @@ export default function App() {
   const COLORS = THEMES[theme];
 
   const toggleTheme = () => setTheme((p) => (p === "light" ? "dark" : "light"));
+
+  const handleCompanyProfileClick = (e) => {
+    e.preventDefault();
+    toggleView("company-profile");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // SERVICE DETAILS VIEW HANDLER
   const goToServiceDetails = (service) => {
@@ -3800,6 +3809,7 @@ export default function App() {
               toggleView={toggleView}
               COLORS={COLORS}
               goToServiceDetails={goToServiceDetails}
+               handleCompanyProfileClick={handleCompanyProfileClick}
             />
           </PageTransitionWrapper>
         )}
