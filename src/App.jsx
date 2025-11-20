@@ -365,7 +365,7 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
   alt="ARM Group Logo"
   className="h-20 w-20 object-cover rounded-full"
   style={{
-    border: "0px solid rgba(155,108,255,0.9)",
+    border: "1px solid rgba(155,108,255,0.9)",
   }}
   animate={{
     boxShadow: [
