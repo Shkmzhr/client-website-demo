@@ -29,7 +29,6 @@ const Navbar = ({ toggleView, currentView }) => {
                     {isPublicView && (
                         <>
                             <NavLink to="hero">Home</NavLink>
-                            <NavLink to="about">About Us</NavLink>
                             <NavLink to="services">Services</NavLink>
                             <NavLink to="directors">Leadership</NavLink>
                             <NavLink to="footer">Contact</NavLink>
@@ -60,7 +59,6 @@ const Navbar = ({ toggleView, currentView }) => {
                     {isPublicView && (
                         <>
                             <NavLink to="hero" setIsOpen={setIsOpen}>Home</NavLink>
-                            <NavLink to="about" setIsOpen={setIsOpen}>About Us</NavLink>
                             <NavLink to="services" setIsOpen={setIsOpen}>Services</NavLink>
                             <NavLink to="directors" setIsOpen={setIsOpen}>Leadership</NavLink>
                             <NavLink to="footer" setIsOpen={setIsOpen}>Contact</NavLink>
