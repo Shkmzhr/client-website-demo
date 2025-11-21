@@ -3706,6 +3706,7 @@ const getInitialView = () => {
     if (window.location.hash.includes(SERVICE_DETAILS_HASH)) return 'service-details';
     return 'public';
 };
+
 export default function App() {
 
   const [view, setView] = useState(getInitialView());
