@@ -363,7 +363,7 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
 <motion.img
   src={ArmGroup}
   alt="ARM Group Logo"
-  className="h-20 w-20 object-cover rounded-full"
+  className="h-14 w-14 object-cover rounded-full"
   style={{
     border: "1px solid rgba(155,108,255,0.9)",
   }}
@@ -1557,12 +1557,193 @@ stage assistants, and security staff for events and exhibitions.`,
   );
 };
 // =======================================================
-// PART 3 — ENHANCED SERVICE DETAILS VIEW (Premium UI)
-// =======================================================
-// =======================================================
+//New Service Inquiry
+const InquirePage = ({ service, toggleView, COLORS }) => {
+  // Form state and submission logic (simplified for example)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: service ? `Inquiry about: ${service.title}` : '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
+
+  useEffect(() => {
+    // Pre-populate message if a service is provided
+    setFormData(prev => ({
+      ...prev,
+      message: service ? `Inquiry about: ${service.title}\n\n[Your detailed message here]` : '[Your detailed message here]',
+    }));
+  }, [service]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (submitStatus) setSubmitStatus(null); // Clear status on new input
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    // Simulate API submission delay with exponential backoff for a real API call
+    const maxRetries = 3;
+    let success = false;
+    for (let i = 0; i < maxRetries; i++) {
+        await new Promise(resolve => setTimeout(resolve, 500 * (i + 1))); // Wait 0.5s, 1s, 1.5s
+
+        // In a real application, replace this with your actual fetch call to a backend endpoint
+        console.log(`Submitting Inquiry: Attempt ${i + 1}`, formData);
+
+        // Simulate success or failure
+        if (Math.random() > 0.1) {
+            success = true;
+            break;
+        }
+    }
+
+    if (success) {
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', message: service ? `Inquiry about: ${service.title}` : '' }); // Clear form
+    } else {
+      setSubmitStatus('error');
+    }
+    setIsSubmitting(false);
+  };
+
+
+  const headerTitle = service ? `Inquire about ${service.title}` : "General Inquiry";
+  const headerSubtitle = service ? `Please fill out the form below for service details related to ${service.title}.` : "Please fill out the form below to get in touch with our team.";
+
+  return (
+    <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto mt-10" style={{ color: COLORS.TEXT }}>
+      {/* <div className="text-center mb-12">
+        <button
+          onClick={() => toggleView(service ? 'service-details' : 'public')}
+          className="mb-6 flex items-center mx-auto text-sm font-medium transition-colors hover:opacity-80"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          {service ? 'Back to Service Details' : 'Back to Home'}
+        </button>
+        <h1 className="text-4xl sm:text-5xl font-extrabold mb-4" style={{ color: COLORS.ACCENT }}>
+          {headerTitle}
+        </h1>
+        <p className="text-lg" style={{ color: COLORS.SECONDARY_TEXT }}>
+          {headerSubtitle}
+        </p>
+      </div> */}
+
+      <motion.form 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        onSubmit={handleSubmit} 
+        className="bg-white/10 p-6 sm:p-10 rounded-3xl shadow-2xl backdrop-blur-sm border border-white/20"
+      >
+        <div className="space-y-6">
+          {/* Name Field */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium mb-2">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              required
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 transition-all"
+              style={{ color: COLORS.TEXT, outlineColor: COLORS.ACCENT }}
+              placeholder="John Doe"
+            />
+          </div>
+
+          {/* Email Field */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 transition-all"
+              style={{ color: COLORS.TEXT, outlineColor: COLORS.ACCENT }}
+              placeholder="you@company.com"
+            />
+          </div>
+
+          {/* Message Field */}
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium mb-2">
+              Your Message / Details
+            </label>
+            <textarea
+              name="message"
+              id="message"
+              required
+              rows="6"
+              value={formData.message}
+              onChange={handleChange}
+              className="w-full p-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 transition-all"
+              style={{ color: COLORS.TEXT, outlineColor: COLORS.ACCENT }}
+              placeholder="I am interested in..."
+            ></textarea>
+          </div>
+        </div>
+
+        {/* Submission Status */}
+        {submitStatus === 'success' && (
+          <div className="mt-6 p-4 rounded-xl flex items-center bg-green-500/20 text-green-300">
+            <Check className="w-5 h-5 mr-3"/>
+            Your inquiry has been successfully sent! We will contact you shortly.
+          </div>
+        )}
+        {submitStatus === 'error' && (
+          <div className="mt-6 p-4 rounded-xl flex items-center bg-red-500/20 text-red-300">
+            <X className="w-5 h-5 mr-3"/>
+            Something went wrong. Please try again or contact us directly.
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <motion.button
+          type="submit"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+          disabled={isSubmitting}
+          className="mt-8 w-full px-8 py-4 text-xl font-bold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center"
+          style={{
+            background: COLORS.ACCENT,
+            color: COLORS.BG,
+            boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
+          }}
+        >
+          {isSubmitting ? (
+            <>
+              <Activity className="w-5 h-5 mr-3 animate-spin" />
+              Sending...
+            </>
+          ) : (
+            <>
+              Submit Inquiry
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </>
+          )}
+        </motion.button>
+      </motion.form>
+    </section>
+  );
+};
+// =============================
+
 // PART 3 — SERVICE DETAILS VIEW (Animated, Safe, Enhanced)
 // =======================================================
-const ServiceDetailsView = ({ service, toggleView, COLORS }) => {
+const ServiceDetailsView = ({ service, toggleView, COLORS,goToInquire}) => {
   // If service object is missing — prevent crash
   if (!service || typeof service !== "object") {
     return (
@@ -1705,19 +1886,19 @@ const ServiceDetailsView = ({ service, toggleView, COLORS }) => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.35, duration: 0.5 }}
         >
-          <motion.button
-            whileHover={{ scale: 1.07, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-           
-            className="px-12 py-4 text-xl font-bold rounded-full shadow-xl"
-            style={{
-              background: COLORS.ACCENT,
-              color: COLORS.BG,
-              boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
-            }}
-          >
-            Inquire About {service.title}
-          </motion.button>
+        <motion.button
+              whileHover={{ scale: 1.07, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => goToInquire(service)} // <-- New redirection
+              className="px-12 py-4 text-xl font-bold rounded-full shadow-xl"
+              style={{
+                background: COLORS.ACCENT,
+                color: COLORS.BG,
+                boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
+              }}
+            >
+              Inquire About {service.title}
+            </motion.button>
         </motion.div>
         
       </div>
@@ -2192,31 +2373,104 @@ const Management = ({ COLORS }) => {
                 {/* =============================== */}
                 {/* Board of Directors */}
                 {/* =============================== */}
-                <h3 className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-indigo-400/50 pb-2 inline-block px-4"
-                    style={{ color: COLORS.ACCENT }}>
-                    Board of Directors
-                </h3>
+             <h3
+  className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-indigo-400/50 pb-2 inline-block px-4"
+  style={{ color: COLORS.ACCENT }}
+>
+  Board of Directors
+</h3>
 
-                <div className="grid grid-cols-1 gap-10 max-w-6xl mx-auto mb-20">
-                    {boardOfDirectors.map((manager, index) => (
-                        <motion.div
-                            key={`director-${index}`}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: index * 0.15 }}
-                        >
-                            <ManagerCard
-                                {...manager}
-                                index={index}
-                                COLORS={COLORS}
-                                layoutType="director"
-                                glass
-                            />
-                        </motion.div>
-                    ))}
-                </div>
+<div className="grid grid-cols-1 max-w-6xl mx-auto mb-20 gap-12">
+  {boardOfDirectors.map((manager, index) => (
+    <motion.div
+      key={`director-${index}`}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }} 
+      transition={{ type: "spring", stiffness: 100, damping: 20, delay: index * 0.1 }}
 
+      className="rounded-3xl p-10 md:p-12 bg-violet-950  shadow-2xl mx-auto relative overflow-hidden"
+      style={{
+        border: `1px solid ${COLORS.ACCENT}30`,
+      }}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-3 items-center">
+
+        {/* LEFT CONTENT: Name, Title, About */}
+        <div className="md:col-span-2 text-left space-y-6">
+
+          {/* NAME AND TITLE */}
+          <div>
+            <h2
+              className="text-4xl font-black"
+              style={{ color: COLORS.PRIMARY_HEADER }}
+            >
+              {manager.name}
+            </h2>
+
+            <p
+              className="text-xl font-semibold mt-1"
+              style={{ color: COLORS.ACCENT }}
+            >
+              {manager.title}
+            </p>
+          </div>
+
+          {/* ABOUT */}
+          <div>
+            <h4 className="text-lg font-bold mb-2" style={{ color: COLORS.PRIMARY_HEADER }}>
+              About
+            </h4>
+            <p className="text-base leading-relaxed" style={{ color: COLORS.SUBTEXT }}>
+              {manager.intro || manager.bio}
+            </p>
+          </div>
+
+          {/* SOCIAL ICONS (LinkedIn Only) */}
+          {manager.linkedinUrl && (
+            <div className="flex items-center gap-4 mt-4">
+              <motion.a
+                href={manager.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                className="p-3 rounded-full bg-black/5 hover:bg-black/20 transition"
+              >
+                <Linkedin className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
+              </motion.a>
+            </div>
+          )}
+        </div>
+
+        {/* RIGHT PROFILE IMAGE */}
+        <div className="flex justify-center md:justify-end mt-10 md:mt-0 ">
+          <div className="relative">
+            <div
+              className="absolute inset-0 rounded-full "
+              style={{
+                background:"white",
+                padding: "4px",
+                borderRadius: "9999px",
+          
+            
+              }}
+            ></div>
+
+            <img
+              src={manager.imageUrl}
+              alt={manager.name}
+              className="relative rounded-full w-48 h-48 md:w-60 md:h-60 object-contain p-1 border-4 border-white shadow-xl"
+              style={{transform: "scale(1.1)"}}
+              onError={(e) => {
+                e.target.src = "https://placehold.co/300x300/cccccc/333?text=No+Image";
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  ))}
+</div>
                 {/* =============================== */}
                 {/* Operational Management */}
                 {/* =============================== */}
@@ -3039,15 +3293,108 @@ const OurClients = (COLORS) => {
 
 // ===================================
 // 9. Admin Dashboard Component (STATIC)
-// ===================================
+// =========================
+//  LOGIN COMPONENT
+// Username: admin
+// Password: 12345
+// =========================
+const AdminLogin = ({ COLORS, onLogin }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (username === "admin" && password === "12345") {
+      onLogin(); // success
+    } else {
+      setError("Invalid username or password");
+    }
+  };
+
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center px-6"
+      style={{ background: COLORS.BG }}
+    >
+      <div
+        className="w-full max-w-md p-8 rounded-3xl backdrop-blur-xl shadow-xl border"
+        style={{
+          background: COLORS.GLASS_BG,
+          border: COLORS.GLASS_BORDER,
+          boxShadow: COLORS.SHADOW,
+        }}
+      >
+        <h2
+          className="text-3xl font-bold mb-6 text-center"
+          style={{ color: COLORS.ACCENT }}
+        >
+          Admin Login
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Username"
+            className="w-full p-3 rounded-xl border outline-none"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              color: COLORS.TEXT,
+            }}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-3 rounded-xl border outline-none"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              color: COLORS.TEXT,
+            }}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {error && (
+            <p className="text-red-400 text-center text-sm">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl font-bold transition-transform hover:scale-105"
+            style={{
+              background: COLORS.ACCENT,
+              color: COLORS.BG,
+            }}
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 // ===================================
 //  Admin Dashboard (Theme-Aware)
 // ===================================
-
-const COLORS_PALETTE = ["#4B89F7", "#63B3ED", "#2B6CB0", "#9F7AEA"];
-
 export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("manpower");
+
+  // Dummy Manpower Data
+  const dummyData = [
+    { id: 1, name: "John Doe", role: "Technician", status: "Active" },
+    { id: 2, name: "Sarah Khan", role: "Nurse", status: "Pending" },
+    { id: 3, name: "Adam Smith", role: "Driver", status: "Active" },
+    { id: 4, name: "Priya Patel", role: "Cleaner", status: "Inactive" },
+    { id: 5, name: "Michael Lee", role: "Electrician", status: "Active" },
+    { id: 6, name: "Aisha Begum", role: "Supervisor", status: "Pending" }
+  ];
 
   return (
     <motion.div
@@ -3060,7 +3407,9 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      {/* HEADER */}
+      {/* ========================= */}
+      {/* 🔵 ADMIN DASHBOARD HEADER */}
+      {/* ========================= */}
       <header
         className="w-full flex justify-between items-center px-6 py-4 sticky top-0 z-50 backdrop-blur-lg border-b shadow-lg"
         style={{
@@ -3077,7 +3426,8 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
         </h1>
 
         <div className="flex items-center gap-4">
-          {/* Theme Toggle Button */}
+
+          {/* 🌙/☀️ Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full border transition duration-300 hover:scale-110"
@@ -3087,49 +3437,14 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
               boxShadow: COLORS.SHADOW,
               color: COLORS.ACCENT,
             }}
-            title={
-              theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"
-            }
           >
-            {theme === "dark" ? (
-              // 🌞 Sun Icon
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 3v1m0 16v1m9-9h1M3 12H2m16.95 4.95l.707.707M5.05 5.05l.707.707m12.728 12.728l.707.707M5.757 18.364l.707.707M12 5a7 7 0 100 14 7 7 0 000-14z"
-                />
-              </svg>
-            ) : (
-              // 🌙 Moon Icon
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
-                />
-              </svg>
-            )}
+            {theme === "dark" ? "☀️" : "🌙"}
           </button>
 
-          {/* Back Button */}
+          {/* 🔙 Back Button */}
           <button
             onClick={() => toggleView("public")}
-            className="px-4 py-2 text-sm md:text-base font-semibold rounded-full transition-transform hover:scale-105"
+            className="px-4 py-2 text-sm font-semibold rounded-full transition-transform hover:scale-105"
             style={{
               backgroundColor: COLORS.ACCENT,
               color: COLORS.BG,
@@ -3141,12 +3456,17 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
+      {/* ========================= */}
+      {/* 📌 MAIN DASHBOARD LAYOUT */}
+      {/* ========================= */}
       <main className="flex-grow container mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* SIDEBAR */}
+
+          {/* ========================= */}
+          {/* 🔻 SIDEBAR NAVIGATION    */}
+          {/* ========================= */}
           <aside
-            className="rounded-xl p-4 md:col-span-1 border backdrop-blur-md"
+            className="rounded-xl p-4 border backdrop-blur-md"
             style={{
               background: COLORS.GLASS_BG,
               border: COLORS.GLASS_BORDER,
@@ -3159,7 +3479,8 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
             >
               Navigation
             </h3>
-            {["overview", "analytics", "users", "settings"].map((tab) => (
+
+            {["manpower", "settings"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -3179,231 +3500,62 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
             ))}
           </aside>
 
-          {/* MAIN PANEL */}
+          {/* ========================= */}
+          {/* 🟣 MAIN PANEL CONTENT    */}
+          {/* ========================= */}
           <section
-            className="md:col-span-3 rounded-xl border backdrop-blur-md p-6 transition-all"
+            className="md:col-span-3 rounded-xl border backdrop-blur-md p-6"
             style={{
               background: COLORS.GLASS_BG,
               border: COLORS.GLASS_BORDER,
               boxShadow: COLORS.SHADOW,
             }}
           >
-            {activeTab === "overview" && <DashboardOverview COLORS={COLORS} />}
-            {activeTab === "analytics" && <DashboardAnalytics COLORS={COLORS} />}
-            {activeTab === "users" && <DashboardUsers COLORS={COLORS} />}
-            {activeTab === "settings" && <DashboardSettings COLORS={COLORS} />}
+            {/* ONLY SHOW DUMMY DATA LIST */}
+            <h2
+              className="text-2xl font-bold mb-6"
+              style={{ color: COLORS.ACCENT }}
+            >
+              Manpower List
+            </h2>
+
+            <div className="space-y-4">
+              {dummyData.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-4 rounded-xl flex justify-between items-center"
+                  style={{
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                  }}
+                >
+                  <div>
+                    <p className="font-semibold">{item.name}</p>
+                    <p className="text-sm opacity-70">{item.role}</p>
+                  </div>
+
+                  <span
+                    className="px-3 py-1 rounded-lg text-sm font-semibold"
+                    style={{
+                      background:
+                        item.status === "Active"
+                          ? "rgba(0,200,0,0.3)"
+                          : item.status === "Pending"
+                          ? "rgba(255,215,0,0.3)"
+                          : "rgba(255,0,0,0.3)",
+                    }}
+                  >
+                    {item.status}
+                  </span>
+                </div>
+              ))}
+            </div>
           </section>
         </div>
       </main>
     </motion.div>
   );
 };
-
-/* =======================================================
-   OVERVIEW TAB (Animated KPIs + Line Chart)
-======================================================= */
-const DashboardOverview = ({ COLORS }) => {
-  const stats = [
-    { title: "Active Users", value: 1248 },
-    { title: "Projects Completed", value: 87 },
-    { title: "Pending Requests", value: 23 },
-    { title: "Revenue (SAR)", value: "1.2M" },
-  ];
-
-  const lineData = [
-    { month: "Jan", users: 400 },
-    { month: "Feb", users: 600 },
-    { month: "Mar", users: 800 },
-    { month: "Apr", users: 700 },
-    { month: "May", users: 1100 },
-    { month: "Jun", users: 950 },
-  ];
-
-  return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6" style={{ color: COLORS.ACCENT }}>
-        Overview
-      </h2>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-        {stats.map((stat, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="p-4 rounded-xl text-center shadow-md"
-            style={{
-              background: COLORS.GLASS_BG,
-              border: COLORS.GLASS_BORDER,
-              boxShadow: COLORS.SHADOW,
-            }}
-          >
-            <p className="text-sm font-medium" style={{ color: COLORS.SUBTEXT }}>
-              {stat.title}
-            </p>
-            <p className="text-2xl font-bold mt-2" style={{ color: COLORS.ACCENT }}>
-              {stat.value}
-            </p>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Line Chart */}
-      <div
-        className="w-full h-64 rounded-xl p-4"
-        style={{
-          background: COLORS.GLASS_BG,
-          border: COLORS.GLASS_BORDER,
-        }}
-      >
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={lineData}>
-            <CartesianGrid strokeDasharray="3 3" stroke={COLORS.SUBTEXT} />
-            <XAxis dataKey="month" stroke={COLORS.SUBTEXT} />
-            <YAxis stroke={COLORS.SUBTEXT} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: COLORS.GLASS_BG,
-                border: COLORS.GLASS_BORDER,
-                color: COLORS.TEXT,
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="users"
-              stroke={COLORS.ACCENT}
-              strokeWidth={3}
-              dot={{ r: 5 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  );
-};
-
-/* =======================================================
-   ANALYTICS TAB (BAR + PIE CHART)
-======================================================= */
-const DashboardAnalytics = ({ COLORS }) => {
-  const barData = [
-    { name: "Construction", value: 240 },
-    { name: "Maintenance", value: 160 },
-    { name: "Technical", value: 320 },
-    { name: "Hospitality", value: 210 },
-    { name: "Oil & Gas", value: 180 },
-  ];
-
-  const pieData = [
-    { name: "Saudi", value: 400 },
-    { name: "India", value: 300 },
-    { name: "Bangladesh", value: 300 },
-    { name: "Nepal", value: 200 },
-  ];
-
-  return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6" style={{ color: COLORS.ACCENT }}>
-        Analytics
-      </h2>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Bar Chart */}
-        <div
-          className="p-4 rounded-xl"
-          style={{
-            background: COLORS.GLASS_BG,
-            border: COLORS.GLASS_BORDER,
-          }}
-        >
-          <h3 className="text-lg font-semibold mb-4">Active Projects by Sector</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={barData}>
-              <XAxis dataKey="name" stroke={COLORS.SUBTEXT} />
-              <YAxis stroke={COLORS.SUBTEXT} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: COLORS.GLASS_BG,
-                  border: COLORS.GLASS_BORDER,
-                  color: COLORS.TEXT,
-                }}
-              />
-              <Bar dataKey="value" fill={COLORS.ACCENT} radius={[10, 10, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Pie Chart */}
-        <div
-          className="p-4 rounded-xl"
-          style={{
-            background: COLORS.GLASS_BG,
-            border: COLORS.GLASS_BORDER,
-          }}
-        >
-          <h3 className="text-lg font-semibold mb-4">Manpower Distribution</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={90}
-                fill={COLORS.ACCENT}
-                label
-              >
-                {pieData.map((_, index) => (
-                  <Cell
-                    key={index}
-                    fill={COLORS_PALETTE[index % COLORS_PALETTE.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: COLORS.GLASS_BG,
-                  border: COLORS.GLASS_BORDER,
-                  color: COLORS.TEXT,
-                }}
-              />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* =======================================================
-   USERS TAB
-======================================================= */
-const DashboardUsers = ({ COLORS }) => (
-  <div>
-    <h2 className="text-2xl font-bold mb-6" style={{ color: COLORS.ACCENT }}>
-      Users
-    </h2>
-    <p style={{ color: COLORS.SUBTEXT }}>
-      Manage user accounts and access controls. (Coming soon)
-    </p>
-  </div>
-);
-
-/* =======================================================
-   SETTINGS TAB
-======================================================= */
-const DashboardSettings = ({ COLORS }) => (
-  <div>
-    <h2 className="text-2xl font-bold mb-6" style={{ color: COLORS.ACCENT }}>
-      Settings
-    </h2>
-    <p style={{ color: COLORS.SUBTEXT }}>
-      Adjust dashboard appearance, theme, and configurations.
-    </p>
-  </div>
-);
 
 
 // ===================================
@@ -3711,9 +3863,13 @@ const getInitialView = () => {
 };
 export default function App() {
 
-  const [view, setView] = useState(getInitialView());
-  const [selectedService, setSelectedService] = useState(null);
   const [theme, setTheme] = useState("dark"); //Default theme
+  const [view, setView] = useState("public");
+  const [selectedService, setSelectedService] = useState(null);
+   // --- NEW STATE FOR INQUIRY ---
+  const [selectedServiceForInquiry, setSelectedServiceForInquiry] = useState(null);
+const [adminLoggedIn, setAdminLoggedIn] = useState(false);
+
   const COLORS = THEMES[theme];
 
   const toggleTheme = () => setTheme((p) => (p === "light" ? "dark" : "light"));
@@ -3735,6 +3891,22 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 500);
   };
+
+ const goToInquire = useCallback((service) => {
+    setSelectedServiceForInquiry(service);
+    setView("inquire");
+  }, []);
+
+ // --- NEW BACK NAVIGATION HANDLER FOR INQUIRY FORM ---
+  const handleInquireBack = useCallback(() => {
+    // Determine the target view based on whether an inquiry service was selected
+    const targetView = selectedServiceForInquiry ? 'service-details' : 'public';
+    
+    // Clear the inquiry context state
+    setSelectedServiceForInquiry(null); 
+});
+  // -----------------------------
+
 
   // toggleView WITH services support
   const toggleView = (targetView) => {
@@ -3787,20 +3959,44 @@ export default function App() {
       )}
 
       <div className="flex-grow">
-        {currentView === "admin" && (
-          <AdminDashboard toggleView={toggleView} COLORS={COLORS} theme={theme} toggleTheme={toggleTheme} />
-        )}
+  {currentView === "admin" && (
+  adminLoggedIn ? (
+    <AdminDashboard
+      toggleView={toggleView}
+      COLORS={COLORS}
+      theme={theme}
+      toggleTheme={toggleTheme}
+    />
+  ) : (
+    <AdminLogin
+      COLORS={COLORS}
+      onLogin={() => setAdminLoggedIn(true)}
+    />
+  )
+)}
+
+
 
         {currentView === "company-profile" && (
           <CompanyProfile toggleView={toggleView} COLORS={COLORS} />
         )}
 
         {currentView === "service-details" && (
-          <ServiceDetailsView service={selectedService} toggleView={toggleView} COLORS={COLORS} />
+          <ServiceDetailsView service={selectedService} toggleView={toggleView} COLORS={COLORS} 
+         goToInquire={goToInquire}
+          />
         )}
 
         {currentView === "services" && (
           <ServicesPage goToServiceDetails={goToServiceDetails} COLORS={COLORS} />
+        )}
+ {currentView === "inquire" && (
+          <InquirePage 
+            service={selectedServiceForInquiry} 
+            toggleView={toggleView} 
+            COLORS={COLORS} 
+ onNavigateBack={handleInquireBack}
+          />
         )}
 
         {(currentView === "public" || view === "fading-out") && (
