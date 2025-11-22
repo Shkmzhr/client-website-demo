@@ -54,6 +54,7 @@ body {
 
 .animate-gradient {
   animation: gradientFlow 6s ease infinite;
+<<<<<<< HEAD
 }
 
 /* Fix native select dropdown background */
@@ -61,3 +62,6 @@ select, option {
   background-color: #1a1530 !important; /* or your COLORS.BG */
   color: #ffffff !important;           /* or COLORS.TEXT */
 }
+=======
+}
+>>>>>>> e33f09d5bcb2cf853adcf59a0b5b112e5aad2f14
