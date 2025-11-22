@@ -8,11 +8,12 @@ node_modules/.cache/
 .cache/
 .parcel-cache
 *.cache
-
+**/.cache/
 # Production
 /build
 /dist
-
+dist/
+build/
 # Environment variables
 .env
 .env.local
