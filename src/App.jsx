@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback, useRef,useMemo  } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import kafdBg from './assets/clientimages/KAFFD_Hero1.webp'; // King Abdullah Financial District image
 import kafd2Bg from './assets/clientimages/kafd2Bg.jpg'; // Hero section2 image
 import HalftoneBG from './assets/halftone-purple.svg'; // Director section image
 import AnimatedWave from "./assets/animated-wave.svg";
-import { 
-  Menu, X, Globe, Users, TrendingUp, Shield, Linkedin, MapPin, Mail, Phone, 
-  Facebook, Twitter, MessageCircle, Factory, Hotel, Truck, Building, HeartPulse, 
-  ShoppingCart, Mic, ArrowLeft, ArrowRight, Wrench, Zap, Stethoscope, Activity, 
-  Hospital, HardHat, Sparkles, Pause, Play, Repeat, ArrowUp, ArrowDown,Check
+import {
+  Menu, X, Globe, Users, TrendingUp, Shield, Linkedin, MapPin, Mail, Phone,
+  Facebook, Twitter, MessageCircle, Factory, Hotel, Truck, Building, HeartPulse,
+  ShoppingCart, Mic, ArrowLeft, ArrowRight, Wrench, Zap, Stethoscope, Activity,
+  Hospital, HardHat, Sparkles, Pause, Play, Repeat, ArrowUp, ArrowDown, Check
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -20,14 +20,14 @@ import Facility from './assets/clientimages/Facility.jpg'; // Services Image
 import Nurses from './assets/clientimages/Nurses.png'; // Services Image
 import Retail from './assets/clientimages/retail-service.webp'; // Services Image
 import Events from './assets/clientimages/events-service.png'; // Services Image
-import { motion, useScroll, useTransform,useSpring,AnimatePresence,useInView    } from 'framer-motion'; 
+import { motion, useScroll, useTransform, useSpring, AnimatePresence, useInView } from 'framer-motion';
 
 
 // ===================================
 // IMAGE IMPORTS (UPDATED PATHS and all client images)
 // ===================================
-import nccLogo from './assets/clientimages/NCC.jpeg'; 
-import ArmGroup from './assets/clientimages/ARM-Group-screenshot.jpg'; 
+import nccLogo from './assets/clientimages/NCC.jpeg';
+import ArmGroup from './assets/clientimages/ARM-Group-screenshot.jpg';
 import clientImage1 from './assets/clientimages/alalkaif.jpeg';
 import clientImage2 from './assets/clientimages/aldawaa.jpeg';
 import clientImage3 from './assets/clientimages/accesspartners.jpeg';
@@ -56,7 +56,7 @@ import clientImage25 from './assets/clientimages/saudieleccomp.jpeg';
 import armGroupPhoto from './assets/clientimages/ARM-group-photo.jpeg';
 import arm2GroupPhoto from './assets/clientimages/ARM-2Group.jpeg';
 import MrMujeeb from './assets/clientimages/mujeebullah.jpg';
-import  MrRizwan from './assets/clientimages/mohammedrizwanahmed.jpg';
+import MrRizwan from './assets/clientimages/mohammedrizwanahmed.jpg';
 import MohammedHamid from './assets/clientimages/mohammedhamidansari.jpg';
 import MrTajammul from './assets/clientimages/Tajammul.jpeg';
 import MrAbdullah from './assets/clientimages/Abdullah.jpg';
@@ -78,6 +78,18 @@ import FacilityBg from './assets/clientimages/Facility.jpg';
 import HealthcareBg from './assets/clientimages/Healthcare.jpg';
 import RetailBg from './assets/clientimages/Retail.jpg';
 import EventsBg from './assets/clientimages/Events.jpg';
+
+//Firebase Imports
+import { db } from '../src/firebaseconfig';
+import { collection, onSnapshot, deleteDoc, addDoc, doc, serverTimestamp } from "firebase/firestore";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../src/firebaseconfig";
+import { signOut } from "firebase/auth";
+import { onAuthStateChanged } from 'firebase/auth';
+
+
+
+
 // Variables for each service background (all pointing to the placeholder for now)
 
 // const OilGasBg = supportStaffPlaceholder;
@@ -101,29 +113,29 @@ import EventsBg from './assets/clientimages/Events.jpg';
 // Theme Definitions
 // ===================================
 const THEMES = {
-light: {
-  BG: "#f9fafc", // soft off-white
-  TEXT: "#1a2233", // deep navy-gray
-  SUBTEXT: "#6b7b8c", // subtle gray-blue
-  ACCENT: "#2db5c9", // Musanadah aqua-teal
-  ACCENT_ALT: "#6dd3e8", // brighter cyan glow
-  GLASS_BG: "rgba(255,255,255,0.6)",
-  GLASS_BORDER: "1px solid rgba(45,181,201,0.25)",
-  SHADOW: "0 8px 32px rgba(45,181,201,0.1)",
-  GRADIENT: "linear-gradient(180deg, #ffffff 0%, #eaf5f7 100%)",
-},
-dark: {
-  BG: "#0a0714",              // deep dark purple / black
-  TEXT: "#f2eaff",           // soft lavender white
-  SUBTEXT: "#b8a6d9",        // muted lilac / dusty purple
-  ACCENT: "#bb86ff",         // bright lavender highlight (buttons, icons)
-  PRIMARY: "#a56bff",        // main purple brand color
-  ACCENT_ALT: "#6b4cff",     // deep violet accent
-  GLASS_BG: "rgba(155, 108, 255, 0.12)",   // subtle purple-glass background
-  GLASS_BORDER: "1px solid rgba(155, 108, 255, 0.28)",    
-  SHADOW: "0 8px 32px rgba(94, 44, 255, 0.35)",           // violet glow shadow
-  GRADIENT: "linear-gradient(180deg, #120b2c 0%, #1a1038 100%)", 
-},
+  light: {
+    BG: "#f9fafc", // soft off-white
+    TEXT: "#1a2233", // deep navy-gray
+    SUBTEXT: "#6b7b8c", // subtle gray-blue
+    ACCENT: "#2db5c9", // Musanadah aqua-teal
+    ACCENT_ALT: "#6dd3e8", // brighter cyan glow
+    GLASS_BG: "rgba(255,255,255,0.6)",
+    GLASS_BORDER: "1px solid rgba(45,181,201,0.25)",
+    SHADOW: "0 8px 32px rgba(45,181,201,0.1)",
+    GRADIENT: "linear-gradient(180deg, #ffffff 0%, #eaf5f7 100%)",
+  },
+  dark: {
+    BG: "#0a0714",              // deep dark purple / black
+    TEXT: "#f2eaff",           // soft lavender white
+    SUBTEXT: "#b8a6d9",        // muted lilac / dusty purple
+    ACCENT: "#bb86ff",         // bright lavender highlight (buttons, icons)
+    PRIMARY: "#a56bff",        // main purple brand color
+    ACCENT_ALT: "#6b4cff",     // deep violet accent
+    GLASS_BG: "rgba(155, 108, 255, 0.12)",   // subtle purple-glass background
+    GLASS_BORDER: "1px solid rgba(155, 108, 255, 0.28)",
+    SHADOW: "0 8px 32px rgba(94, 44, 255, 0.35)",           // violet glow shadow
+    GRADIENT: "linear-gradient(180deg, #120b2c 0%, #1a1038 100%)",
+  },
 };
 const MockUsers = Users;
 const MockArrowLeft = ArrowLeft;
@@ -146,93 +158,93 @@ const DURATION = 540; // Total duration of the scramble effect in ms
  * Animates text by cycling through random characters before resolving to the final text.
  */
 const ScrambleText = ({ text, className, color = DEEP_BROWN }) => {
-    const [scrambledText, setScrambledText] = useState('');
-    const [isComplete, setIsComplete] = useState(false);
+  const [scrambledText, setScrambledText] = useState('');
+  const [isComplete, setIsComplete] = useState(false);
 
-    const scramble = useCallback(() => {
-        if (!text) return;
+  const scramble = useCallback(() => {
+    if (!text) return;
 
-        const interval = Math.max(10, DURATION / text.length / 2); 
-        let iteration = 0;
+    const interval = Math.max(10, DURATION / text.length / 2);
+    let iteration = 0;
 
-        const scrambler = setInterval(() => {
-            const newText = text.split('').map((char, index) => {
-                const threshold = iteration / (text.length * 2);
+    const scrambler = setInterval(() => {
+      const newText = text.split('').map((char, index) => {
+        const threshold = iteration / (text.length * 2);
 
-                if (index < threshold * text.length) {
-                    return char;
-                }
-                
-                return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-            }).join('');
+        if (index < threshold * text.length) {
+          return char;
+        }
 
-            setScrambledText(newText);
-            iteration++;
+        return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+      }).join('');
 
-            if (iteration > text.length * 2) { 
-                clearInterval(scrambler);
-                setScrambledText(text);
-                setIsComplete(true);
-            }
-        }, interval);
+      setScrambledText(newText);
+      iteration++;
 
-        return () => clearInterval(scrambler);
-    }, [text]);
+      if (iteration > text.length * 2) {
+        clearInterval(scrambler);
+        setScrambledText(text);
+        setIsComplete(true);
+      }
+    }, interval);
 
-    useEffect(() => {
-        scramble();
-    }, [scramble]);
+    return () => clearInterval(scrambler);
+  }, [text]);
 
-    return (
-        <span 
-            className={`${className} transition-all duration-300`} 
-            style={{ 
-                color: color, 
-       
-            }}
-        >
-            {scrambledText}
-        </span>
-    );
+  useEffect(() => {
+    scramble();
+  }, [scramble]);
+
+  return (
+    <span
+      className={`${className} transition-all duration-300`}
+      style={{
+        color: color,
+
+      }}
+    >
+      {scrambledText}
+    </span>
+  );
 };
 const FramerFadeIn = ({ children, delay = 0, duration = 0.8, y = 30, once = true }) => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: y }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: duration, delay: delay, ease: "easeOut" }}
-            viewport={{ once: once, amount: 0.1 }}
-        >
-            {children}
-        </motion.div>
-    );
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: duration, delay: delay, ease: "easeOut" }}
+      viewport={{ once: once, amount: 0.1 }}
+    >
+      {children}
+    </motion.div>
+  );
 };
 /**
  * PageTransitionWrapper Component (Controls Admin/Public full-page fade)
  * Manages the fade-in/fade-out effect for the entire public site when switching views.
  */
 const PageTransitionWrapper = ({ children, isPublic }) => {
-    const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-    useEffect(() => {
-        // When becoming public, trigger fade-in
-        if (isPublic) {
-            const timeout = setTimeout(() => setIsVisible(true), 50); 
-            return () => clearTimeout(timeout);
-        } else {
-            // When leaving public, trigger fade-out
-            setIsVisible(false);
-        }
-    }, [isPublic]);
+  useEffect(() => {
+    // When becoming public, trigger fade-in
+    if (isPublic) {
+      const timeout = setTimeout(() => setIsVisible(true), 50);
+      return () => clearTimeout(timeout);
+    } else {
+      // When leaving public, trigger fade-out
+      setIsVisible(false);
+    }
+  }, [isPublic]);
 
-    return (
-        <div 
-            className={`transition-opacity duration-500 ease-in-out`}
-            style={{ opacity: isPublic && isVisible ? 1 : 0 }}
-        >
-            {children}
-        </div>
-    );
+  return (
+    <div
+      className={`transition-opacity duration-500 ease-in-out`}
+      style={{ opacity: isPublic && isVisible ? 1 : 0 }}
+    >
+      {children}
+    </div>
+  );
 };
 
 /**
@@ -240,47 +252,47 @@ const PageTransitionWrapper = ({ children, isPublic }) => {
  * Uses IntersectionObserver to trigger a fade-in when the element enters the viewport.
  */
 const FadeInSection = ({ children }) => {
-    const [isVisible, setVisible] = useState(false);
-    const domRef = useRef();
+  const [isVisible, setVisible] = useState(false);
+  const domRef = useRef();
 
-    useEffect(() => {
-        const currentRef = domRef.current;
-        if (!currentRef) return;
+  useEffect(() => {
+    const currentRef = domRef.current;
+    if (!currentRef) return;
 
-        const observer = new IntersectionObserver(entries => {
-            // Check if the element is intersecting
-            if (entries[0].isIntersecting) {
-                setVisible(true);
-                // Stop observing after first appearance to prevent re-fading on scroll up/down
-                observer.unobserve(currentRef); 
-            }
-        }, { 
-            // Trigger when 10% of the element is visible
-            threshold: 0.1 
-        });
+    const observer = new IntersectionObserver(entries => {
+      // Check if the element is intersecting
+      if (entries[0].isIntersecting) {
+        setVisible(true);
+        // Stop observing after first appearance to prevent re-fading on scroll up/down
+        observer.unobserve(currentRef);
+      }
+    }, {
+      // Trigger when 10% of the element is visible
+      threshold: 0.1
+    });
 
-        observer.observe(currentRef);
+    observer.observe(currentRef);
 
-        return () => {
-            if (currentRef) {
-                observer.unobserve(currentRef);
-            }
-        };
-    }, []);
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
 
-    // Increased duration to 1000ms and translateY distance to 50px for a more visible effect
-    return (
-        <div
-            className={`transition-all duration-1000 ease-out transform`} 
-            style={{ 
-                opacity: isVisible ? 1 : 0, 
-                transform: isVisible ? 'translateY(0)' : 'translateY(50px)'
-            }}
-            ref={domRef}
-        >
-            {children}
-        </div>
-    );
+  // Increased duration to 1000ms and translateY distance to 50px for a more visible effect
+  return (
+    <div
+      className={`transition-all duration-1000 ease-out transform`}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(50px)'
+      }}
+      ref={domRef}
+    >
+      {children}
+    </div>
+  );
 };
 //RANSITION THEME Component
 
@@ -347,65 +359,64 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
       style={{
         background: COLORS.GRADIENT,
         boxShadow: COLORS.SHADOW,
-        
+
       }}
     >
       <div className="container mx-auto px-6 lg:px-12 py-3 flex justify-between items-center">
 
         {/* Logo */}
-      <motion.div
-  initial={{ opacity: 0, y: -10 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
-  className="cursor-pointer inline-block"
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="cursor-pointer inline-block"
 
->
-<motion.img
-  src={ArmGroup}
-  alt="ARM Group Logo"
-  className="h-14 w-14 object-cover rounded-full"
-  style={{
-    border: "1px solid rgba(155,108,255,0.9)",
-  }}
-  animate={{
-    boxShadow: [
-      "0 0 10px rgba(155,108,255,0.4)",   // start (soft)
-      "0 0 22px rgba(155,108,255,0.9)",   // mid (bright)
-      "0 0 10px rgba(155,108,255,0.4)",   // end (same as start → smooth loop)
-    ],
-  }}
-  transition={{
-    duration: 3.5,
-    repeat: Infinity,
-    ease: "easeInOut",
-  }}
-/>
+        >
+          <motion.img
+            src={ArmGroup}
+            alt="ARM Group Logo"
+            className="h-14 w-14 object-cover rounded-full"
+            style={{
+              border: "1px solid rgba(155,108,255,0.9)",
+            }}
+            animate={{
+              boxShadow: [
+                "0 0 10px rgba(155,108,255,0.4)",   // start (soft)
+                "0 0 22px rgba(155,108,255,0.9)",   // mid (bright)
+                "0 0 10px rgba(155,108,255,0.4)",   // end (same as start → smooth loop)
+              ],
+            }}
+            transition={{
+              duration: 3.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
 
 
 
-</motion.div>
+        </motion.div>
 
 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex items-center space-x-10 font-medium">
- <button
-    onClick={() => {
-      toggleView("public");
-      window.location.hash = "";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }}
-    className="hover:text-blue-300 transition duration-300 font-semibold"
-  >
-    Home
-  </button>
+          <button
+            onClick={() => {
+              toggleView("public");
+              window.location.hash = "";
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-blue-300 transition duration-300 font-semibold"
+          >
+            Home
+          </button>
           {isPublicView ? (
             <>
               {/* Home Page Scroll Sections */}
               {/* <NavLink to="hero">Home</NavLink> */}
-              <NavLink to="about">About</NavLink>
+              {/* <NavLink to="about">About</NavLink> */}
               <NavLink to="services">Expertise</NavLink>
-              <NavLink to="directors">Leadership</NavLink>
-              <NavLink to="contact">Contact</NavLink>
+              {/* <NavLink to="directors">Leadership</NavLink> */}
 
               {/* ⭐ NEW — Services Full Page */}
               <a
@@ -415,6 +426,7 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
               >
                 Services
               </a>
+              <NavLink to="contact">Contact</NavLink>
 
               {/* Company Profile */}
               <a
@@ -422,7 +434,7 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
                 onClick={handleCompanyProfileClick}
                 className="hover:text-blue-300 transition duration-300"
               >
-                Company Profile
+                About Us
               </a>
             </>
           ) : (
@@ -528,18 +540,18 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
             exit="exit"
             variants={menuVariants}
           >
-<motion.a
-  onClick={() => {
-    toggleView("public");
-    setIsOpen(false);
-    window.location.hash = "";
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }}
-  className="block text-lg font-semibold text-blue-400"
-  variants={itemVariants}
->
-  Home
-</motion.a>
+            <motion.a
+              onClick={() => {
+                toggleView("public");
+                setIsOpen(false);
+                window.location.hash = "";
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="block text-lg font-semibold text-blue-400"
+              variants={itemVariants}
+            >
+              Home
+            </motion.a>
             {isPublicView && (
               <>
                 {/* Normal Home Scroll Links */}
@@ -629,485 +641,484 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
 // ===================================
 
 const Hero = () => {
-    const { scrollY } = useScroll();
-    const y = useTransform(scrollY, [0, 800], [0, -200]);
-    const scale = useTransform(scrollY, [0, 800], [1, 1.15]);
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 800], [0, -200]);
+  const scale = useTransform(scrollY, [0, 800], [1, 1.15]);
 
-    const slides = [
-        {
-            id: 1,
-            image: kafdBg,
-            subtitle: "FOR A VIBRANT SOCIETY",
-            title: "Award-Winning Facility Management Services",
-            button: "Explore Solutions",
-        },
-        {
-            id: 2,
-            image: kafd2Bg,
-            subtitle: "EXCELLENCE IN EVERY DETAIL",
-            title: "Delivering Quality Across All Sectors",
-            button: "Discover Expertise",
-            
-        },
-    ];
+  const slides = [
+    {
+      id: 1,
+      image: kafdBg,
+      subtitle: "FOR A VIBRANT SOCIETY",
+      title: "Award-Winning Facility Management Services",
+      button: "Explore Solutions",
+    },
+    {
+      id: 2,
+      image: kafd2Bg,
+      subtitle: "EXCELLENCE IN EVERY DETAIL",
+      title: "Delivering Quality Across All Sectors",
+      button: "Discover Expertise",
 
-    const [active, setActive] = React.useState(0);
+    },
+  ];
 
-    // Auto-scroll effect
-    React.useEffect(() => {
-        const interval = setInterval(() => {
-            setActive((prev) => (prev + 1) % slides.length);
-        }, 7000);
-        return () => clearInterval(interval);
-    }, [slides.length]);
+  const [active, setActive] = React.useState(0);
 
-    const handleScrollToAbout = () => {
-        const about = document.getElementById("about");
-        if (about) about.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
+  // Auto-scroll effect
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setActive((prev) => (prev + 1) % slides.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
-    return (
-        <section
-            id="hero"
-            className="relative h-screen flex items-center justify-center overflow-hidden"
-        >
-            {/* --- Background Carousel --- */}
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={slides[active].id}
-                    className="absolute inset-0 bg-cover bg-center will-change-transform"
-                    style={{
-                        backgroundImage: `url(${slides[active].image})`,
-                        y,
-                        scale,
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1.5, ease: "easeInOut" }}
-                />
-            </AnimatePresence>
+  const handleScrollToAbout = () => {
+    const about = document.getElementById("about");
+    if (about) about.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
-            {/* --- Purple Shade Overlay --- */}
-            <motion.div
-                className="absolute inset-0"
-                initial={{ opacity: 0.8 }}
-                animate={{
-                    background:
-                        "linear-gradient(180deg, rgba(99,51,109,0.85) 0%, rgba(10,10,25,0.9) 100%)",
-                }}
-            />
-
-            {/* --- Text Layer --- */}
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={slides[active].title}
-                    className="relative z-10 text-center px-6"
-                    initial={{ opacity: 0, y: 60 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -40 }}
-                    transition={{ duration: 1.2, ease: [0.25, 0.8, 0.25, 1] }}
-                >
-                    <motion.p
-                        className="text-blue-300 font-semibold tracking-widest mb-3 text-sm md:text-base uppercase"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                    >
-                        {slides[active].subtitle}
-                    </motion.p>
-
-                    {/* === MODIFICATION: Replaced motion.h1 content with ScrambleText === */}
-                    <motion.h1
-                        // Keeping Framer Motion animation for the whole H1 element to slide up
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5, duration: 1 }}
-                        className="text-white text-4xl md:text-6xl font-extrabold max-w-4xl mx-auto leading-tight"
-                    >
-                        <ScrambleText
-                            text={slides[active].title}
-                            className="inline-block"
-                            color="white" // Ensure text is visible on the dark overlay
-                            delay={0.9} // Start the scramble slightly after the h1 slides in
-                        />
-                    </motion.h1>
-
-                    <motion.a
-                        href="#services"
-                        className="inline-flex items-center gap-2 mt-10 bg-gradient-to-r from-indigo-500 to-fuchsia-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.9 }}
-                    >
-                        {slides[active].button}
-                        <ArrowRight className="w-5 h-5" />
-                    </motion.a>
-                </motion.div>
-            </AnimatePresence>
-
-{/* --- Scroll Indicator (Big Down Arrow) --- */}
-<motion.div
-  className="absolute bottom-14 left-1/2 -translate-x-1/2 z-20 cursor-pointer"
-  onClick={handleScrollToAbout}
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 1.2, duration: 1 }}
->
-
-  <motion.div
-    animate={{ y: [0, 16, 0], opacity: [1, 0.7, 1] }}
-    transition={{
-      duration: 1.8,
-      repeat: Infinity,
-      ease: "easeInOut",
-    }}
-    className="flex flex-col items-center"
-  >
-    {/* BIG Arrow Icon */}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-16 h-16"   // <<< Increased from w-10 h-10
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="white"
-      strokeWidth={0.5}       // <<< Slightly thicker stroke
+  return (
+    <section
+      id="hero"
+      className="relative h-screen flex items-center justify-center overflow-hidden"
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19 13l-7 7m0 0l-7-7m7 7V3"
+      {/* --- Background Carousel --- */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={slides[active].id}
+          className="absolute inset-0 bg-cover bg-center will-change-transform"
+          style={{
+            backgroundImage: `url(${slides[active].image})`,
+            y,
+            scale,
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+        />
+      </AnimatePresence>
+
+      {/* --- Purple Shade Overlay --- */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0.8 }}
+        animate={{
+          background:
+            "linear-gradient(180deg, rgba(99,51,109,0.85) 0%, rgba(10,10,25,0.9) 100%)",
+        }}
       />
-    </svg>
-  </motion.div>
 
-</motion.div>
+      {/* --- Text Layer --- */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={slides[active].title}
+          className="relative z-10 text-center px-6"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -40 }}
+          transition={{ duration: 1.2, ease: [0.25, 0.8, 0.25, 1] }}
+        >
+          <motion.p
+            className="text-blue-300 font-semibold tracking-widest mb-3 text-sm md:text-base uppercase"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            {slides[active].subtitle}
+          </motion.p>
 
-            {/* --- Indicators --- */}
-            <div className="absolute bottom-10 left-10 flex gap-3 z-20">
-                {slides.map((_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => setActive(i)}
-                        className={`w-4 h-2 rounded-full transition-all duration-300 ${
-                            i === active ? "bg-blue-400 w-8" : "bg-white/50"
-                        }`}
-                    ></button>
-                ))}
-            </div>
-        </section>
-    );
+          {/* === MODIFICATION: Replaced motion.h1 content with ScrambleText === */}
+          <motion.h1
+            // Keeping Framer Motion animation for the whole H1 element to slide up
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="text-white text-4xl md:text-6xl font-extrabold max-w-4xl mx-auto leading-tight"
+          >
+            <ScrambleText
+              text={slides[active].title}
+              className="inline-block"
+              color="white" // Ensure text is visible on the dark overlay
+              delay={0.9} // Start the scramble slightly after the h1 slides in
+            />
+          </motion.h1>
+
+          <motion.a
+            href="#services"
+            className="inline-flex items-center gap-2 mt-10 bg-gradient-to-r from-indigo-500 to-fuchsia-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            {slides[active].button}
+            <ArrowRight className="w-5 h-5" />
+          </motion.a>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* --- Scroll Indicator (Big Down Arrow) --- */}
+      <motion.div
+        className="absolute bottom-14 left-1/2 -translate-x-1/2 z-20 cursor-pointer"
+        onClick={handleScrollToAbout}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 1 }}
+      >
+
+        <motion.div
+          animate={{ y: [0, 16, 0], opacity: [1, 0.7, 1] }}
+          transition={{
+            duration: 1.8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="flex flex-col items-center"
+        >
+          {/* BIG Arrow Icon */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-16 h-16"   // <<< Increased from w-10 h-10
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="white"
+            strokeWidth={0.5}       // <<< Slightly thicker stroke
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19 13l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </motion.div>
+
+      </motion.div>
+
+      {/* --- Indicators --- */}
+      <div className="absolute bottom-10 left-10 flex gap-3 z-20">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            className={`w-4 h-2 rounded-full transition-all duration-300 ${i === active ? "bg-blue-400 w-8" : "bg-white/50"
+              }`}
+          ></button>
+        ))}
+      </div>
+    </section>
+  );
 };
 
 
 //About component
 const About = ({ COLORS, theme }) => {
-    const springTransition = {
-        type: "spring",
-        damping: 18,
-        stiffness: 120,
-        restDelta: 0.001,
-    };
+  const springTransition = {
+    type: "spring",
+    damping: 18,
+    stiffness: 120,
+    restDelta: 0.001,
+  };
 
-    const fadeLeft = {
-        hidden: { opacity: 0, x: -80, filter: "blur(6px)" },
-        show: {
-            opacity: 1,
-            x: 0,
-            filter: "blur(0px)",
-            transition: { ...springTransition, delay: 0.1 }
-        },
-    };
+  const fadeLeft = {
+    hidden: { opacity: 0, x: -80, filter: "blur(6px)" },
+    show: {
+      opacity: 1,
+      x: 0,
+      filter: "blur(0px)",
+      transition: { ...springTransition, delay: 0.1 }
+    },
+  };
 
-    const fadeRight = {
-        hidden: { opacity: 0, x: 80, filter: "blur(6px)" },
-        show: {
-            opacity: 1,
-            x: 0,
-            filter: "blur(0px)",
-            transition: { ...springTransition, delay: 0.2 }
-        },
-    };
+  const fadeRight = {
+    hidden: { opacity: 0, x: 80, filter: "blur(6px)" },
+    show: {
+      opacity: 1,
+      x: 0,
+      filter: "blur(0px)",
+      transition: { ...springTransition, delay: 0.2 }
+    },
+  };
 
-    const fadeUp = (delay = 0) => ({
-        hidden: { opacity: 0, y: 60, filter: "blur(6px)" },
-        show: {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            transition: {
-                delay,
-                duration: 1.0,
-                ease: [0.22, 1, 0.36, 1]
-            }
-        },
-    });
+  const fadeUp = (delay = 0) => ({
+    hidden: { opacity: 0, y: 60, filter: "blur(6px)" },
+    show: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        delay,
+        duration: 1.0,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    },
+  });
 
-    const isLight = theme === "light";
-    const textColor = isLight ? COLORS.TEXT : "#fff";
-    const subText = isLight ? COLORS.SUBTEXT : "#e6e6e6";
+  const isLight = theme === "light";
+  const textColor = isLight ? COLORS.TEXT : "#fff";
+  const subText = isLight ? COLORS.SUBTEXT : "#e6e6e6";
 
-    return (
-        // Main wrapper with dark background
-        <section 
-            id="about" 
-            className="relative overflow-hidden min-h-screen font-inter"
-            style={{ backgroundColor: COLORS.BG, color: COLORS.TEXT }}
-        >
+  return (
+    // Main wrapper with dark background
+    <section
+      id="about"
+      className="relative overflow-hidden min-h-screen font-inter"
+      style={{ backgroundColor: COLORS.BG, color: COLORS.TEXT }}
+    >
 
-            {/* ---------------------------------------------------------------- */}
-            {/* ⭐ 1. TOP SECTION (INDUSTRIES & STATS) 	 	 	 	 	 */}
-            {/* ---------------------------------------------------------------- */}
-            <motion.div
-                className="relative py-20 md:py-28 px-6 lg:px-20 overflow-hidden"
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.3 }}
-            >
-                {/* Abstract Background Element 1: Faded Neon Blob */}
-                <div
-                    className="absolute top-0 left-0 w-96 h-96 rounded-full mix-blend-screen opacity-30 blur-3xl z-0"
-                    style={{ background: `radial-gradient(circle, ${COLORS.ACCENT} 0%, transparent 70%)` }}
-                />
+      {/* ---------------------------------------------------------------- */}
+      {/* ⭐ 1. TOP SECTION (INDUSTRIES & STATS) 	 	 	 	 	 */}
+      {/* ---------------------------------------------------------------- */}
+      <motion.div
+        className="relative py-20 md:py-28 px-6 lg:px-20 overflow-hidden"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        {/* Abstract Background Element 1: Faded Neon Blob */}
+        <div
+          className="absolute top-0 left-0 w-96 h-96 rounded-full mix-blend-screen opacity-30 blur-3xl z-0"
+          style={{ background: `radial-gradient(circle, ${COLORS.ACCENT} 0%, transparent 70%)` }}
+        />
 
-                <div className="max-w-7xl mx-auto relative z-10">
+        <div className="max-w-7xl mx-auto relative z-10">
 
-                    {/* GRID WRAPPER */}
-                    <motion.div
-                        className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start"
-                        variants={{
-                            hidden: {},
-                            show: {
-                                transition: { staggerChildren: 0.15 },
-                            },
-                        }}
-                    >
+          {/* GRID WRAPPER */}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start"
+            variants={{
+              hidden: {},
+              show: {
+                transition: { staggerChildren: 0.15 },
+              },
+            }}
+          >
 
-                        {/* ========================================================
+            {/* ========================================================
                             LEFT — INDUSTRIES LIST (TAG STYLE)
                         ======================================================== */}
-                        <motion.div variants={fadeUp(0)}>
-                            <h3
-                                className="text-3xl md:text-4xl font-extrabold mb-6"
-                                style={{ color: COLORS.TEXT }}
-                            >
-                                Industries We Serve
-                            </h3>
+            <motion.div variants={fadeUp(0)}>
+              <h3
+                className="text-3xl md:text-4xl font-extrabold mb-6"
+                style={{ color: COLORS.TEXT }}
+              >
+                Industries We Serve
+              </h3>
 
-                            {/* TAGS — WRAP AND GLOW */}
-                            <div
-                                className="flex flex-wrap gap-3 pb-2"
-                                style={{ scrollbarWidth: "none" }}
-                            >
-                                {[
-                                    "Healthcare",
-                                    "Retail",
-                                    "Construction",
-                                    "Industrial & Oilfield",
-                                    "Skilled Worker",
-                                    "Logistics",
-                                    "Management",
-                                    "Events",
-                                ].map((item, i) => (
-                                    <motion.span
-                                        key={i}
-                                        className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg border"
-                                        style={{
-                                            background: 'rgba(255, 255, 255, 0.05)', // Subtle dark glass effect
-                                            color: COLORS.NEON_CYAN,
-                                            borderColor: COLORS.NEON_CYAN + '33',
-                                            textShadow: `0 0 4px ${COLORS.NEON_CYAN}55`,
-                                        }}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: i * 0.05, duration: 0.4 }}
-                                    >
-                                        {item}
-                                    </motion.span>
-                                ))}
-                            </div>
+              {/* TAGS — WRAP AND GLOW */}
+              <div
+                className="flex flex-wrap gap-3 pb-2"
+                style={{ scrollbarWidth: "none" }}
+              >
+                {[
+                  "Healthcare",
+                  "Retail",
+                  "Construction",
+                  "Industrial & Oilfield",
+                  "Skilled Worker",
+                  "Logistics",
+                  "Management",
+                  "Events",
+                ].map((item, i) => (
+                  <motion.span
+                    key={i}
+                    className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg border"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)', // Subtle dark glass effect
+                      color: COLORS.NEON_CYAN,
+                      borderColor: COLORS.NEON_CYAN + '33',
+                      textShadow: `0 0 4px ${COLORS.NEON_CYAN}55`,
+                    }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05, duration: 0.4 }}
+                  >
+                    {item}
+                  </motion.span>
+                ))}
+              </div>
 
-                            {/* CTA with Neon Underline Effect */}
-                            <motion.a
-                                href="#services"
-                                className="inline-flex items-center font-bold text-lg mt-8 group relative"
-                                style={{ color: COLORS.ACCENT }}
-                                whileHover={{ x: 6 }}
-                                transition={{ type: "spring", stiffness: 150 }}
-                            >
-                                Read more about our solutions
-                                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                {/* Neon underline */}
-                                <span 
-                                    className="absolute bottom-0 left-0 w-full h-0.5 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-                                    style={{ backgroundColor: COLORS.ACCENT, boxShadow: `0 0 5px ${COLORS.ACCENT}` }}
-                                />
-                            </motion.a>
-                        </motion.div>
+              {/* CTA with Neon Underline Effect */}
+              <motion.a
+                href="#services"
+                className="inline-flex items-center font-bold text-lg mt-8 group relative"
+                style={{ color: COLORS.ACCENT }}
+                whileHover={{ x: 6 }}
+                transition={{ type: "spring", stiffness: 150 }}
+              >
+                Read more about our solutions
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                {/* Neon underline */}
+                <span
+                  className="absolute bottom-0 left-0 w-full h-0.5 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  style={{ backgroundColor: COLORS.ACCENT, boxShadow: `0 0 5px ${COLORS.ACCENT}` }}
+                />
+              </motion.a>
+            </motion.div>
 
 
-                        {/* ========================================================
+            {/* ========================================================
                             RIGHT — CORPORATE PARAGRAPH + STATS
                         ======================================================== */}
-                        <motion.div
-                            variants={fadeUp(0.2)}
-                            className="space-y-10"
-                        >
-                            {/* Corporate Paragraph */}
-                            <motion.div
-                                className="text-base md:text-lg leading-relaxed tracking-wide"
-                                style={{ color: COLORS.SUBTEXT }}
-                                variants={fadeUp(0.3)}
-                            >
-                                Our agency provides strategic manpower and workforce solutions across
-                                key industry sectors, delivering professionals who uphold the highest
-                                standards of performance, compliance, and reliability. We support
-                                healthcare organizations with qualified medical support teams, empower
-                                the retail sector with trained service personnel, and strengthen
-                                construction and infrastructure projects with site workers. We also
-                                serve industrial and oilfield operations with safety-driven technical
-                                specialists, supply certified skilled workers across multiple trades,
-                                and enhance supply chain efficiency through logistics manpower.
-                                Additionally, we offer management-level professionals and dedicated
-                                event manpower to meet diverse operational demands.
-                            </motion.div>
-
-                            {/* Stats Grid with Neon Text */}
-                            <motion.div
-                                className="grid grid-cols-3 gap-6 md:gap-12 text-center md:text-left p-6 rounded-xl shadow-inner"
-                                style={{ 
-                                    background: 'rgba(255, 255, 255, 0.03)', // Subtle dark card background
-                                    border: `1px solid ${COLORS.ACCENT}22`,
-                                }}
-                                variants={{
-                                    show: {
-                                        transition: { staggerChildren: 0.2 },
-                                    },
-                                }}
-                            >
-                                {[
-                                    { icon: Users, label: "Workforce", value: "600+" },
-                                    { icon: Factory, label: "Service Lines", value: "50+" },
-                                    { icon: TrendingUp, label: "Retention", value: "98%" },
-                                ].map((stat, i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="relative"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.6, delay: 0.3 + i * 0.1 }}
-                                    >
-                                        <stat.icon className="w-6 h-6 mb-2 mx-auto md:mx-0" style={{ color: COLORS.NEON_CYAN }}/>
-                                        <h4
-                                            className="text-3xl md:text-4xl font-extrabold"
-                                            style={{ color: COLORS.ACCENT, textShadow: `0 0 8px ${COLORS.ACCENT}88` }} // Neon glow
-                                        >
-                                            {stat.value}
-                                        </h4>
-                                        <p
-                                            className="text-xs uppercase tracking-widest mt-1"
-                                            style={{ color: COLORS.SUBTEXT }}
-                                        >
-                                            {stat.label}
-                                        </p>
-                                    </motion.div>
-                                ))}
-                            </motion.div>
-                        </motion.div>
-
-                    </motion.div> {/* end grid */}
-
-                </div>
-            </motion.div>
-
-            {/* Divider Transition - More pronounced neon effect */}
-            <div
-                className="h-10 w-full"
-                style={{
-                    background: `linear-gradient(to bottom, ${COLORS.BG} 0%, ${COLORS.ACCENT}11 50%, ${COLORS.ACCENT}00 100%)`,
-                    boxShadow: `0 0 10px ${COLORS.ACCENT}33`,
-                }}
-            />
-
-
-            {/* ---------------------------------------------------------------- */}
-            {/* ⭐ 2. BOTTOM SECTION (COMPANY FOCUS) 	 	 	 	 	 */}
-            {/* ---------------------------------------------------------------- */}
             <motion.div
-                className="relative py-20 md:py-28 px-6 lg:px-20 overflow-hidden"
-                style={{ background: "#210d3f", color: "#fff" }} // Slightly different dark purple for contrast
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.3 }}
+              variants={fadeUp(0.2)}
+              className="space-y-10"
             >
-                {/* Abstract Background Element 2: Animated Line Pattern */}
-                <motion.div
-                    className="absolute inset-0 opacity-20 z-0"
-                    animate={{
-                        backgroundPosition: ["0% 0%", "100% 100%"],
-                        backgroundImage: [
-                            `repeating-linear-gradient(45deg, ${COLORS.ACCENT}22 0, ${COLORS.ACCENT}22 1px, transparent 1px, transparent 20px)`,
-                            `repeating-linear-gradient(135deg, ${COLORS.ACCENT}22 0, ${COLORS.ACCENT}22 1px, transparent 1px, transparent 20px)`,
-                        ],
-                    }}
-                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                />
+              {/* Corporate Paragraph */}
+              <motion.div
+                className="text-base md:text-lg leading-relaxed tracking-wide"
+                style={{ color: COLORS.SUBTEXT }}
+                variants={fadeUp(0.3)}
+              >
+                Our agency provides strategic manpower and workforce solutions across
+                key industry sectors, delivering professionals who uphold the highest
+                standards of performance, compliance, and reliability. We support
+                healthcare organizations with qualified medical support teams, empower
+                the retail sector with trained service personnel, and strengthen
+                construction and infrastructure projects with site workers. We also
+                serve industrial and oilfield operations with safety-driven technical
+                specialists, supply certified skilled workers across multiple trades,
+                and enhance supply chain efficiency through logistics manpower.
+                Additionally, we offer management-level professionals and dedicated
+                event manpower to meet diverse operational demands.
+              </motion.div>
 
-                <div className="grid md:grid-cols-[1.3fr_1fr] gap-16 max-w-7xl mx-auto relative z-10 items-center">
-
-                    {/* Left content: Title and CTA */}
-                    <motion.div variants={fadeLeft}>
-                        <h2 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
-                            Transforming Workspaces
-                            <span style={{ color: COLORS.NEON_CYAN }} className="block"> with Reliability & Expertise</span>
-                        </h2>
-
-                        <p className="text-lg mt-4 leading-relaxed" style={{ color: COLORS.TEXT }}>
-                            We create environments where businesses thrive—delivering manpower and integrated facility
-                            services that elevate comfort, safety, and operational excellence across all sectors.
-                        </p>
-
-                        <motion.a
-                            href="#company-profile"
-                            className="inline-flex items-center font-bold text-lg mt-8 group relative"
-                            style={{ color: COLORS.NEON_CYAN }}
-                            whileHover={{ x: 6 }}
-                            transition={{ type: "spring", stiffness: 150 }}
-                        >
-                            Explore Our Company Profile
-                            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            {/* Neon underline */}
-                            <span 
-                                className="absolute bottom-0 left-0 w-full h-0.5 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-                                style={{ backgroundColor: COLORS.NEON_CYAN, boxShadow: `0 0 5px ${COLORS.NEON_CYAN}` }}
-                            />
-                        </motion.a>
-                    </motion.div>
-
-                    {/* Right content: Glass Card */}
-                    <motion.div
-                        variants={fadeRight}
-                        className="p-8 rounded-2xl shadow-2xl relative overflow-hidden"
-                        style={{
-                            background: "rgba(255, 255, 255, 0.05)",
-                            border: `1px solid ${COLORS.ACCENT}`, // Stronger neon border
-                            backdropFilter: "blur(15px)",
-                            boxShadow: `0 0 20px ${COLORS.ACCENT}44, inset 0 0 8px ${COLORS.ACCENT}33`, // Inner and outer glow
-                            minWidth: "260px",
-                        }}
+              {/* Stats Grid with Neon Text */}
+              <motion.div
+                className="grid grid-cols-3 gap-6 md:gap-12 text-center md:text-left p-6 rounded-xl shadow-inner"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)', // Subtle dark card background
+                  border: `1px solid ${COLORS.ACCENT}22`,
+                }}
+                variants={{
+                  show: {
+                    transition: { staggerChildren: 0.2 },
+                  },
+                }}
+              >
+                {[
+                  { icon: Users, label: "Workforce", value: "600+" },
+                  { icon: Factory, label: "Service Lines", value: "50+" },
+                  { icon: TrendingUp, label: "Retention", value: "98%" },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={i}
+                    className="relative"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.3 + i * 0.1 }}
+                  >
+                    <stat.icon className="w-6 h-6 mb-2 mx-auto md:mx-0" style={{ color: COLORS.NEON_CYAN }} />
+                    <h4
+                      className="text-3xl md:text-4xl font-extrabold"
+                      style={{ color: COLORS.ACCENT, textShadow: `0 0 8px ${COLORS.ACCENT}88` }} // Neon glow
                     >
-                        <p className="leading-relaxed text-gray-100 font-bold md:text-lg">
-                            Founded in 2010, ARM Solutions has grown into a trusted partner <span className="text-cyan-400" style={{ textShadow: `0 0 5px ${COLORS.NEON_CYAN}99` }}> delivering skilled manpower,
-                            FM solutions, and operational support across Saudi Arabia.</span> Our mission is built around quality,
-                            consistency, and strong customer relationships.
-                        </p>
-                    </motion.div>
-
-                </div>
+                      {stat.value}
+                    </h4>
+                    <p
+                      className="text-xs uppercase tracking-widest mt-1"
+                      style={{ color: COLORS.SUBTEXT }}
+                    >
+                      {stat.label}
+                    </p>
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
-        </section>
-    );
+
+          </motion.div> {/* end grid */}
+
+        </div>
+      </motion.div>
+
+      {/* Divider Transition - More pronounced neon effect */}
+      <div
+        className="h-10 w-full"
+        style={{
+          background: `linear-gradient(to bottom, ${COLORS.BG} 0%, ${COLORS.ACCENT}11 50%, ${COLORS.ACCENT}00 100%)`,
+          boxShadow: `0 0 10px ${COLORS.ACCENT}33`,
+        }}
+      />
+
+
+      {/* ---------------------------------------------------------------- */}
+      {/* ⭐ 2. BOTTOM SECTION (COMPANY FOCUS) 	 	 	 	 	 */}
+      {/* ---------------------------------------------------------------- */}
+      <motion.div
+        className="relative py-20 md:py-28 px-6 lg:px-20 overflow-hidden"
+        style={{ background: "#210d3f", color: "#fff" }} // Slightly different dark purple for contrast
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        {/* Abstract Background Element 2: Animated Line Pattern */}
+        <motion.div
+          className="absolute inset-0 opacity-20 z-0"
+          animate={{
+            backgroundPosition: ["0% 0%", "100% 100%"],
+            backgroundImage: [
+              `repeating-linear-gradient(45deg, ${COLORS.ACCENT}22 0, ${COLORS.ACCENT}22 1px, transparent 1px, transparent 20px)`,
+              `repeating-linear-gradient(135deg, ${COLORS.ACCENT}22 0, ${COLORS.ACCENT}22 1px, transparent 1px, transparent 20px)`,
+            ],
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        />
+
+        <div className="grid md:grid-cols-[1.3fr_1fr] gap-16 max-w-7xl mx-auto relative z-10 items-center">
+
+          {/* Left content: Title and CTA */}
+          <motion.div variants={fadeLeft}>
+            <h2 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+              Transforming Workspaces
+              <span style={{ color: COLORS.NEON_CYAN }} className="block"> with Reliability & Expertise</span>
+            </h2>
+
+            <p className="text-lg mt-4 leading-relaxed" style={{ color: COLORS.TEXT }}>
+              We create environments where businesses thrive—delivering manpower and integrated facility
+              services that elevate comfort, safety, and operational excellence across all sectors.
+            </p>
+
+            <motion.a
+              href="#company-profile"
+              className="inline-flex items-center font-bold text-lg mt-8 group relative"
+              style={{ color: COLORS.NEON_CYAN }}
+              whileHover={{ x: 6 }}
+              transition={{ type: "spring", stiffness: 150 }}
+            >
+              Explore Our Company Profile
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {/* Neon underline */}
+              <span
+                className="absolute bottom-0 left-0 w-full h-0.5 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                style={{ backgroundColor: COLORS.NEON_CYAN, boxShadow: `0 0 5px ${COLORS.NEON_CYAN}` }}
+              />
+            </motion.a>
+          </motion.div>
+
+          {/* Right content: Glass Card */}
+          <motion.div
+            variants={fadeRight}
+            className="p-8 rounded-2xl shadow-2xl relative overflow-hidden"
+            style={{
+              background: "rgba(255, 255, 255, 0.05)",
+              border: `1px solid ${COLORS.ACCENT}`, // Stronger neon border
+              backdropFilter: "blur(15px)",
+              boxShadow: `0 0 20px ${COLORS.ACCENT}44, inset 0 0 8px ${COLORS.ACCENT}33`, // Inner and outer glow
+              minWidth: "260px",
+            }}
+          >
+            <p className="leading-relaxed text-gray-100 font-bold md:text-lg">
+              Founded in 2015, ARM Solutions has grown into a trusted partner <span className="text-cyan-400" style={{ textShadow: `0 0 5px ${COLORS.NEON_CYAN}99` }}> delivering skilled manpower,
+                FM solutions, and operational support across Saudi Arabia.</span> Our mission is built around quality,
+              consistency, and strong customer relationships.
+            </p>
+          </motion.div>
+
+        </div>
+      </motion.div>
+    </section>
+  );
 };
 
 
@@ -1138,180 +1149,180 @@ const About = ({ COLORS, theme }) => {
 // PART 1 — HOMEPAGE SERVICES CAROUSEL
 // =======================================================
 const servicesList = [
-    { icon: MockFactory, title: "Industrial & Manufacturing", description: "Providing skilled labor for assembly lines, quality control, and machinery operation." },
-    { icon: MockWrench, title: "Oil & Gas Operations", description: "Specialized engineers, technicians, and field workers compliant with international safety standards." },
-    { icon: MockBuilding, title: "Construction & Infrastructure", description: "Supplying certified tradesmen, project managers, and site supervisors." },
-    { icon: MockHotel, title: "Hospitality & Tourism", description: "Manpower for hotel management, food & beverage services, and guest relations." },
-    { icon: MockTruck, title: "Logistics & Supply Chain", description: "Drivers, warehouse staff, and supply chain managers for efficient operations." },
-    { icon: MockHeartPulse, title: "Healthcare Support", description: "Trained medical assistants, administrative staff, and facility support personnel." },
-    { icon: MockStethoscope, title: "IT & Technology", description: "Tech talent for software development, network administration, and data analysis." },
+  { icon: MockFactory, title: "Industrial & Manufacturing", description: "Providing skilled labor for assembly lines, quality control, and machinery operation." },
+  { icon: MockWrench, title: "Oil & Gas Operations", description: "Specialized engineers, technicians, and field workers compliant with international safety standards." },
+  { icon: MockBuilding, title: "Construction & Infrastructure", description: "Supplying certified tradesmen, project managers, and site supervisors." },
+  { icon: MockHotel, title: "Hospitality & Tourism", description: "Manpower for hotel management, food & beverage services, and guest relations." },
+  { icon: MockTruck, title: "Logistics & Supply Chain", description: "Drivers, warehouse staff, and supply chain managers for efficient operations." },
+  { icon: MockHeartPulse, title: "Healthcare Support", description: "Trained medical assistants, administrative staff, and facility support personnel." },
+  { icon: MockStethoscope, title: "IT & Technology", description: "Tech talent for software development, network administration, and data analysis." },
 ];
 
 /**
  * Card Component (Styled for Dark/Vibrant Theme)
  */
 const Card = ({ icon: Icon, title, description, onExplore }) => (
-    <motion.div
-        whileHover={{ scale: 1.05, y: -6 }}
-        transition={{ type: "spring", stiffness: 200, damping: 18 }}
-        className="group relative p-6 rounded-2xl overflow-hidden flex flex-col justify-between w-full h-full"
-        style={{
-            background: "rgba(75,0,130,0.12)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            backdropFilter: "blur(10px)",
-        }}
+  <motion.div
+    whileHover={{ scale: 1.05, y: -6 }}
+    transition={{ type: "spring", stiffness: 200, damping: 18 }}
+    className="group relative p-6 rounded-2xl overflow-hidden flex flex-col justify-between w-full h-full"
+    style={{
+      background: "rgba(75,0,130,0.12)",
+      border: "1px solid rgba(255,255,255,0.08)",
+      backdropFilter: "blur(10px)",
+    }}
+  >
+    {/* Icon */}
+    <div
+      className="flex items-center justify-center w-14 h-14 rounded-xl mb-4"
+      style={{ background: "rgba(0,163,224,0.20)" }}
     >
-        {/* Icon */}
-        <div
-            className="flex items-center justify-center w-14 h-14 rounded-xl mb-4"
-            style={{ background: "rgba(0,163,224,0.20)" }}
-        >
-            {/* Using MockUsers as default fallback */}
-            {Icon ? <Icon className="w-7 h-7 text-blue-400" /> : <MockUsers className="w-7 h-7 text-blue-400" />}
-        </div>
+      {/* Using MockUsers as default fallback */}
+      {Icon ? <Icon className="w-7 h-7 text-blue-400" /> : <MockUsers className="w-7 h-7 text-blue-400" />}
+    </div>
 
-        {/* Title & text */}
-        <h3 className="text-xl font-semibold mb-2 text-blue-300">{title}</h3>
-        <p className="text-gray-300 text-sm">{description}</p>
+    {/* Title & text */}
+    <h3 className="text-xl font-semibold mb-2 text-blue-300">{title}</h3>
+    <p className="text-gray-300 text-sm">{description}</p>
 
-        {/* Button (Commented out as in original) */}
-        {/* <button
+    {/* Button (Commented out as in original) */}
+    {/* <button
             onClick={onExplore}
             className="mt-6 w-full text-sm font-semibold py-2 rounded-lg text-white"
             style={{ backgroundColor: "rgba(0,163,224,0.6)", border: "1px solid rgba(0,163,224,0.85)" }}
         >
             Explore Services <MockArrowRight className="w-4 h-4 inline ml-1" />
         </button> */}
-    </motion.div>
+  </motion.div>
 );
 
 /**
  * Main Services Component (Responsive Carousel Logic)
  */
 const Services = ({ goToServiceDetails }) => {
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const [page, setPage] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [page, setPage] = useState(0);
 
-    // 1. Dynamic cardsPerPage based on screen size
-    const getCardsPerPage = useCallback((width) => {
-        if (width < 640) return 1;    // Mobile
-        if (width < 1024) return 2;   // Tablet
-        return 3;                     // Desktop
-    }, []);
+  // 1. Dynamic cardsPerPage based on screen size
+  const getCardsPerPage = useCallback((width) => {
+    if (width < 640) return 1;    // Mobile
+    if (width < 1024) return 2;   // Tablet
+    return 3;                     // Desktop
+  }, []);
 
-    const cardsPerPage = getCardsPerPage(windowWidth);
+  const cardsPerPage = getCardsPerPage(windowWidth);
 
-    // 2. Recalculate pages whenever windowWidth (and thus cardsPerPage) changes
-    const pages = useMemo(() => {
-        const out = [];
-        // Reset page to 0 if the total number of pages changes drastically
-        // This prevents the carousel from landing on a page that no longer exists
-        if (page >= Math.ceil(servicesList.length / cardsPerPage) && cardsPerPage > 0) {
-            setPage(0);
-        }
-        for (let i = 0; i < servicesList.length; i += cardsPerPage) {
-            out.push(servicesList.slice(i, i + cardsPerPage));
-        }
-        return out;
-    }, [cardsPerPage, page]); // Dependency on 'page' is necessary for the reset logic
+  // 2. Recalculate pages whenever windowWidth (and thus cardsPerPage) changes
+  const pages = useMemo(() => {
+    const out = [];
+    // Reset page to 0 if the total number of pages changes drastically
+    // This prevents the carousel from landing on a page that no longer exists
+    if (page >= Math.ceil(servicesList.length / cardsPerPage) && cardsPerPage > 0) {
+      setPage(0);
+    }
+    for (let i = 0; i < servicesList.length; i += cardsPerPage) {
+      out.push(servicesList.slice(i, i + cardsPerPage));
+    }
+    return out;
+  }, [cardsPerPage, page]); // Dependency on 'page' is necessary for the reset logic
 
-    // 3. Handle window resize event
-    useEffect(() => {
-        const handleResize = () => {
-            // Only update if the breakpoint actually changes
-            if (getCardsPerPage(window.innerWidth) !== getCardsPerPage(windowWidth)) {
-                setWindowWidth(window.innerWidth);
-            }
-        };
+  // 3. Handle window resize event
+  useEffect(() => {
+    const handleResize = () => {
+      // Only update if the breakpoint actually changes
+      if (getCardsPerPage(window.innerWidth) !== getCardsPerPage(windowWidth)) {
+        setWindowWidth(window.innerWidth);
+      }
+    };
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [windowWidth, getCardsPerPage]);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [windowWidth, getCardsPerPage]);
 
 
-    const next = () => setPage((p) => (p + 1) % pages.length);
-    const prev = () => setPage((p) => (p - 1 + pages.length) % pages.length);
+  const next = () => setPage((p) => (p + 1) % pages.length);
+  const prev = () => setPage((p) => (p - 1 + pages.length) % pages.length);
 
-    if (pages.length === 0) return null; // Handle empty list
+  if (pages.length === 0) return null; // Handle empty list
 
-    return (
-        <section
-            id="services"
-            className="relative py-24 overflow-hidden"
-            style={{
-                backgroundImage: `linear-gradient(rgba(40,0,70,0.6), rgba(20,0,40,0.8)), url(${kafdBg})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-            }}
-        >
-            <div className="container mx-auto px-6 lg:px-12 relative z-10">
-                <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                    <h2 className="text-white text-4xl font-bold mb-4">Our Service Sectors</h2>
-                    <p className="text-gray-300 text-lg">Skilled manpower across multiple industries.</p>
-                </motion.div>
+  return (
+    <section
+      id="services"
+      className="relative py-24 overflow-hidden"
+      style={{
+        backgroundImage: `linear-gradient(rgba(40,0,70,0.6), rgba(20,0,40,0.8)), url(${kafdBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="container mx-auto px-6 lg:px-12 relative z-10">
+        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <h2 className="text-white text-4xl font-bold mb-4"> <a href='#services-page'>Our Service Sectors</a></h2>
+          <p className="text-gray-300 text-lg">Skilled manpower across multiple industries.</p>
+        </motion.div>
 
-                {/* Carousel - Responsive Structure */}
-                <div className="relative mt-10">
-                    <div className="overflow-hidden w-full px-12 sm:px-16 md:px-20 lg:px-0"> {/* Add padding for arrow space on smaller screens */}
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={page}
-                                // Card layout adapts using gap and flex
-                                className="flex gap-6 items-stretch" 
-                                initial={{ opacity: 0, x: 80 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -80 }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                {pages[page].map((service, i) => (
-                                    <div key={i} className="w-full">
-                                        <Card {...service} onExplore={() => goToServiceDetails && goToServiceDetails(service)} />
-                                    </div>
-                                ))}
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
+        {/* Carousel - Responsive Structure */}
+        <div className="relative mt-10">
+          <div className="overflow-hidden w-full px-12 sm:px-16 md:px-20 lg:px-0"> {/* Add padding for arrow space on smaller screens */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={page}
+                // Card layout adapts using gap and flex
+                className="flex gap-6 items-stretch"
+                initial={{ opacity: 0, x: 80 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -80 }}
+                transition={{ duration: 0.5 }}
+              >
+                {pages[page].map((service, i) => (
+                  <div key={i} className="w-full">
+                    <Card {...service} onExplore={() => goToServiceDetails && goToServiceDetails(service)} />
+                  </div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-                    {/* Navigation Arrows - Positioning is now relative to the carousel area */}
-                    {pages.length > 1 && (
-                        <>
-                            {/* Previous Button */}
-                            <button
-                                onClick={prev}
-                                className="absolute top-1/2 -translate-y-1/2 left-0 z-20 bg-black/30 hover:bg-black/50 p-3 rounded-full text-white transition-all duration-300 hidden sm:block" // Hide on xs screens, show on small screens and up
-                            >
-                                <MockArrowLeft className="w-5 h-5" />
-                            </button>
-                            {/* Next Button */}
-                            <button
-                                onClick={next}
-                                className="absolute top-1/2 -translate-y-1/2 right-0 z-20 bg-black/30 hover:bg-black/50 p-3 rounded-full text-white transition-all duration-300 hidden sm:block" // Hide on xs screens, show on small screens and up
-                            >
-                                <MockArrowRight className="w-5 h-5" />
-                            </button>
-                            
-                            {/* Mobile arrows (smaller and positioned below the cards) */}
-                            <div className="flex justify-center space-x-4 mt-8 sm:hidden">
-                                <button
-                                    onClick={prev}
-                                    className="bg-white/10 p-2 rounded-full text-white hover:bg-white/20 transition"
-                                >
-                                    <MockArrowLeft className="w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={next}
-                                    className="bg-white/10 p-2 rounded-full text-white hover:bg-white/20 transition"
-                                >
-                                    <MockArrowRight className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </>
-                    )}
-                </div>
+          {/* Navigation Arrows - Positioning is now relative to the carousel area */}
+          {pages.length > 1 && (
+            <>
+              {/* Previous Button */}
+              <button
+                onClick={prev}
+                className="absolute top-1/2 -translate-y-1/2 left-0 z-20 bg-black/30 hover:bg-black/50 p-3 rounded-full text-white transition-all duration-300 hidden sm:block" // Hide on xs screens, show on small screens and up
+              >
+                <MockArrowLeft className="w-5 h-5" />
+              </button>
+              {/* Next Button */}
+              <button
+                onClick={next}
+                className="absolute top-1/2 -translate-y-1/2 right-0 z-20 bg-black/30 hover:bg-black/50 p-3 rounded-full text-white transition-all duration-300 hidden sm:block" // Hide on xs screens, show on small screens and up
+              >
+                <MockArrowRight className="w-5 h-5" />
+              </button>
 
-            </div>
-        </section>
-    );
+              {/* Mobile arrows (smaller and positioned below the cards) */}
+              <div className="flex justify-center space-x-4 mt-8 sm:hidden">
+                <button
+                  onClick={prev}
+                  className="bg-white/10 p-2 rounded-full text-white hover:bg-white/20 transition"
+                >
+                  <MockArrowLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={next}
+                  className="bg-white/10 p-2 rounded-full text-white hover:bg-white/20 transition"
+                >
+                  <MockArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+      </div>
+    </section>
+  );
 };
 
 // =======================================================
@@ -1415,144 +1426,142 @@ stage assistants, and security staff for events and exhibitions.`,
         </div>
 
 
-     <div className="space-y-32">
-  {servicesSections.map((s, index) => {
-    const reverse = index % 2 !== 0;
+        <div className="space-y-32">
+          {servicesSections.map((s, index) => {
+            const reverse = index % 2 !== 0;
 
-    return (
-      <motion.div
-        key={s.key}
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="relative"
-      >
-        <div
-          className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start`}
-        >
-          {/* ============= IMAGE SIDE ============= */}
-          <motion.div
-  initial={{ scale: 1.1, opacity: 0 }}
-  whileInView={{ scale: 1, opacity: 1 }}
-  whileHover={{ scale: 1.03 }}
-  transition={{ duration: 0.9 }}
-  viewport={{ once: true }}
-  className={`relative rounded-3xl overflow-hidden shadow-2xl lg:col-span-4 ${
-    reverse ? "lg:order-2" : "lg:order-1"
-  }`}
-  style={{ minHeight: "340px" }}
->
-
-  {/* Background image with smooth reveal + image effects */}
-  <motion.div
-    className="absolute inset-0 bg-cover bg-center"
-    style={{
-      backgroundImage: `url(${s.image})`,
-      filter: "brightness(0.9) saturate(1.1)",
-      transition: "filter 0.4s ease",
-    }}
-    whileHover={{
-      filter: "brightness(1.05) saturate(1.25) contrast(1.1)",
-    }}
-  />
-
-  {/* Light Purple Overlay */}
-<div
-  className="absolute inset-0 pointer-events-none"
-  style={{
-    background: "rgba(116, 219, 253, 0.25)",
-    mixBlendMode: "overlay",
-  }}
-/>
-
-{/* Vignette / Shadow Edges */}
-<div
-  className="absolute inset-0 pointer-events-none"
-  style={{
-    background:
-      "radial-gradient(circle at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.35) 100%)",
-  }}
-/>
-
-  {/* Existing gradient overlay for readability */}
-  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />
-
-</motion.div>
-
-          {/* ============= TEXT SIDE ============= */}
-          <motion.div
-            initial={{ opacity: 0, x: reverse ? -40 : 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className={`lg:col-span-8 ${
-              reverse ? "lg:order-1" : "lg:order-2"
-            }`}
-          >
-            <div
-              className="p-10 rounded-3xl backdrop-blur-xl shadow-2xl"
-              style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.18)",
-              }}
-            >
-              {/* TITLE */}
-              <h2
-                className="text-4xl font-bold mb-3"
-                style={{ color: COLORS.PRIMARY }}
+            return (
+              <motion.div
+                key={s.key}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                className="relative"
               >
-                {s.title}
-              </h2>
+                <div
+                  className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start`}
+                >
+                  {/* ============= IMAGE SIDE ============= */}
+                  <motion.div
+                    initial={{ scale: 1.1, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    whileHover={{ scale: 1.03 }}
+                    transition={{ duration: 0.9 }}
+                    viewport={{ once: true }}
+                    className={`relative rounded-3xl overflow-hidden shadow-2xl lg:col-span-4 ${reverse ? "lg:order-2" : "lg:order-1"
+                      }`}
+                    style={{ minHeight: "340px" }}
+                  >
 
-              {/* SUBTITLE */}
-              <p className="text-teal-500 text-lg font-medium mb-6">
-                {s.subtitle}
-              </p>
+                    {/* Background image with smooth reveal + image effects */}
+                    <motion.div
+                      className="absolute inset-0 bg-cover bg-center"
+                      style={{
+                        backgroundImage: `url(${s.image})`,
+                        filter: "brightness(0.9) saturate(1.1)",
+                        transition: "filter 0.4s ease",
+                      }}
+                      whileHover={{
+                        filter: "brightness(1.05) saturate(1.25) contrast(1.1)",
+                      }}
+                    />
 
-              {/* TEXT BLOCK – MULTI PARA SUPPORT */}
-              <div className="text-gray-400 text-lg leading-relaxed space-y-5">
-                {s.text.split("\n").map((para, i) => (
-                  <p key={i} className="whitespace-pre-line">
-                    {para.trim()}
-                  </p>
-                ))}
-              </div>
+                    {/* Light Purple Overlay */}
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: "rgba(116, 219, 253, 0.25)",
+                        mixBlendMode: "overlay",
+                      }}
+                    />
 
-              {/* DIVIDER */}
-              <div className="w-20 h-1 mt-8 mb-6 rounded-full"
-                style={{ background: COLORS.ACCENT }}
-              />
+                    {/* Vignette / Shadow Edges */}
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          "radial-gradient(circle at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.35) 100%)",
+                      }}
+                    />
 
-              {/* CTA */}
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() =>
-                  goToServiceDetails({
-                    title: s.title,
-                    description: s.text,
-                    imageUrl: s.image, 
-                      icon: s.icon || null     // optional
-                  })
-                }
-                className="px-8 py-4 rounded-full text-lg font-semibold"
-                style={{
-                  background: COLORS.ACCENT,
-                  color: COLORS.BG,
-                  boxShadow: COLORS.SHADOW,
-                }}
-              >
-                Request Manpower
-              </motion.button>
-            </div>
-          </motion.div>
+                    {/* Existing gradient overlay for readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />
+
+                  </motion.div>
+
+                  {/* ============= TEXT SIDE ============= */}
+                  <motion.div
+                    initial={{ opacity: 0, x: reverse ? -40 : 40 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.7 }}
+                    viewport={{ once: true }}
+                    className={`lg:col-span-8 ${reverse ? "lg:order-1" : "lg:order-2"
+                      }`}
+                  >
+                    <div
+                      className="p-10 rounded-3xl backdrop-blur-xl shadow-2xl"
+                      style={{
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                      }}
+                    >
+                      {/* TITLE */}
+                      <h2
+                        className="text-4xl font-bold mb-3"
+                        style={{ color: COLORS.PRIMARY }}
+                      >
+                        {s.title}
+                      </h2>
+
+                      {/* SUBTITLE */}
+                      <p className="text-teal-500 text-lg font-medium mb-6">
+                        {s.subtitle}
+                      </p>
+
+                      {/* TEXT BLOCK – MULTI PARA SUPPORT */}
+                      <div className="text-gray-400 text-lg leading-relaxed space-y-5">
+                        {s.text.split("\n").map((para, i) => (
+                          <p key={i} className="whitespace-pre-line">
+                            {para.trim()}
+                          </p>
+                        ))}
+                      </div>
+
+                      {/* DIVIDER */}
+                      <div className="w-20 h-1 mt-8 mb-6 rounded-full"
+                        style={{ background: COLORS.ACCENT }}
+                      />
+
+                      {/* CTA */}
+                      <motion.button
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() =>
+                          goToServiceDetails({
+                            title: s.title,
+                            description: s.text,
+                            imageUrl: s.image,
+                            icon: s.icon || null     // optional
+                          })
+                        }
+                        className="px-8 py-4 rounded-full text-lg font-semibold"
+                        style={{
+                          background: COLORS.ACCENT,
+                          color: COLORS.BG,
+                          boxShadow: COLORS.SHADOW,
+                        }}
+                      >
+                        Request Manpower
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
-      </motion.div>
-    );
-  })}
-</div>
-   </div>
+      </div>
     </section>
   );
 };
@@ -1590,16 +1599,16 @@ const InquirePage = ({ service, toggleView, COLORS }) => {
     const maxRetries = 3;
     let success = false;
     for (let i = 0; i < maxRetries; i++) {
-        await new Promise(resolve => setTimeout(resolve, 500 * (i + 1))); // Wait 0.5s, 1s, 1.5s
+      await new Promise(resolve => setTimeout(resolve, 500 * (i + 1))); // Wait 0.5s, 1s, 1.5s
 
-        // In a real application, replace this with your actual fetch call to a backend endpoint
-        console.log(`Submitting Inquiry: Attempt ${i + 1}`, formData);
+      // In a real application, replace this with your actual fetch call to a backend endpoint
+      console.log(`Submitting Inquiry: Attempt ${i + 1}`, formData);
 
-        // Simulate success or failure
-        if (Math.random() > 0.1) {
-            success = true;
-            break;
-        }
+      // Simulate success or failure
+      if (Math.random() > 0.1) {
+        success = true;
+        break;
+      }
     }
 
     if (success) {
@@ -1633,11 +1642,11 @@ const InquirePage = ({ service, toggleView, COLORS }) => {
         </p>
       </div> */}
 
-      <motion.form 
+      <motion.form
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        onSubmit={handleSubmit} 
+        onSubmit={handleSubmit}
         className="bg-white/10 p-6 sm:p-10 rounded-3xl shadow-2xl backdrop-blur-sm border border-white/20"
       >
         <div className="space-y-6">
@@ -1699,13 +1708,13 @@ const InquirePage = ({ service, toggleView, COLORS }) => {
         {/* Submission Status */}
         {submitStatus === 'success' && (
           <div className="mt-6 p-4 rounded-xl flex items-center bg-green-500/20 text-green-300">
-            <Check className="w-5 h-5 mr-3"/>
+            <Check className="w-5 h-5 mr-3" />
             Your inquiry has been successfully sent! We will contact you shortly.
           </div>
         )}
         {submitStatus === 'error' && (
           <div className="mt-6 p-4 rounded-xl flex items-center bg-red-500/20 text-red-300">
-            <X className="w-5 h-5 mr-3"/>
+            <X className="w-5 h-5 mr-3" />
             Something went wrong. Please try again or contact us directly.
           </div>
         )}
@@ -1743,7 +1752,7 @@ const InquirePage = ({ service, toggleView, COLORS }) => {
 
 // PART 3 — SERVICE DETAILS VIEW (Animated, Safe, Enhanced)
 // =======================================================
-const ServiceDetailsView = ({ service, toggleView, COLORS,goToInquire}) => {
+const ServiceDetailsView = ({ service, toggleView, COLORS, goToInquire }) => {
   // If service object is missing — prevent crash
   if (!service || typeof service !== "object") {
     return (
@@ -1774,7 +1783,7 @@ const ServiceDetailsView = ({ service, toggleView, COLORS,goToInquire}) => {
       style={{ background: COLORS.BG, color: COLORS.TEXT }}
     >
       <div className="container mx-auto px-6 lg:px-12 max-w-5xl">
-        
+
         {/* BACK BUTTON */}
         <motion.button
           whileHover={{ x: -3 }}
@@ -1864,17 +1873,17 @@ const ServiceDetailsView = ({ service, toggleView, COLORS,goToInquire}) => {
 
             <div className="flex items-start">
               <Check className="w-6 h-6 text-green-400 mr-3 mt-1" />
-                 <p className="text-gray-500">Technicians & Skilled Labor Workforce</p>
+              <p className="text-gray-500">Technicians & Skilled Labor Workforce</p>
             </div>
 
             <div className="flex items-start">
               <Check className="w-6 h-6 text-green-400 mr-3 mt-1" />
-               <p className="text-gray-500">  Safety Compliance & QA/QC Personnel</p>
+              <p className="text-gray-500">  Safety Compliance & QA/QC Personnel</p>
             </div>
 
             <div className="flex items-start">
               <Check className="w-6 h-6 text-green-400 mr-3 mt-1" />
-               <p className="text-gray-500"> Support, Logistics & On-Site Coordinators</p>
+              <p className="text-gray-500"> Support, Logistics & On-Site Coordinators</p>
             </div>
           </div>
         </motion.div>
@@ -1886,21 +1895,21 @@ const ServiceDetailsView = ({ service, toggleView, COLORS,goToInquire}) => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.35, duration: 0.5 }}
         >
-        <motion.button
-              whileHover={{ scale: 1.07, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => goToInquire(service)} // <-- New redirection
-              className="px-12 py-4 text-xl font-bold rounded-full shadow-xl"
-              style={{
-                background: COLORS.ACCENT,
-                color: COLORS.BG,
-                boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
-              }}
-            >
-              Inquire About {service.title}
-            </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.07, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => goToInquire(service)} // <-- New redirection
+            className="px-12 py-4 text-xl font-bold rounded-full shadow-xl"
+            style={{
+              background: COLORS.ACCENT,
+              color: COLORS.BG,
+              boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
+            }}
+          >
+            Inquire About {service.title}
+          </motion.button>
         </motion.div>
-        
+
       </div>
     </motion.div>
   );
@@ -1910,7 +1919,7 @@ const ServiceDetailsView = ({ service, toggleView, COLORS,goToInquire}) => {
 // ===================================
 // 5. Directors Component
 // ===================================
-const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS  }) => {
+const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS }) => {
   const [flipped, setFlipped] = React.useState(false);
 
   return (
@@ -1935,10 +1944,10 @@ const DirectorCard = ({ name, title, bio, intro, imageUrl, index, COLORS  }) => 
           className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col items-center justify-between text-center backdrop-blur-md"
           style={{
             backgroundImage: `url(${HalftoneBG})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    // opacity: 0.25,
-    mixBlendMode: "overlay",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            // opacity: 0.25,
+            mixBlendMode: "overlay",
             // background: COLORS.GLASS_BG,
             border: COLORS.GLASS_BORDER,
             boxShadow: COLORS.SHADOW,
@@ -2074,7 +2083,7 @@ const Directors = ({ COLORS, handleCompanyProfileClick }) => {
         >
           <a
             onClick={handleCompanyProfileClick}
-            
+
             href="#company-profile"// Change this to your About Us page route
             className="inline-flex items-center px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             style={{
@@ -2092,10 +2101,10 @@ const Directors = ({ COLORS, handleCompanyProfileClick }) => {
             }}
           >
             Explore More
-            <svg 
-              className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1"
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -2109,93 +2118,93 @@ const Directors = ({ COLORS, handleCompanyProfileClick }) => {
 
 
 // ================Management section===================
-const ManagerCard = ({ name, title, bio, intro, imageUrl, COLORS, index, layoutType, linkedinUrl}) => {
-    const description = intro || bio;
-    const isDirector = layoutType === 'director';
+const ManagerCard = ({ name, title, bio, intro, imageUrl, COLORS, index, layoutType, linkedinUrl }) => {
+  const description = intro || bio;
+  const isDirector = layoutType === 'director';
 
-    // Conditional classes based on layoutType
-    const cardContentClasses = isDirector
-        ? "flex flex-col md:grid md:grid-cols-12 md:gap-10" // Horizontal for Directors
-        : "flex flex-col items-center text-center"; // Vertical for Operational
+  // Conditional classes based on layoutType
+  const cardContentClasses = isDirector
+    ? "flex flex-col md:grid md:grid-cols-12 md:gap-10" // Horizontal for Directors
+    : "flex flex-col items-center text-center"; // Vertical for Operational
 
-    const imageContainerClasses = isDirector
-        ? "md:col-span-3 lg:col-span-2 flex justify-center md:block md:justify-start mb-6 md:mb-0"
-        : "mb-6 flex justify-center";
-    
-    const textContainerClasses = isDirector
-        ? "md:col-span-9 lg:col-span-10 text-left"
-        : "text-center";
+  const imageContainerClasses = isDirector
+    ? "md:col-span-3 lg:col-span-2 flex justify-center md:block md:justify-start mb-6 md:mb-0"
+    : "mb-6 flex justify-center";
 
-    return (
-        <motion.div
-            className="p-8 md:p-10 rounded-3xl overflow-hidden backdrop-blur-lg transition-all duration-500 w-full cursor-pointer hover:scale-[1.01]"
-            style={{
-                // Enhanced Glassmorphism Style
-                background: COLORS.GLASS_BG_LIGHT,
-                border: COLORS.GLASS_BORDER,
-                boxShadow: COLORS.SHADOW_DARK,
-                minHeight: isDirector ? '300px' : '380px',
+  const textContainerClasses = isDirector
+    ? "md:col-span-9 lg:col-span-10 text-left"
+    : "text-center";
+
+  return (
+    <motion.div
+      className="p-8 md:p-10 rounded-3xl overflow-hidden backdrop-blur-lg transition-all duration-500 w-full cursor-pointer hover:scale-[1.01]"
+      style={{
+        // Enhanced Glassmorphism Style
+        background: COLORS.GLASS_BG_LIGHT,
+        border: COLORS.GLASS_BORDER,
+        boxShadow: COLORS.SHADOW_DARK,
+        minHeight: isDirector ? '300px' : '380px',
+      }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{
+        scale: isDirector ? 1.0 : 1.05, // Subtle scale on hover
+        background: COLORS.HOVER_GLASS_BG
+      }}
+      transition={{
+        type: 'spring',
+        stiffness: 100,
+        delay: index * 0.1,
+        duration: 0.5
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
+      <div className={cardContentClasses}>
+        {/* Image Section */}
+        <div className={imageContainerClasses}>
+          <img
+            src={imageUrl}
+            alt={name}
+            className="h-32 w-32 md:h-40 md:w-40 object-contain rounded-xl shadow-xl border-4 border-white/50 transform transition-transform duration-300 hover:rotate-1"
+            onError={(e) => {
+              e.target.src = "https://placehold.co/160x160/cccccc/333?text=No+Image";
             }}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{ 
-                scale: isDirector ? 1.0 : 1.05, // Subtle scale on hover
-                background: COLORS.HOVER_GLASS_BG
-            }}
-            transition={{ 
-                type: 'spring', 
-                stiffness: 100,
-                delay: index * 0.1, 
-                duration: 0.5 
-            }}
-            viewport={{ once: true, amount: 0.2 }}
-        >
-            <div className={cardContentClasses}>
-                {/* Image Section */}
-                <div className={imageContainerClasses}>
-                    <img
-                        src={imageUrl}
-                        alt={name}
-                        className="h-32 w-32 md:h-40 md:w-40 object-contain rounded-xl shadow-xl border-4 border-white/50 transform transition-transform duration-300 hover:rotate-1"
-                        onError={(e) => {
-                            e.target.src = "https://placehold.co/160x160/cccccc/333?text=No+Image";
-                        }}
-                    />
-                </div>
+          />
+        </div>
 
-                {/* Text and Description Section */}
-                <div className={textContainerClasses}>
-                    <h3 className="text-2xl md:text-3xl font-extrabold mb-1" style={{ color: COLORS.PRIMARY_HEADER }}>
-                        {name}
-                    </h3>
-                    <p className="text-base md:text-lg font-semibold uppercase tracking-wider mb-4" style={{ color: COLORS.ACCENT }}>
-                        {title}
-                    </p>
-                    
-                    {/* Full Description */}
-                    <div className="text-sm leading-relaxed space-y-4 pr-2" style={{ color: COLORS.SUBTEXT }}>
-                        <p>{description}</p>
-                    </div>
-                </div>
-            </div>
-            
-            {/* LinkedIn Icon - Only show if linkedinUrl exists */}
-            {linkedinUrl && (
-                <div className={`mt-6 pt-4 border-t border-white/10 ${isDirector ? 'flex justify-end' : 'flex justify-center'}`}>
-                    <motion.a
-                        href={linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 rounded-full bg-white/10 hover:bg-white/30 transition-colors"
-                        whileHover={{ scale: 1.2, rotate: 5 }}
-                        whileTap={{ scale: 0.9 }}
-                    >
-                        <Linkedin className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
-                    </motion.a>
-                </div>
-            )}
-        </motion.div>
-    );
+        {/* Text and Description Section */}
+        <div className={textContainerClasses}>
+          <h3 className="text-2xl md:text-3xl font-extrabold mb-1" style={{ color: COLORS.PRIMARY_HEADER }}>
+            {name}
+          </h3>
+          <p className="text-base md:text-lg font-semibold uppercase tracking-wider mb-4" style={{ color: COLORS.ACCENT }}>
+            {title}
+          </p>
+
+          {/* Full Description */}
+          <div className="text-sm leading-relaxed space-y-4 pr-2" style={{ color: COLORS.SUBTEXT }}>
+            <p>{description}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* LinkedIn Icon - Only show if linkedinUrl exists */}
+      {linkedinUrl && (
+        <div className={`mt-6 pt-4 border-t border-white/10 ${isDirector ? 'flex justify-end' : 'flex justify-center'}`}>
+          <motion.a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full bg-white/10 hover:bg-white/30 transition-colors"
+            whileHover={{ scale: 1.2, rotate: 5 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Linkedin className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
+          </motion.a>
+        </div>
+      )}
+    </motion.div>
+  );
 };
 
 // ===================================
@@ -2203,305 +2212,305 @@ const ManagerCard = ({ name, title, bio, intro, imageUrl, COLORS, index, layoutT
 // ===================================
 
 const Management = ({ COLORS }) => {
-    if (!COLORS) {
-        console.error("COLORS prop is missing in Management component.");
-        return null;
-    }
+  if (!COLORS) {
+    console.error("COLORS prop is missing in Management component.");
+    return null;
+  }
 
-    const { scrollY } = useScroll();
-    const y = useTransform(scrollY, [0, 600], [0, -150]);
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 600], [0, -150]);
 
-    // =========================================
-    // Board of Directors
-    // =========================================
-    const boardOfDirectors = [
-        { 
-            name: "Mohammad Hamid Ansari", 
-            title: "Founder & Group Vice Chairman",
-            bio: "Over 12 years of experience in the GCC and GCC markets, specializing in strategic planning and long-term project management.", 
-            intro: "Mr. Mohammad Hamid Ansari stands as the distinguished Founder and Chairman of ARM Solutions, guiding the organization with a clear and unwavering strategic direction. His leadership is not merely administrative; it is the driving force and the very foundation upon which ARM Solutions' continuous expansion and notable success have been built. Possessing a profound and comprehensive level of expertise, Mr. Ansari's professional journey spans over twelve years of intensive and highly successful engagement within the competitive and dynamic GCC (Gulf Cooperation Council) markets.",
-            imageUrl: MohammedHamid 
-            // linkedinUrl:
-        },
-        { 
-            name: "Mujeeb Ullah", 
-            title: "Chief Executive Officer (CEO)",
-            bio: "A decade of experience in strategic business development, client relations, and financial oversight.", 
-            intro: "Mr. Mujeeb Ullah, the dynamic Chief Executive Officer (CEO), brings a highly valuable decade of experience in key areas including comprehensive strategic business development, sophisticated client relations management, and meticulous financial oversight. He plays an absolutely instrumental and indispensable role in shaping the company's deeply client-centric approach. Furthermore, he is essential for consistently ensuring operational excellence and adherence to the highest standards across all organizational departments, successfully driving the company's growth and stability.",
-            imageUrl: MrMujeeb 
-            // linkedinUrl:
-        },
-        { 
-       name: "Abdullah Masoud Ghazi Alotaibi", 
-       title: "Deputy CEO", 
-       bio: "Oversight of cross-departmental operations and strategic implementation.", 
-       intro: "As the Deputy CEO, Mr. Abdullah performs a truly crucial role in maintaining organizational synergy and efficiency. He is specifically tasked with the oversight of cross-departmental operations, ensuring that workflows and activities are perfectly aligned. His focus is on guaranteeing seamless coordination and effective communication between all project teams and the executive management. This vital function ensures that strategies are executed smoothly and that all projects remain on track, directly supporting the firm's overall operational success.", 
-       imageUrl: MrAbdullah 
+  // =========================================
+  // Board of Directors
+  // =========================================
+  const boardOfDirectors = [
+    {
+      name: "Mohammad Hamid Ansari",
+      title: "Founder & Group Vice Chairman",
+      bio: "Over 12 years of experience in the GCC and GCC markets, specializing in strategic planning and long-term project management.",
+      intro: "Mr. Mohammad Hamid Ansari stands as the distinguished Founder and Chairman of ARM Solutions, guiding the organization with a clear and unwavering strategic direction. His leadership is not merely administrative; it is the driving force and the very foundation upon which ARM Solutions' continuous expansion and notable success have been built. Possessing a profound and comprehensive level of expertise, Mr. Ansari's professional journey spans over twelve years of intensive and highly successful engagement within the competitive and dynamic GCC (Gulf Cooperation Council) markets.",
+      imageUrl: MohammedHamid
+      // linkedinUrl:
+    },
+    {
+      name: "Mujeeb Ullah",
+      title: "Chief Executive Officer (CEO)",
+      bio: "A decade of experience in strategic business development, client relations, and financial oversight.",
+      intro: "Mr. Mujeeb Ullah, the dynamic Chief Executive Officer (CEO), brings a highly valuable decade of experience in key areas including comprehensive strategic business development, sophisticated client relations management, and meticulous financial oversight. He plays an absolutely instrumental and indispensable role in shaping the company's deeply client-centric approach. Furthermore, he is essential for consistently ensuring operational excellence and adherence to the highest standards across all organizational departments, successfully driving the company's growth and stability.",
+      imageUrl: MrMujeeb
+      // linkedinUrl:
+    },
+    {
+      name: "Abdullah Masoud Ghazi Alotaibi",
+      title: "Deputy CEO",
+      bio: "Oversight of cross-departmental operations and strategic implementation.",
+      intro: "As the Deputy CEO, Mr. Abdullah performs a truly crucial role in maintaining organizational synergy and efficiency. He is specifically tasked with the oversight of cross-departmental operations, ensuring that workflows and activities are perfectly aligned. His focus is on guaranteeing seamless coordination and effective communication between all project teams and the executive management. This vital function ensures that strategies are executed smoothly and that all projects remain on track, directly supporting the firm's overall operational success.",
+      imageUrl: MrAbdullah
       //linkedinUrl:
-   },
-        { 
-            name: "Mohammed Rizwan Ahmed", 
-            title: "Managing Director", 
-            bio: "14+ years of robust leadership experience in manpower operations and strategic management.", 
-            intro: "Serving as the Managing Director, Mr. Mohammed Rizwan Ahmed leverages an impressive 14+ years of robust leadership experience. His specialization spans critical areas, including complex manpower operations, rigorous regulatory compliance, and stringent international standards enforcement. His leadership is absolutely pivotal to the organization, directly enabling the consistent maintenance of high-quality project delivery and guaranteeing sustained and high levels of client satisfaction across all operations. His expertise ensures operational integrity and market trust.",
-            imageUrl: MrRizwan,
-            linkedinUrl: "https://www.linkedin.com/in/rizwan-ahmed-07636182/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
-        },
-    ];
+    },
+    {
+      name: "Mohammed Rizwan Ahmed",
+      title: "Managing Director",
+      bio: "14+ years of robust leadership experience in manpower operations and strategic management.",
+      intro: "Serving as the Managing Director, Mr. Mohammed Rizwan Ahmed leverages an impressive 14+ years of robust leadership experience. His specialization spans critical areas, including complex manpower operations, rigorous regulatory compliance, and stringent international standards enforcement. His leadership is absolutely pivotal to the organization, directly enabling the consistent maintenance of high-quality project delivery and guaranteeing sustained and high levels of client satisfaction across all operations. His expertise ensures operational integrity and market trust.",
+      imageUrl: MrRizwan,
+      linkedinUrl: "https://www.linkedin.com/in/rizwan-ahmed-07636182/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+    },
+  ];
 
-    // =========================================
-    // Operational Management
-    // =========================================
-    const operationalManagement = [
+  // =========================================
+  // Operational Management
+  // =========================================
+  const operationalManagement = [
 
 
-        { 
-            name: "Zafar Imam", 
-            title: "Procurement manager ", 
-            bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.", 
-            intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.", 
-            imageUrl: MrZafar
-            // linkedinUrl:
-        },
-        { 
-            name: "Mohammed Tajammul Ahmed", 
-            title: "Administrator", 
-            bio: "Specialist in soft services training and continuous staff development.", 
-            intro: "We proudly introduce Mr. Mohammed Tajammul Ahmed, an expert in the training and development of soft services personnel for housekeeping, hospitality, and facility management. He ensures teams deliver service excellence in diverse environments. Highly skilled in building strong client relationships, he tailors solutions based on operational needs, consistently enhancing efficiency, performance, and long-term client trust.", 
-            imageUrl: MrTajammul
-            // linkedinUrl: 
-        },
-            { 
-            name: "Mohammed Abdul Mannan", 
-            title: "Payroll Officer", 
-            bio: "Manages all payroll operations and workforce compensation compliance.", 
-            intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.", 
-            imageUrl: MrMannan
-            // linkedinUrl: 
-        },
-        { 
-            name: "Palesh Rana", 
-            title: "Senior Recruiter - Overseas & Local (Bangladesh)", 
-            bio: "Expert in regional talent acquisition and large-scale project sourcing.", 
-            intro: "Mr. Palesh Rana serves as our indispensable Senior Recruiter, specializing in crucial talent acquisition efforts. His scope encompasses securing both overseas and local talent from the vital recruitment market of Bangladesh. With a keen focus on sourcing and engaging top professionals, he plays an essential role in expanding our workforce and ensuring the successful placement of well-vetted candidates into key roles.", 
-            imageUrl: MrPaleshRana 
-            // linkedinUrl:
-        },
-    
-        { 
-            name: "Farooq Nawaz", 
-            title: "Operations Supervisor", 
-            bio: "ensuring smooth workflow, high productivity, and consistent achievement of organizational goals..", 
-            intro: "Mr. Farooq Nawaz, the Operations Supervisor, possesses extensive experience in the comprehensive management of daily operations and diligent workforce performance. He is crucial for ensuring a smooth workflow and maintaining consistently high productivity. His dedicated efforts directly contribute to the consistent achievement of all organizational goals and operational efficiency.", 
-            imageUrl: MrFarooq 
-            // linkedinUrl:
-        },
-        
-        { 
-            name: "Imtiyaz Alam", 
-            title: "Finance Manager", 
-            bio: "Oversees all financial reporting, budgeting, and fiscal strategy.", 
-            intro: "Mr. Imtiyaz Alam efficiently manages the comprehensive scope of the organization's fiscal operations. His primary responsibilities include meticulous oversight of all financial reporting, strategic budgeting processes, and the day-to-day fiscal activities. His expertise ensures the financial health, accuracy, and regulatory compliance of the company's entire monetary structure.", 
-            imageUrl: MrImtiyaz 
-            // linkedinUrl:
-        },
-    ];
+    {
+      name: "Zafar Imam",
+      title: "Procurement manager ",
+      bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.",
+      intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.",
+      imageUrl: MrZafar
+      // linkedinUrl:
+    },
+    {
+      name: "Mohammed Tajammul Ahmed",
+      title: "Administrator",
+      bio: "Specialist in soft services training and continuous staff development.",
+      intro: "We proudly introduce Mr. Mohammed Tajammul Ahmed, an expert in the training and development of soft services personnel for housekeeping, hospitality, and facility management. He ensures teams deliver service excellence in diverse environments. Highly skilled in building strong client relationships, he tailors solutions based on operational needs, consistently enhancing efficiency, performance, and long-term client trust.",
+      imageUrl: MrTajammul
+      // linkedinUrl: 
+    },
+    {
+      name: "Mohammed Abdul Mannan",
+      title: "Payroll Officer",
+      bio: "Manages all payroll operations and workforce compensation compliance.",
+      intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.",
+      imageUrl: MrMannan
+      // linkedinUrl: 
+    },
+    {
+      name: "Palesh Rana",
+      title: "Senior Recruiter - Overseas & Local (Bangladesh)",
+      bio: "Expert in regional talent acquisition and large-scale project sourcing.",
+      intro: "Mr. Palesh Rana serves as our indispensable Senior Recruiter, specializing in crucial talent acquisition efforts. His scope encompasses securing both overseas and local talent from the vital recruitment market of Bangladesh. With a keen focus on sourcing and engaging top professionals, he plays an essential role in expanding our workforce and ensuring the successful placement of well-vetted candidates into key roles.",
+      imageUrl: MrPaleshRana
+      // linkedinUrl:
+    },
 
-    return (
-        <section
-            id="management"
-            className="relative py-24 md:py-36 overflow-hidden"
-            style={{ background: COLORS.GRADIENT }}
-        >
-            {/* Parallax glow */}
-            <motion.div
-                className="absolute inset-0 opacity-25"
-                style={{
-                    background: `radial-gradient(circle at 50% 10%, ${COLORS.ACCENT}30, transparent 70%)`,
-                    y,
-                }}
-            ></motion.div>
+    {
+      name: "Farooq Nawaz",
+      title: "Operations Supervisor",
+      bio: "ensuring smooth workflow, high productivity, and consistent achievement of organizational goals..",
+      intro: "Mr. Farooq Nawaz, the Operations Supervisor, possesses extensive experience in the comprehensive management of daily operations and diligent workforce performance. He is crucial for ensuring a smooth workflow and maintaining consistently high productivity. His dedicated efforts directly contribute to the consistent achievement of all organizational goals and operational efficiency.",
+      imageUrl: MrFarooq
+      // linkedinUrl:
+    },
 
-            {/* ===================================================== */}
-            {/* 🔥 Abstract Animated Background */}
-            {/* ===================================================== */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                
-                {/* Blob Left */}
-                <motion.div
-                    initial={{ x: -150, y: 0, opacity: 0.4 }}
-                    animate={{ x: 0, y: 30 }}
-                    transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
-                    className="absolute w-96 h-96 rounded-full blur-3xl opacity-30"
-                    style={{ background: COLORS.ACCENT + "55", left: "-10%", top: "12%" }}
-                />
+    {
+      name: "Imtiyaz Alam",
+      title: "Finance Manager",
+      bio: "Oversees all financial reporting, budgeting, and fiscal strategy.",
+      intro: "Mr. Imtiyaz Alam efficiently manages the comprehensive scope of the organization's fiscal operations. His primary responsibilities include meticulous oversight of all financial reporting, strategic budgeting processes, and the day-to-day fiscal activities. His expertise ensures the financial health, accuracy, and regulatory compliance of the company's entire monetary structure.",
+      imageUrl: MrImtiyaz
+      // linkedinUrl:
+    },
+  ];
 
-                {/* Blob Right */}
-                <motion.div
-                    initial={{ x: 150, y: 50, opacity: 0.4 }}
-                    animate={{ x: 0, y: -20 }}
-                    transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-                    className="absolute w-[450px] h-[450px] rounded-full blur-3xl opacity-30"
-                    style={{ background: COLORS.PRIMARY + "40", right: "-12%", bottom: "8%" }}
-                />
-
-                {/* Floating Light Bar */}
-                <motion.div
-                    initial={{ opacity: 0.2, y: -20 }}
-                    animate={{ opacity: 0.4, y: 10 }}
-                    transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
-                    className="absolute w-[70%] h-40 rounded-3xl blur-2xl"
-                    style={{ background: COLORS.ACCENT + "30", top: "5%", left: "15%" }}
-                />
-            </div>
-
-            {/* ===================================================== */}
-            {/* Content */}
-            {/* ===================================================== */}
-            <div className="container mx-auto px-6 text-center relative z-10">
-
-                {/* Heading */}
-                <div className="mb-16">
-                    <h2 className="text-4xl md:text-6xl font-black mb-4" style={{ color: COLORS.ACCENT }}>
-                        The ARM Leadership
-                    </h2>
-                    <p className="text-lg max-w-4xl mx-auto" style={{ color: COLORS.SUBTEXT }}>
-                        Our leadership team combines deep industry experience, integrity, and innovation.
-                    </p>
-                </div>
-
-                {/* =============================== */}
-                {/* Board of Directors */}
-                {/* =============================== */}
-             <h3
-  className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-indigo-400/50 pb-2 inline-block px-4"
-  style={{ color: COLORS.ACCENT }}
->
-  Board of Directors
-</h3>
-
-<div className="grid grid-cols-1 max-w-6xl mx-auto mb-20 gap-12">
-  {boardOfDirectors.map((manager, index) => (
-    <motion.div
-      key={`director-${index}`}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }} 
-      transition={{ type: "spring", stiffness: 100, damping: 20, delay: index * 0.1 }}
-
-      className="rounded-3xl p-10 md:p-12 bg-violet-950  shadow-2xl mx-auto relative overflow-hidden"
-      style={{
-        border: `1px solid ${COLORS.ACCENT}30`,
-      }}
+  return (
+    <section
+      id="management"
+      className="relative py-24 md:py-36 overflow-hidden"
+      style={{ background: COLORS.GRADIENT }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-3 items-center">
+      {/* Parallax glow */}
+      <motion.div
+        className="absolute inset-0 opacity-25"
+        style={{
+          background: `radial-gradient(circle at 50% 10%, ${COLORS.ACCENT}30, transparent 70%)`,
+          y,
+        }}
+      ></motion.div>
 
-        {/* LEFT CONTENT: Name, Title, About */}
-        <div className="md:col-span-2 text-left space-y-6">
+      {/* ===================================================== */}
+      {/* 🔥 Abstract Animated Background */}
+      {/* ===================================================== */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
 
-          {/* NAME AND TITLE */}
-          <div>
-            <h2
-              className="text-4xl font-black"
-              style={{ color: COLORS.PRIMARY_HEADER }}
-            >
-              {manager.name}
-            </h2>
+        {/* Blob Left */}
+        <motion.div
+          initial={{ x: -150, y: 0, opacity: 0.4 }}
+          animate={{ x: 0, y: 30 }}
+          transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
+          className="absolute w-96 h-96 rounded-full blur-3xl opacity-30"
+          style={{ background: COLORS.ACCENT + "55", left: "-10%", top: "12%" }}
+        />
 
-            <p
-              className="text-xl font-semibold mt-1"
-              style={{ color: COLORS.ACCENT }}
-            >
-              {manager.title}
-            </p>
-          </div>
+        {/* Blob Right */}
+        <motion.div
+          initial={{ x: 150, y: 50, opacity: 0.4 }}
+          animate={{ x: 0, y: -20 }}
+          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+          className="absolute w-[450px] h-[450px] rounded-full blur-3xl opacity-30"
+          style={{ background: COLORS.PRIMARY + "40", right: "-12%", bottom: "8%" }}
+        />
 
-          {/* ABOUT */}
-          <div>
-            <h4 className="text-lg font-bold mb-2" style={{ color: COLORS.PRIMARY_HEADER }}>
-              About
-            </h4>
-            <p className="text-base leading-relaxed" style={{ color: COLORS.SUBTEXT }}>
-              {manager.intro || manager.bio}
-            </p>
-          </div>
+        {/* Floating Light Bar */}
+        <motion.div
+          initial={{ opacity: 0.2, y: -20 }}
+          animate={{ opacity: 0.4, y: 10 }}
+          transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
+          className="absolute w-[70%] h-40 rounded-3xl blur-2xl"
+          style={{ background: COLORS.ACCENT + "30", top: "5%", left: "15%" }}
+        />
+      </div>
 
-          {/* SOCIAL ICONS (LinkedIn Only) */}
-          {manager.linkedinUrl && (
-            <div className="flex items-center gap-4 mt-4">
-              <motion.a
-                href={manager.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.2, rotate: 5 }}
-                className="p-3 rounded-full bg-black/5 hover:bg-black/20 transition"
-              >
-                <Linkedin className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
-              </motion.a>
-            </div>
-          )}
+      {/* ===================================================== */}
+      {/* Content */}
+      {/* ===================================================== */}
+      <div className="container mx-auto px-6 text-center relative z-10">
+
+        {/* Heading */}
+        <div className="mb-16">
+          <h2 className="text-4xl md:text-6xl font-black mb-4" style={{ color: COLORS.ACCENT }}>
+            The ARM Leadership
+          </h2>
+          <p className="text-lg max-w-4xl mx-auto" style={{ color: COLORS.SUBTEXT }}>
+            Our leadership team combines deep industry experience, integrity, and innovation.
+          </p>
         </div>
 
-        {/* RIGHT PROFILE IMAGE */}
-        <div className="flex justify-center md:justify-end mt-10 md:mt-0 ">
-          <div className="relative">
-            <div
-              className="absolute inset-0 rounded-full "
-              style={{
-                background:"white",
-                padding: "4px",
-                borderRadius: "9999px",
-          
-            
-              }}
-            ></div>
+        {/* =============================== */}
+        {/* Board of Directors */}
+        {/* =============================== */}
+        <h3
+          className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-indigo-400/50 pb-2 inline-block px-4"
+          style={{ color: COLORS.ACCENT }}
+        >
+          Board of Directors
+        </h3>
 
-            <img
-              src={manager.imageUrl}
-              alt={manager.name}
-              className="relative rounded-full w-48 h-48 md:w-60 md:h-60 object-contain p-1 border-4 border-white shadow-xl"
-              style={{transform: "scale(1.1)"}}
-              onError={(e) => {
-                e.target.src = "https://placehold.co/300x300/cccccc/333?text=No+Image";
+        <div className="grid grid-cols-1 max-w-6xl mx-auto mb-20 gap-12">
+          {boardOfDirectors.map((manager, index) => (
+            <motion.div
+              key={`director-${index}`}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, delay: index * 0.1 }}
+
+              className="rounded-3xl p-10 md:p-12 bg-violet-950  shadow-2xl mx-auto relative overflow-hidden"
+              style={{
+                border: `1px solid ${COLORS.ACCENT}30`,
               }}
-            />
-          </div>
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 items-center">
+
+                {/* LEFT CONTENT: Name, Title, About */}
+                <div className="md:col-span-2 text-left space-y-6">
+
+                  {/* NAME AND TITLE */}
+                  <div>
+                    <h2
+                      className="text-4xl font-black"
+                      style={{ color: COLORS.PRIMARY_HEADER }}
+                    >
+                      {manager.name}
+                    </h2>
+
+                    <p
+                      className="text-xl font-semibold mt-1"
+                      style={{ color: COLORS.ACCENT }}
+                    >
+                      {manager.title}
+                    </p>
+                  </div>
+
+                  {/* ABOUT */}
+                  <div>
+                    <h4 className="text-lg font-bold mb-2" style={{ color: COLORS.PRIMARY_HEADER }}>
+                      About
+                    </h4>
+                    <p className="text-base leading-relaxed" style={{ color: COLORS.SUBTEXT }}>
+                      {manager.intro || manager.bio}
+                    </p>
+                  </div>
+
+                  {/* SOCIAL ICONS (LinkedIn Only) */}
+                  {manager.linkedinUrl && (
+                    <div className="flex items-center gap-4 mt-4">
+                      <motion.a
+                        href={manager.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.2, rotate: 5 }}
+                        className="p-3 rounded-full bg-black/5 hover:bg-black/20 transition"
+                      >
+                        <Linkedin className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
+                      </motion.a>
+                    </div>
+                  )}
+                </div>
+
+                {/* RIGHT PROFILE IMAGE */}
+                <div className="flex justify-center md:justify-end mt-10 md:mt-0 ">
+                  <div className="relative">
+                    <div
+                      className="absolute inset-0 rounded-full "
+                      style={{
+                        background: "white",
+                        padding: "4px",
+                        borderRadius: "9999px",
+
+
+                      }}
+                    ></div>
+
+                    <img
+                      src={manager.imageUrl}
+                      alt={manager.name}
+                      className="relative rounded-full w-48 h-48 md:w-60 md:h-60 object-contain p-1 border-4 border-white shadow-xl"
+                      style={{ transform: "scale(1.1)" }}
+                      onError={(e) => {
+                        e.target.src = "https://placehold.co/300x300/cccccc/333?text=No+Image";
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        {/* =============================== */}
+        {/* Operational Management */}
+        {/* =============================== */}
+        <h3 className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-gray-400/50 pb-2 inline-block px-4"
+          style={{ color: COLORS.ACCENT }}>
+          Operational Management
+        </h3>
+
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl mx-auto"> */}
+        <div className="grid grid-cols-1 gap-10 max-w-6xl mx-auto mb-20">
+          {operationalManagement.map((manager, index) => (
+            <motion.div
+              key={`staff-${index}`}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.12 }}
+            >
+              <ManagerCard
+                {...manager}
+                index={index + boardOfDirectors.length}
+                COLORS={COLORS}
+                layoutType="director"
+                glass
+              />
+            </motion.div>
+          ))}
         </div>
       </div>
-    </motion.div>
-  ))}
-</div>
-                {/* =============================== */}
-                {/* Operational Management */}
-                {/* =============================== */}
-                <h3 className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-gray-400/50 pb-2 inline-block px-4"
-                    style={{ color:COLORS.ACCENT }}>
-                    Operational Management
-                </h3>
-
-                {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl mx-auto"> */}
-                <div className="grid grid-cols-1 gap-10 max-w-6xl mx-auto mb-20">
-                    {operationalManagement.map((manager, index) => (
-                        <motion.div
-                            key={`staff-${index}`}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: index * 0.12 }}
-                        >
-                            <ManagerCard
-                                {...manager}
-                                index={index + boardOfDirectors.length}
-                                COLORS={COLORS}
-                                layoutType="director"
-                                glass
-                            />
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+    </section>
+  );
 };
 
 // ===================================
@@ -2509,8 +2518,8 @@ const Management = ({ COLORS }) => {
 // ===================================
 
 const CustomStyles = (COLORS) => (
-    <style jsx="true">
-        {`
+  <style jsx="true">
+    {`
         @keyframes blob-move-one {
             0%, 100% { transform: translate(0, 0) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
@@ -2536,252 +2545,278 @@ const CustomStyles = (COLORS) => (
             color: ${COLORS.SUBTEXT}80;
         }
         `}
-    </style>
+  </style>
 );
 
 const Contact = ({ COLORS }) => {
-    const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(null);
 
-    // Simple submission handler for UI feedback
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setStatus("success");
-        // Clear status after 4 seconds
-        setTimeout(() => setStatus(null), 4000); 
-        e.target.reset(); // Reset form fields
+  // Simple submission handler for UI feedback
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const enquiryData = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      company: formData.get("company") || "N/A",
+      message: formData.get("message"),
+      dateTime: serverTimestamp(),
     };
 
-    return (
-        <>
-            <CustomStyles /> {/* Inject custom CSS for blob animation */}
-            <FadeInSection>
-                <section
-                    id="contact"
-                    className="relative py-20 md:py-28 overflow-hidden min-h-screen flex items-center w-full"
-                    style={{ background: COLORS.GRADIENT }}
-                >
-                    {/* Abstract Background Elements (Blobs) for Enhanced Design */}
-                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
-                        {/* Blob 1: Top Left - Blue Accent */}
-                        <div 
-                            className="absolute top-[-50px] left-[-50px] w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-blob-slow" 
-                            style={{ background: COLORS.ACCENT }}
-                        ></div>
-                        {/* Blob 2: Bottom Right - Alt Accent (Red) */}
-                        <div 
-                            className="absolute bottom-[-50px] right-[-50px] w-[350px] h-[350px] md:w-[500px] md:h-[500px] rounded-full mix-blend-screen filter blur-[150px] opacity-35 animate-blob-slower" 
-                            style={{ background: COLORS.ACCENT_ALT }}
-                        ></div>
-                        {/* Blob 3: Center - More Subtle Blue */}
-                        <div 
-                            className="absolute top-1/4 right-[20%] w-64 h-64 rounded-full mix-blend-screen filter blur-[100px] opacity-30" 
-                            style={{ background: COLORS.ACCENT }}
-                        ></div>
+    try {
+      await addDoc(collection(db, "enquiries"), enquiryData);
+
+      setStatus("success");
+      setTimeout(() => setStatus(null), 4000);
+      e.target.reset();
+
+    } catch (err) {
+      console.error("Error saving enquiry:", err);
+      setStatus("error");
+    }
+  };
+
+  return (
+    <>
+      <CustomStyles /> {/* Inject custom CSS for blob animation */}
+      <FadeInSection>
+        <section
+          id="contact"
+          className="relative py-20 md:py-28 overflow-hidden min-h-screen flex items-center w-full"
+          style={{ background: COLORS.GRADIENT }}
+        >
+          {/* Abstract Background Elements (Blobs) for Enhanced Design */}
+          <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+            {/* Blob 1: Top Left - Blue Accent */}
+            <div
+              className="absolute top-[-50px] left-[-50px] w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full mix-blend-screen filter blur-[120px] opacity-40 animate-blob-slow"
+              style={{ background: COLORS.ACCENT }}
+            ></div>
+            {/* Blob 2: Bottom Right - Alt Accent (Red) */}
+            <div
+              className="absolute bottom-[-50px] right-[-50px] w-[350px] h-[350px] md:w-[500px] md:h-[500px] rounded-full mix-blend-screen filter blur-[150px] opacity-35 animate-blob-slower"
+              style={{ background: COLORS.ACCENT_ALT }}
+            ></div>
+            {/* Blob 3: Center - More Subtle Blue */}
+            <div
+              className="absolute top-1/4 right-[20%] w-64 h-64 rounded-full mix-blend-screen filter blur-[100px] opacity-30"
+              style={{ background: COLORS.ACCENT }}
+            ></div>
+          </div>
+
+
+          {/* Existing Animated Radial Gradient (kept for motion flair) */}
+          <motion.div
+            className="absolute inset-0 z-0 overflow-hidden"
+            animate={{
+              background: [
+                `radial-gradient(circle at 20% 30%, ${COLORS.ACCENT}10, transparent 70%), radial-gradient(circle at 80% 70%, ${COLORS.ACCENT_ALT}15, transparent 70%)`,
+                `radial-gradient(circle at 25% 25%, ${COLORS.ACCENT}15, transparent 70%), radial-gradient(circle at 85% 75%, ${COLORS.ACCENT_ALT}20, transparent 70%)`,
+              ],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "easeInOut",
+            }}
+          ></motion.div>
+
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div className="text-center mb-16">
+              <p className="font-semibold uppercase mb-2 tracking-widest" style={{ color: COLORS.ACCENT }}>
+                Connect With Us
+              </p>
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6" style={{ color: COLORS.TEXT }}>
+                Ready to Build Your Team?
+              </h2>
+              <p className="max-w-2xl mx-auto text-lg" style={{ color: COLORS.SUBTEXT }}>
+                Reach out today and let’s create workforce solutions that move your projects forward.
+              </p>
+            </div>
+
+            {/* Contact Layout */}
+            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+
+              {/* Contact Info Card (Glassmorphism) */}
+              <motion.div
+                className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl transition-all duration-500 hover:shadow-3xl"
+                style={{
+                  background: COLORS.GLASS_BG,
+                  border: COLORS.GLASS_BORDER,
+                  boxShadow: COLORS.SHADOW,
+                  // Added an explicit backdrop filter for cross-browser consistency
+                  backdropFilter: 'blur(20px)',
+                }}
+                initial={{ opacity: 0, x: -60, rotateY: 10 }}
+                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                transition={{ duration: 1.0, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.3 }}
+              >
+                <h3 className="text-2xl font-bold mb-6 border-b pb-3" style={{ color: COLORS.TEXT, borderColor: COLORS.ACCENT + '40' }}>
+                  Our Details
+                </h3>
+
+                <div className="space-y-8 text-left">
+                  <div className="flex items-start space-x-4">
+                    <MapPin className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
+                    <div>
+                      <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>
+                        Headquarters
+                      </p>
+                      <p className="text-base" style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
                     </div>
-
-
-                    {/* Existing Animated Radial Gradient (kept for motion flair) */}
-                    <motion.div
-                        className="absolute inset-0 z-0 overflow-hidden"
-                        animate={{
-                            background: [
-                                `radial-gradient(circle at 20% 30%, ${COLORS.ACCENT}10, transparent 70%), radial-gradient(circle at 80% 70%, ${COLORS.ACCENT_ALT}15, transparent 70%)`,
-                                `radial-gradient(circle at 25% 25%, ${COLORS.ACCENT}15, transparent 70%), radial-gradient(circle at 85% 75%, ${COLORS.ACCENT_ALT}20, transparent 70%)`,
-                            ],
-                        }}
-                        transition={{
-                            duration: 20,
-                            repeat: Infinity,
-                            repeatType: "mirror",
-                            ease: "easeInOut",
-                        }}
-                    ></motion.div>
-
-                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-                        <div className="text-center mb-16">
-                            <p className="font-semibold uppercase mb-2 tracking-widest" style={{ color: COLORS.ACCENT }}>
-                                Connect With Us
-                            </p>
-                            <h2 className="text-4xl md:text-5xl font-extrabold mb-6" style={{ color: COLORS.TEXT }}>
-                                Ready to Build Your Team?
-                            </h2>
-                            <p className="max-w-2xl mx-auto text-lg" style={{ color: COLORS.SUBTEXT }}>
-                                Reach out today and let’s create workforce solutions that move your projects forward.
-                            </p>
-                        </div>
-
-                        {/* Contact Layout */}
-                        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
-                            
-                            {/* Contact Info Card (Glassmorphism) */}
-                            <motion.div
-                                className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl transition-all duration-500 hover:shadow-3xl"
-                                style={{
-                                    background: COLORS.GLASS_BG,
-                                    border: COLORS.GLASS_BORDER,
-                                    boxShadow: COLORS.SHADOW,
-                                    // Added an explicit backdrop filter for cross-browser consistency
-                                    backdropFilter: 'blur(20px)', 
-                                }}
-                                initial={{ opacity: 0, x: -60, rotateY: 10 }}
-                                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-                                transition={{ duration: 1.0, ease: "easeOut" }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <h3 className="text-2xl font-bold mb-6 border-b pb-3" style={{ color: COLORS.TEXT, borderColor: COLORS.ACCENT + '40' }}>
-                                    Our Details
-                                </h3>
-
-                                <div className="space-y-8 text-left">
-                                    <div className="flex items-start space-x-4">
-                                        <MapPin className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
-                                        <div>
-                                            <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>
-                                                Headquarters
-                                            </p>
-                                            <p className="text-base" style={{ color: COLORS.SUBTEXT }}>Dammam, Kingdom of Saudi Arabia</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start space-x-4">
-                                        <MapPin className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
-                                        <div>
-                                            <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>
-                                                Branches
-                                            </p>
-                                            <ul className="text-base" style={{ color: COLORS.SUBTEXT }}>
-                                              <li>Riyadh, Kingdom of Saudi Arabia</li>
-                                              <li>Jeddah, Kingdom of Saudi Arabia</li>
-                                              <li>Madina, Kingdom of Saudi Arabia</li>
-                                              <li>Najran, Kingdom of Saudi Arabia</li>
-                                              </ul>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start space-x-4">
-                                        <Mail className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
-                                        <div>
-                                            <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>Email Us</p>
-                                            <a href="mailto:info@armsolutions.sa" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
-                                                info@armsolutions.sa
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start space-x-4">
-                                        <Phone className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
-                                        <div>
-                                            <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>Call Us</p>
-                                            <a href="tel:+966536514449" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
-                                               +966 53 651 4449
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    {/* Social Icons */}
-                                    <div className="pt-6 flex space-x-4">
-                                        {[Facebook, Linkedin, Twitter, MessageCircle].map((Icon, i) => (
-                                            <motion.a
-                                                key={i}
-                                                href="#"
-                                                className="p-3 rounded-full border transition-all duration-300 backdrop-blur-sm cursor-pointer"
-                                                whileHover={{ scale: 1.2, rotate: 10, backgroundColor: COLORS.ACCENT + '30' }}
-                                                style={{
-                                                    color: COLORS.ACCENT,
-                                                    border: COLORS.GLASS_BORDER,
-                                                    background: 'rgba(255, 255, 255, 0.05)',
-                                                }}
-                                            >
-                                                <Icon className="h-6 w-6" />
-                                            </motion.a>
-                                        ))}
-                                    </div>
-                                </div>
-                            </motion.div>
-
-                            {/* Contact Form (Glassmorphism) */}
-                            <motion.div
-                                className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl"
-                                style={{
-                                    background: COLORS.GLASS_BG,
-                                    border: COLORS.GLASS_BORDER,
-                                    boxShadow: COLORS.SHADOW,
-                                    backdropFilter: 'blur(20px)',
-                                }}
-                                initial={{ opacity: 0, x: 60, rotateY: -10 }}
-                                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-                                transition={{ duration: 1.0, ease: "easeOut" }}
-                                viewport={{ once: true, amount: 0.3 }}
-                            >
-                                <h3 className="text-2xl font-bold mb-6" style={{ color: COLORS.TEXT }}>
-                                    Send Us a Message
-                                </h3>
-
-                                <form className="space-y-5" onSubmit={handleSubmit}>
-                                    {["Name", "Email", "Phone", "Company"].map((placeholder, i) => (
-                                        <input
-                                            key={i}
-                                            type={placeholder === "Email" ? "email" : "text"}
-                                            placeholder={`Your ${placeholder}`}
-                                            className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
-                                            style={{
-                                                borderColor: COLORS.ACCENT + '80', // Slightly transparent border when unfocused
-                                                color: COLORS.TEXT,
-                                                background: 'rgba(255, 255, 255, 0.02)', // Very subtle internal background for contrast
-                                                '--tw-ring-color': COLORS.ACCENT + '80',
-                                            }}
-                                            required
-                                        />
-                                    ))}
-                                    <textarea
-                                        placeholder="How can we help you?"
-                                        rows="4"
-                                        className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
-                                        style={{
-                                            borderColor: COLORS.ACCENT + '80',
-                                            color: COLORS.TEXT,
-                                            background: 'rgba(255, 255, 255, 0.02)',
-                                            '--tw-ring-color': COLORS.ACCENT + '80',
-                                        }}
-                                        required
-                                    ></textarea>
-
-                                    <motion.button
-                                        type="submit"
-                                        whileHover={{
-                                            scale: 1.02,
-                                            boxShadow: `0 0 20px ${COLORS.ACCENT}`,
-                                        }}
-                                        whileTap={{ scale: 0.98 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="w-full py-4 text-lg font-bold rounded-xl transition-all border-2"
-                                        style={{
-                                            backgroundColor: COLORS.ACCENT,
-                                            color: COLORS.BG,
-                                            borderColor: COLORS.ACCENT,
-                                        }}
-                                    >
-                                        Submit Inquiry
-                                    </motion.button>
-                                </form>
-
-                                {status === "success" && (
-                                    <motion.p 
-                                        className="mt-6 text-center text-lg font-medium p-3 rounded-xl" 
-                                        style={{ color: COLORS.TEXT, background: COLORS.ACCENT + '20' }}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                    >
-                                        <Zap className="inline h-5 w-5 mr-2" style={{ color: COLORS.ACCENT }} />
-                                        Your message has been sent successfully! We'll be in touch.
-                                    </motion.p>
-                                )}
-                            </motion.div>
-                        </div>
+                  </div>
+                  <div className="flex items-start space-x-4">
+                    <MapPin className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
+                    <div>
+                      <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>
+                        Our Branches
+                      </p>
+                      <ul className="text-base" style={{ color: COLORS.SUBTEXT }}>
+                        <li>Riyadh, Jeddah, Madina, Najran</li>
+                        {/* <li>Jeddah</li>
+                                              <li>Madina</li>
+                                              <li>Najran</li> */}
+                      </ul>
                     </div>
-                </section>
-            </FadeInSection>
-        </>
-    );
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <Mail className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
+                    <div>
+                      <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>Email Us</p>
+                      <a href="mailto:info@armsolutions.sa" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
+                        info@armsolutions.sa
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <Phone className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
+                    <div>
+                      <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>Call Us</p>
+                      <a href="tel:+966536514449" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
+                        +966 53 651 4449
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Social Icons */}
+                  <div className="pt-6 flex space-x-4">
+                    {[Facebook, Linkedin, Twitter, MessageCircle].map((Icon, i) => (
+                      <motion.a
+                        key={i}
+                        href="#"
+                        className="p-3 rounded-full border transition-all duration-300 backdrop-blur-sm cursor-pointer"
+                        whileHover={{ scale: 1.2, rotate: 10, backgroundColor: COLORS.ACCENT + '30' }}
+                        style={{
+                          color: COLORS.ACCENT,
+                          border: COLORS.GLASS_BORDER,
+                          background: 'rgba(255, 255, 255, 0.05)',
+                        }}
+                      >
+                        <Icon className="h-6 w-6" />
+                      </motion.a>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Contact Form (Glassmorphism) */}
+              <motion.div
+                className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl"
+                style={{
+                  background: COLORS.GLASS_BG,
+                  border: COLORS.GLASS_BORDER,
+                  boxShadow: COLORS.SHADOW,
+                  backdropFilter: 'blur(20px)',
+                }}
+                initial={{ opacity: 0, x: 60, rotateY: -10 }}
+                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                transition={{ duration: 1.0, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.3 }}
+              >
+                <h3 className="text-2xl font-bold mb-6" style={{ color: COLORS.TEXT }}>
+                  Send Us a Message
+                </h3>
+
+                <form className="space-y-5" onSubmit={handleSubmit}>
+
+                  <input
+                    name="name"
+                    type="text"
+                    placeholder="Your Name"
+                    className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
+                    style={{ borderColor: COLORS.ACCENT + '80', color: COLORS.TEXT, background: 'rgba(255,255,255,0.02)' }}
+                    required
+                  />
+
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Your Email"
+                    className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
+                    style={{ borderColor: COLORS.ACCENT + '80', color: COLORS.TEXT, background: 'rgba(255,255,255,0.02)' }}
+                    required
+                  />
+
+                  <input
+                    name="phone"
+                    type="text"
+                    placeholder="Your Phone"
+                    className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
+                    style={{ borderColor: COLORS.ACCENT + '80', color: COLORS.TEXT, background: 'rgba(255,255,255,0.02)' }}
+                    required
+                  />
+
+                  <input
+                    name="company"
+                    type="text"
+                    placeholder="Your Company (Optional)"
+                    className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
+                    style={{ borderColor: COLORS.ACCENT + '80', color: COLORS.TEXT, background: 'rgba(255,255,255,0.02)' }}
+                  />
+
+                  <textarea
+                    name="message"
+                    placeholder="How can we help you?"
+                    rows="4"
+                    className="w-full p-4 rounded-xl bg-transparent border focus:outline-none focus:ring-4 transition-all duration-300"
+                    style={{ borderColor: COLORS.ACCENT + '80', color: COLORS.TEXT, background: 'rgba(255,255,255,0.02)' }}
+                    required
+                  ></textarea>
+
+                  <motion.button
+                    type="submit"
+                    className="w-full py-4 text-lg font-bold rounded-xl transition-all border-2"
+                    style={{ backgroundColor: COLORS.ACCENT, color: COLORS.BG, borderColor: COLORS.ACCENT }}
+                  >
+                    Submit Inquiry
+                  </motion.button>
+                </form>
+
+                {status === "success" && (
+                  <motion.p
+                    className="mt-6 text-center text-lg font-medium p-3 rounded-xl"
+                    style={{ color: COLORS.TEXT, background: COLORS.ACCENT + '20' }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <Zap className="inline h-5 w-5 mr-2" style={{ color: COLORS.ACCENT }} />
+                    Your message has been sent successfully! We'll be in touch.
+                  </motion.p>
+                )}
+              </motion.div>
+            </div>
+          </div>
+        </section>
+      </FadeInSection>
+    </>
+  );
 };
 
 
@@ -2870,9 +2905,9 @@ const Footer = ({ COLORS }) => {
               >
                 Contact
               </h4>
-              <p>Dammam, Kingdom of Saudi Arabia</p>
+              <p>Dammam, Taibah District, Al Harith Ibn Al Summah, Kingdom of Saudi Arabia</p>
               <p>+966536514449</p>
-              <p>admin@armgroup.org</p>
+              <p>info@armgroups.org</p>
             </div>
 
             <div>
@@ -3106,23 +3141,23 @@ const ClientMarquee = ({ COLORS, theme }) => {
                     animate={
                       !isLight
                         ? {
-                            opacity: [0.85, 1, 0.85],
-                            scale: [1, 1.03, 1],
-                            filter: [
-                              `drop-shadow(0 0 4px ${COLORS.ACCENT}50)`,
-                              `drop-shadow(0 0 8px ${COLORS.ACCENT}90)`,
-                              `drop-shadow(0 0 4px ${COLORS.ACCENT}50)`,
-                            ],
-                          }
+                          opacity: [0.85, 1, 0.85],
+                          scale: [1, 1.03, 1],
+                          filter: [
+                            `drop-shadow(0 0 4px ${COLORS.ACCENT}50)`,
+                            `drop-shadow(0 0 8px ${COLORS.ACCENT}90)`,
+                            `drop-shadow(0 0 4px ${COLORS.ACCENT}50)`,
+                          ],
+                        }
                         : {}
                     }
                     transition={
                       !isLight
                         ? {
-                            duration: 5,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                          }
+                          duration: 5,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }
                         : {}
                     }
                     onError={(e) => {
@@ -3178,12 +3213,12 @@ const OurClients = (COLORS) => {
     { name: "Client Partner 25", logo: clientImage25 },
   ];
 
- const row1 = clients.slice(0, 9);
- 
+  const row1 = clients.slice(0, 9);
+
   const row2 = clients.slice(9, 17);
   const row3 = clients.slice(17, 25);
 
- return (
+  return (
     <section
       id="clients"
       className="relative py-20 overflow-hidden"
@@ -3201,7 +3236,7 @@ const OurClients = (COLORS) => {
         {/* LEFT CONTENT */}
         <div className="space-y-6">
           <h2 className="text-4xl md:text-5xl font-extrabold text-blue-400">
-           Our Valued Clients
+            Our Valued Clients
           </h2>
 
           <p className="text-gray-400 leading-relaxed max-w-md">
@@ -3232,58 +3267,56 @@ const OurClients = (COLORS) => {
               title="Reverse Direction"
             >
               <Repeat
-                className={`w-6 h-6 text-blue-400 transition-transform ${
-                  reverse ? "rotate-180" : ""
-                }`}
+                className={`w-6 h-6 text-blue-400 transition-transform ${reverse ? "rotate-180" : ""
+                  }`}
               />
             </button>
           </div>
-          <button 
-                   
-                        className="px-4 py-2 text-lg font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
-                   style={{
-    background: COLORS.GLASS_BG,
-    border: COLORS.GLASS_BORDER,
-    boxShadow: COLORS.SHADOW,
-  }}
-                    >
-                        Become our Client
-                    </button>
+          <button
+
+            className="px-4 py-2 text-lg font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
+            }}
+          >
+            Become our Client
+          </button>
         </div>
 
         {/* RIGHT: MULTI-LINE MARQUEE */}
-     <div className="relative rounded-2xl backdrop-blur-xl bg-white/5 border border-blue-500/20 shadow-lg p-6 overflow-hidden">
-  {[row1, row2, row3].map((row, i) => (
-<div
-  key={i}
-  className={`flex gap-8 mb-6 ${
-    reverse
-      ? "animate-marquee-reverse"
-      : i % 2 === 0
-      ? "animate-marquee"
-      : "animate-marquee-reverse"
-  }`}
-  style={{
-    animationPlayState: isPaused ? "paused" : "running",
-    animationDuration: `${18 + i * 4}s`, // ✅ refined smooth duration
-  }}
->
-      {/* Duplicate logos once for seamless looping */}
-      {[...row, ...row].map((client, index) => (
-        <div
-          key={`${i}-${index}`}
-          className="w-36 h-20 flex items-center justify-center rounded-lg bg-white/10 border border-blue-500/10 hover:bg-blue-600/10 transition transform hover:scale-105 shadow-md flex-shrink-0"
-        >
-          <img
-            src={client.logo}
-            alt={client.name}
-            className="max-w-full max-h-full object-contain opacity-80 hover:opacity-100 transition"
-          />
+        <div className="relative rounded-2xl backdrop-blur-xl bg-white/5 border border-blue-500/20 shadow-lg p-6 overflow-hidden">
+          {[row1, row2, row3].map((row, i) => (
+            <div
+              key={i}
+              className={`flex gap-8 mb-6 ${reverse
+                ? "animate-marquee-reverse"
+                : i % 2 === 0
+                  ? "animate-marquee"
+                  : "animate-marquee-reverse"
+                }`}
+              style={{
+                animationPlayState: isPaused ? "paused" : "running",
+                animationDuration: `${18 + i * 4}s`, // ✅ refined smooth duration
+              }}
+            >
+              {/* Duplicate logos once for seamless looping */}
+              {[...row, ...row].map((client, index) => (
+                <div
+                  key={`${i}-${index}`}
+                  className="w-36 h-20 flex items-center justify-center rounded-lg bg-white/10 border border-blue-500/10 hover:bg-blue-600/10 transition transform hover:scale-105 shadow-md flex-shrink-0"
+                >
+                  <img
+                    src={client.logo}
+                    alt={client.name}
+                    className="max-w-full max-h-full object-contain opacity-80 hover:opacity-100 transition"
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  ))}
-</div>
       </div>
     </section>
   );
@@ -3299,17 +3332,19 @@ const OurClients = (COLORS) => {
 // Password: 12345
 // =========================
 const AdminLogin = ({ COLORS, onLogin }) => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
-    if (username === "admin" && password === "12345") {
-      onLogin(); // success
-    } else {
-      setError("Invalid username or password");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      onLogin(true); // Notify parent component
+    } catch (err) {
+      setError("Invalid email or password");
     }
   };
 
@@ -3333,18 +3368,18 @@ const AdminLogin = ({ COLORS, onLogin }) => {
           Admin Login
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Email"
             className="w-full p-3 rounded-xl border outline-none"
             style={{
               background: COLORS.GLASS_BG,
               border: COLORS.GLASS_BORDER,
               color: COLORS.TEXT,
             }}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
@@ -3383,18 +3418,93 @@ const AdminLogin = ({ COLORS, onLogin }) => {
 // ===================================
 //  Admin Dashboard (Theme-Aware)
 // ===================================
-export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
-  const [activeTab, setActiveTab] = useState("manpower");
+export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme, onLogout }) => {
+  const [activeTab, setActiveTab] = useState("enquiries");
 
-  // Dummy Manpower Data
-  const dummyData = [
-    { id: 1, name: "John Doe", role: "Technician", status: "Active" },
-    { id: 2, name: "Sarah Khan", role: "Nurse", status: "Pending" },
-    { id: 3, name: "Adam Smith", role: "Driver", status: "Active" },
-    { id: 4, name: "Priya Patel", role: "Cleaner", status: "Inactive" },
-    { id: 5, name: "Michael Lee", role: "Electrician", status: "Active" },
-    { id: 6, name: "Aisha Begum", role: "Supervisor", status: "Pending" }
-  ];
+  // Firestore data + UI states
+  const [enquiries, setEnquiries] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Search / Sort / Pagination states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState("newest"); // 'newest' | 'oldest'
+  const [pageSize, setPageSize] = useState(8);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Fetch Firestore enquiries in realtime
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, "enquiries"),
+      (snapshot) => {
+        const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+        setEnquiries(list);
+        setLoading(false);
+        setCurrentPage(1); // reset to first page on fresh load
+      },
+      (err) => {
+        console.error("Firestore onSnapshot error:", err);
+        setLoading(false);
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  // Delete enquiry
+  const deleteEnquiry = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this enquiry?")) return;
+    try {
+      await deleteDoc(doc(db, "enquiries", id));
+    } catch (err) {
+      console.error("Error deleting enquiry:", err);
+    }
+  };
+
+  // === Filtering ===
+  const filtered = useMemo(() => {
+    if (!searchQuery) return enquiries;
+    const q = searchQuery.trim().toLowerCase();
+    return enquiries.filter((it) => {
+      const fields = [
+        it.name,
+        it.email,
+        it.phone,
+        it.company,
+        it.message,
+      ].map((f) => (f ? String(f).toLowerCase() : ""));
+      return fields.some((f) => f.includes(q));
+    });
+  }, [enquiries, searchQuery]);
+
+  // === Sorting ===
+  const sorted = useMemo(() => {
+    const copy = [...filtered];
+    copy.sort((a, b) => {
+      const at = a.dateTime?.seconds ?? 0;
+      const bt = b.dateTime?.seconds ?? 0;
+      return sortOrder === "newest" ? bt - at : at - bt;
+    });
+    return copy;
+  }, [filtered, sortOrder]);
+
+  // === Pagination calculations ===
+  const totalItems = sorted.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  // Ensure currentPage remains in bounds
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+    if (currentPage < 1) setCurrentPage(1);
+  }, [currentPage, totalPages]);
+
+  const paginated = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return sorted.slice(start, start + pageSize);
+  }, [sorted, currentPage, pageSize]);
+
+  // Helpers for UI
+  const clearSearch = () => {
+    setSearchQuery("");
+    setCurrentPage(1);
+  };
 
   return (
     <motion.div
@@ -3426,8 +3536,7 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
         </h1>
 
         <div className="flex items-center gap-4">
-
-          {/* 🌙/☀️ Theme Toggle */}
+          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full border transition duration-300 hover:scale-110"
@@ -3437,13 +3546,14 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
               boxShadow: COLORS.SHADOW,
               color: COLORS.ACCENT,
             }}
+            aria-label="Toggle theme"
           >
             {theme === "dark" ? "☀️" : "🌙"}
           </button>
 
-          {/* 🔙 Back Button */}
+          {/* Logout Button (calls onLogout passed from App) */}
           <button
-            onClick={() => toggleView("public")}
+            onClick={onLogout}
             className="px-4 py-2 text-sm font-semibold rounded-full transition-transform hover:scale-105"
             style={{
               backgroundColor: COLORS.ACCENT,
@@ -3451,7 +3561,7 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
               border: `2px solid ${COLORS.ACCENT}`,
             }}
           >
-            ← Back to Site
+            Logout
           </button>
         </div>
       </header>
@@ -3461,10 +3571,7 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
       {/* ========================= */}
       <main className="flex-grow container mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-
-          {/* ========================= */}
-          {/* 🔻 SIDEBAR NAVIGATION    */}
-          {/* ========================= */}
+          {/* SIDEBAR */}
           <aside
             className="rounded-xl p-4 border backdrop-blur-md"
             style={{
@@ -3480,13 +3587,12 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
               Navigation
             </h3>
 
-            {["manpower", "settings"].map((tab) => (
+            {["enquiries"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`w-full text-left px-4 py-2 mb-2 rounded-lg transition-all ${
-                  activeTab === tab ? "font-bold scale-105" : ""
-                }`}
+                className={`w-full text-left px-4 py-2 mb-2 rounded-lg transition-all ${activeTab === tab ? "font-bold scale-105" : ""
+                  }`}
                 style={{
                   background:
                     activeTab === tab ? COLORS.ACCENT : COLORS.GLASS_BG,
@@ -3500,9 +3606,7 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
             ))}
           </aside>
 
-          {/* ========================= */}
-          {/* 🟣 MAIN PANEL CONTENT    */}
-          {/* ========================= */}
+          {/* MAIN PANEL */}
           <section
             className="md:col-span-3 rounded-xl border backdrop-blur-md p-6"
             style={{
@@ -3511,52 +3615,242 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme }) => {
               boxShadow: COLORS.SHADOW,
             }}
           >
-            {/* ONLY SHOW DUMMY DATA LIST */}
-            <h2
-              className="text-2xl font-bold mb-6"
-              style={{ color: COLORS.ACCENT }}
-            >
-              Manpower List
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <h2
+                className="text-2xl font-bold"
+                style={{ color: COLORS.ACCENT }}
+              >
+                Enquiry List
+              </h2>
 
-            <div className="space-y-4">
-              {dummyData.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-4 rounded-xl flex justify-between items-center"
+              {/* CONTROLS: Search, Sort, Page Size */}
+              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
+                {/* Search */}
+                <div className="relative w-full sm:w-[360px]">
+                  <input
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Search by name, email, phone, company, message..."
+                    className="w-full p-3 rounded-xl border focus:outline-none"
+                    style={{
+                      background: "rgba(255,255,255,0.02)",
+                      borderColor: COLORS.ACCENT + "40",
+                      color: COLORS.TEXT,
+                    }}
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={clearSearch}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 rounded"
+                      style={{ color: COLORS.SUBTEXT }}
+                      aria-label="Clear search"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+
+                {/* Sort */}
+                <select
+                  value={sortOrder}
+                  onChange={(e) => {
+                    setSortOrder(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="p-3 rounded-xl border"
                   style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.15)",
+                    borderColor: COLORS.ACCENT + "40",
+                    background: COLORS.BG,
+                    color: COLORS.TEXT,
                   }}
                 >
-                  <div>
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm opacity-70">{item.role}</p>
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                </select>
+
+                {/* Page size */}
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="p-3 rounded-xl border"
+                  style={{
+                    borderColor: COLORS.ACCENT + "40",
+                    background: COLORS.BG,
+                    color: COLORS.TEXT,
+                  }}
+                >
+                  <option value={5}>5 / page</option>
+                  <option value={8}>8 / page</option>
+                  <option value={12}>12 / page</option>
+                  <option value={20}>20 / page</option>
+                </select>
+              </div>
+            </div>
+
+            {/* LOADER */}
+            {loading ? (
+              <div className="flex justify-center items-center py-20">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1,
+                    ease: "linear",
+                  }}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    border: `4px solid ${COLORS.ACCENT + "40"}`,
+                    borderTop: `4px solid ${COLORS.ACCENT}`,
+                    borderRadius: "50%",
+                  }}
+                />
+              </div>
+            ) : totalItems === 0 ? (
+              <p className="opacity-70">No enquiries found.</p>
+            ) : (
+              <>
+                {/* LIST */}
+                <div className="space-y-4">
+                  {paginated.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3"
+                      style={{
+                        background: "rgba(255,255,255,0.05)",
+                        border: "1px solid rgba(255,255,255,0.15)",
+                      }}
+                    >
+                      <div className="flex-grow">
+                        <p className="font-semibold">{item.name}</p>
+                        <div className="text-sm opacity-70 flex flex-wrap gap-3 mt-1">
+                          <span>{item.email}</span>
+                          <span>•</span>
+                          <span>{item.phone}</span>
+                          {item.company && <>
+                            <span>•</span>
+                            <span>{item.company}</span>
+                          </>}
+                        </div>
+                        <p className="text-sm opacity-70 mt-3">{item.message}</p>
+                        <p className="text-xs opacity-50 mt-2">
+                          {item.dateTime?.seconds
+                            ? new Date(item.dateTime.seconds * 1000).toLocaleString()
+                            : "No timestamp"}
+                        </p>
+                      </div>
+
+                      <div className="flex-shrink-0 flex gap-2 items-center">
+                        <button
+                          onClick={() => deleteEnquiry(item.id)}
+                          className="px-3 py-1 rounded-lg text-sm font-semibold bg-red-500 text-white hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* PAGINATION CONTROLS */}
+                <div className="flex items-center justify-between mt-6 gap-4 flex-col sm:flex-row">
+                  <div className="text-sm opacity-70">
+                    Showing{" "}
+                    <strong>
+                      {(currentPage - 1) * pageSize + 1}
+                    </strong>{" "}
+                    to{" "}
+                    <strong>
+                      {Math.min(currentPage * pageSize, totalItems)}
+                    </strong>{" "}
+                    of <strong>{totalItems}</strong> enquiries
                   </div>
 
-                  <span
-                    className="px-3 py-1 rounded-lg text-sm font-semibold"
-                    style={{
-                      background:
-                        item.status === "Active"
-                          ? "rgba(0,200,0,0.3)"
-                          : item.status === "Pending"
-                          ? "rgba(255,215,0,0.3)"
-                          : "rgba(255,0,0,0.3)",
-                    }}
-                  >
-                    {item.status}
-                  </span>
+                  <div className="flex gap-2 items-center">
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="px-3 py-2 rounded-lg border"
+                      style={{
+                        background: COLORS.GLASS_BG,
+                        borderColor: COLORS.GLASS_BORDER,
+                        color: COLORS.TEXT,
+                        opacity: currentPage === 1 ? 0.5 : 1,
+                      }}
+                    >
+                      Prev
+                    </button>
+
+                    {/* Page numbers (compact, show few around current) */}
+                    <div className="flex gap-1">
+                      {Array.from({ length: totalPages }).map((_, idx) => {
+                        const page = idx + 1;
+                        // show if near current page or first/last (compact)
+                        if (
+                          page === 1 ||
+                          page === totalPages ||
+                          (page >= currentPage - 1 && page <= currentPage + 1)
+                        ) {
+                          return (
+                            <button
+                              key={page}
+                              onClick={() => setCurrentPage(page)}
+                              className={`px-3 py-2 rounded-lg border ${page === currentPage ? "font-bold" : ""
+                                }`}
+                              style={{
+                                background:
+                                  page === currentPage ? COLORS.ACCENT : COLORS.GLASS_BG,
+                                color: page === currentPage ? COLORS.BG : COLORS.TEXT,
+                                borderColor: COLORS.GLASS_BORDER,
+                              }}
+                            >
+                              {page}
+                            </button>
+                          );
+                        } else if (
+                          page === currentPage - 2 ||
+                          page === currentPage + 2
+                        ) {
+                          // show ellipsis where appropriate
+                          return (
+                            <span key={page} className="px-2 py-2 text-sm opacity-60">
+                              ...
+                            </span>
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="px-3 py-2 rounded-lg border"
+                      style={{
+                        background: COLORS.GLASS_BG,
+                        borderColor: COLORS.GLASS_BORDER,
+                        color: COLORS.TEXT,
+                        opacity: currentPage === totalPages ? 0.5 : 1,
+                      }}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </section>
         </div>
       </main>
     </motion.div>
   );
 };
-
 
 // ===================================
 // 10. CompanyProfile Page Component (Dark Glassmorphic Version)
@@ -3603,11 +3897,11 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
         <motion.div
           className="p-8 rounded-2xl backdrop-blur-md border shadow-xl mb-16"
           style={{
-      
-    backgroundImage: `url(${HalftoneBG})`,
-    backgroundSize: "cover",
-    backgroundPosition: "right center",
-    mixBlendMode: "overlay",
+
+            backgroundImage: `url(${HalftoneBG})`,
+            backgroundSize: "cover",
+            backgroundPosition: "right center",
+            mixBlendMode: "overlay",
             border: COLORS.GLASS_BORDER,
             boxShadow: COLORS.SHADOW,
           }}
@@ -3617,9 +3911,10 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
         >
           <h2
             className="text-3xl font-bold mb-4"
-            style={{ color: COLORS.ACCENT,
-              
-             }}
+            style={{
+              color: COLORS.ACCENT,
+
+            }}
           >
             Company Overview
           </h2>
@@ -3654,7 +3949,7 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
             Leadership
           </h2> */}
           <Management COLORS={COLORS}
-           />
+          />
         </motion.div>
 
         {/* ===================================================== */}
@@ -3672,7 +3967,7 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
             className="p-8 rounded-2xl backdrop-blur-md border shadow-xl"
             style={{
               background: COLORS.GLASS_BG,
-              
+
               borderColor: COLORS.ACCENT,
               boxShadow: COLORS.SHADOW,
             }}
@@ -3690,7 +3985,7 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
                   Vision:
                 </span>
                 {" "}
-            To become the most trusted and sought-after manpower solutions provider, recognized not only for excellence, reliability, and innovation, but also for our ability to transform workforce management across industries. We aspire to set new benchmarks in quality, safety, and operational efficiency by continuously elevating the standards of manpower supply—locally and internationally. Our vision is to empower organizations with a highly skilled and motivated workforce while contributing to regional development, sustainable business growth, and long-term industry leadership.
+                To become the most trusted and sought-after manpower solutions provider, recognized not only for excellence, reliability, and innovation, but also for our ability to transform workforce management across industries. We aspire to set new benchmarks in quality, safety, and operational efficiency by continuously elevating the standards of manpower supply—locally and internationally. Our vision is to empower organizations with a highly skilled and motivated workforce while contributing to regional development, sustainable business growth, and long-term industry leadership.
                 .
               </li>
 
@@ -3698,8 +3993,8 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
                 <span className="font-bold" style={{ color: COLORS.TEXT }}>
                   Mission:
                 </span>{" "}
-             To deliver qualified, trained, and motivated manpower that strengthens our clients’ operational success while fostering the professional growth and well-being of our workforce. We are committed to supplying industry-ready personnel equipped with international safety standards, strong work ethics, and specialized technical skills.
-Our mission is to create a seamless and efficient manpower ecosystem—bridging talent with opportunity—while upholding excellence, transparency, safety, and continuous improvement
+                To deliver qualified, trained, and motivated manpower that strengthens our clients’ operational success while fostering the professional growth and well-being of our workforce. We are committed to supplying industry-ready personnel equipped with international safety standards, strong work ethics, and specialized technical skills.
+                Our mission is to create a seamless and efficient manpower ecosystem—bridging talent with opportunity—while upholding excellence, transparency, safety, and continuous improvement
               </li>
             </ul>
           </div>
@@ -3737,11 +4032,11 @@ Our mission is to create a seamless and efficient manpower ecosystem—bridging 
           className="mt-20 p-8 rounded-2xl backdrop-blur-md border shadow-2xl"
           style={{
             background: COLORS.GLASS_BG,
-                   backgroundImage: `url(${HalftoneBG})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    // opacity: 0.25,
-    // mixBlendMode: "overlay",
+            backgroundImage: `url(${HalftoneBG})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            // opacity: 0.25,
+            // mixBlendMode: "overlay",
             border: COLORS.GLASS_BORDER,
             boxShadow: COLORS.SHADOW,
           }}
@@ -3759,26 +4054,26 @@ Our mission is to create a seamless and efficient manpower ecosystem—bridging 
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-               [
-    "Integrity",
-    "We conduct all operations with honesty, transparency, and ethical responsibility, ensuring trust and long-term partnerships with our clients and workforce."
-  ],
-  [
-    "Excellence",
-    "We are committed to delivering superior manpower solutions by maintaining high standards of quality, safety, training, and continuous performance improvement."
-  ],
-  [
-    "Commitment",
-    "We remain dedicated to client satisfaction, operational efficiency, and timely workforce mobilization, ensuring reliable support across all sectors."
-  ],
-  [
-    "Teamwork",
-    "We believe in a collaborative environment where employees, management, and clients work together to achieve shared goals and sustainable success."
-  ],
-  [
-    "Innovation",
-    "We continuously adopt new technologies, training methods, and modern workforce practices to enhance service delivery and meet evolving industry demands."
-  ],
+              [
+                "Integrity",
+                "We conduct all operations with honesty, transparency, and ethical responsibility, ensuring trust and long-term partnerships with our clients and workforce."
+              ],
+              [
+                "Excellence",
+                "We are committed to delivering superior manpower solutions by maintaining high standards of quality, safety, training, and continuous performance improvement."
+              ],
+              [
+                "Commitment",
+                "We remain dedicated to client satisfaction, operational efficiency, and timely workforce mobilization, ensuring reliable support across all sectors."
+              ],
+              [
+                "Teamwork",
+                "We believe in a collaborative environment where employees, management, and clients work together to achieve shared goals and sustainable success."
+              ],
+              [
+                "Innovation",
+                "We continuously adopt new technologies, training methods, and modern workforce practices to enhance service delivery and meet evolving industry demands."
+              ],
             ].map(([title, desc], i) => (
               <motion.div key={i} whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
                 <p className="font-bold mb-2" style={{ color: COLORS.TEXT }}>
@@ -3825,16 +4120,16 @@ Our mission is to create a seamless and efficient manpower ecosystem—bridging 
 // ===================================
 // 11. Public View Wrapper
 // ===================================
-const PublicView = ({ toggleView, COLORS, theme,goToServiceDetails,handleCompanyProfileClick  }) => (
+const PublicView = ({ toggleView, COLORS, theme, goToServiceDetails, handleCompanyProfileClick }) => (
   <>
     <main className="flex-grow">
       <Hero COLORS={COLORS} />
       <About COLORS={COLORS} />
-    <Services goToServiceDetails={goToServiceDetails} COLORS={COLORS} />
+      <Services goToServiceDetails={goToServiceDetails} COLORS={COLORS} />
       {/* <ServiceItem COLORS={COLORS} /> */}
       <ClientMarquee COLORS={COLORS} theme={theme} />
-      <Directors COLORS={COLORS}   handleCompanyProfileClick={handleCompanyProfileClick}
-/>
+      <Directors COLORS={COLORS} handleCompanyProfileClick={handleCompanyProfileClick}
+      />
       <Contact COLORS={COLORS} />
     </main>
     <Footer COLORS={COLORS} />
@@ -3855,20 +4150,22 @@ const SERVICES_HASH = '#services-page';
 const SERVICE_DETAILS_HASH = '#service-details';
 
 const getInitialView = () => {
-    if (window.location.hash.includes(ADMIN_HASH)) return 'admin';
-    if (window.location.hash.includes(COMPANY_PROFILE_HASH)) return 'company-profile';
-    if (window.location.hash.includes(SERVICES_HASH)) return 'services';
-    if (window.location.hash.includes(SERVICE_DETAILS_HASH)) return 'service-details';
-    return 'public';
+  if (window.location.hash.includes(ADMIN_HASH)) return 'admin';
+  if (window.location.hash.includes(COMPANY_PROFILE_HASH)) return 'company-profile';
+  if (window.location.hash.includes(SERVICES_HASH)) return 'services';
+  if (window.location.hash.includes(SERVICE_DETAILS_HASH)) return 'service-details';
+  return 'public';
 };
-export default function App() {
 
+export default function App() {
   const [theme, setTheme] = useState("dark"); //Default theme
   const [view, setView] = useState("public");
   const [selectedService, setSelectedService] = useState(null);
-   // --- NEW STATE FOR INQUIRY ---
+  // --- NEW STATE FOR INQUIRY ---
   const [selectedServiceForInquiry, setSelectedServiceForInquiry] = useState(null);
-const [adminLoggedIn, setAdminLoggedIn] = useState(false);
+
+  // Admin auth state (keeps in sync with Firebase)
+  const [adminLoggedIn, setAdminLoggedIn] = useState(false);
 
   const COLORS = THEMES[theme];
 
@@ -3892,21 +4189,20 @@ const [adminLoggedIn, setAdminLoggedIn] = useState(false);
     }, 500);
   };
 
- const goToInquire = useCallback((service) => {
+  const goToInquire = useCallback((service) => {
     setSelectedServiceForInquiry(service);
     setView("inquire");
   }, []);
 
- // --- NEW BACK NAVIGATION HANDLER FOR INQUIRY FORM ---
+  // --- NEW BACK NAVIGATION HANDLER FOR INQUIRY FORM ---
   const handleInquireBack = useCallback(() => {
     // Determine the target view based on whether an inquiry service was selected
     const targetView = selectedServiceForInquiry ? 'service-details' : 'public';
-    
-    // Clear the inquiry context state
-    setSelectedServiceForInquiry(null); 
-});
-  // -----------------------------
 
+    // Clear the inquiry context state
+    setSelectedServiceForInquiry(null);
+  });
+  // -----------------------------
 
   // toggleView WITH services support
   const toggleView = (targetView) => {
@@ -3933,21 +4229,49 @@ const [adminLoggedIn, setAdminLoggedIn] = useState(false);
     }, 500);
   };
 
-  // HASH LISTENER
+  // HASH LISTENER - do not override admin/login flow or logout redirect
   useEffect(() => {
     const handler = () => {
       const newView = getInitialView();
-      if (view !== "fading-out") setView(newView);
+
+      // If newView is admin, do not override the current flow here:
+      if (newView === "admin") return;
+
+      if (view !== "fading-out") {
+        setView(newView);
+      }
     };
+
     window.addEventListener("hashchange", handler);
     return () => window.removeEventListener("hashchange", handler);
   }, [view]);
+
+  // Listen to Firebase Auth state (keeps adminLoggedIn accurate)
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      setAdminLoggedIn(!!user);
+    });
+    return () => unsub();
+  }, []);
+
+  // Logout handler in App - passed down to AdminDashboard as onLogout
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // signOut triggers onAuthStateChanged which updates adminLoggedIn -> false
+      // Ensure UI redirects to public immediately
+      setAdminLoggedIn(false);
+      setView("public");
+      window.location.hash = "";
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   const currentView = view === "fading-out" ? "public" : view;
 
   return (
     <div className="font-sans min-h-screen flex flex-col" style={{ background: COLORS.BG, color: COLORS.TEXT }}>
-
       {currentView !== "admin" && (
         <Navbar
           toggleView={toggleView}
@@ -3959,43 +4283,46 @@ const [adminLoggedIn, setAdminLoggedIn] = useState(false);
       )}
 
       <div className="flex-grow">
-  {currentView === "admin" && (
-  adminLoggedIn ? (
-    <AdminDashboard
-      toggleView={toggleView}
-      COLORS={COLORS}
-      theme={theme}
-      toggleTheme={toggleTheme}
-    />
-  ) : (
-    <AdminLogin
-      COLORS={COLORS}
-      onLogin={() => setAdminLoggedIn(true)}
-    />
-  )
-)}
-
-
+        {currentView === "admin" && (
+          adminLoggedIn ? (
+            <AdminDashboard
+              toggleView={toggleView}
+              COLORS={COLORS}
+              theme={theme}
+              toggleTheme={toggleTheme}
+              onLogout={handleLogout}
+            />
+          ) : (
+            <AdminLogin
+              COLORS={COLORS}
+              onLogin={() => {
+                // When AdminLogin signals successful login, we rely on onAuthStateChanged
+                // to set adminLoggedIn. But ensure view switches properly:
+                setView("admin");
+              }}
+            />
+          )
+        )}
 
         {currentView === "company-profile" && (
           <CompanyProfile toggleView={toggleView} COLORS={COLORS} />
         )}
 
         {currentView === "service-details" && (
-          <ServiceDetailsView service={selectedService} toggleView={toggleView} COLORS={COLORS} 
-         goToInquire={goToInquire}
+          <ServiceDetailsView service={selectedService} toggleView={toggleView} COLORS={COLORS}
+            goToInquire={goToInquire}
           />
         )}
 
         {currentView === "services" && (
           <ServicesPage goToServiceDetails={goToServiceDetails} COLORS={COLORS} />
         )}
- {currentView === "inquire" && (
-          <InquirePage 
-            service={selectedServiceForInquiry} 
-            toggleView={toggleView} 
-            COLORS={COLORS} 
- onNavigateBack={handleInquireBack}
+        {currentView === "inquire" && (
+          <InquirePage
+            service={selectedServiceForInquiry}
+            toggleView={toggleView}
+            COLORS={COLORS}
+            onNavigateBack={handleInquireBack}
           />
         )}
 
@@ -4005,7 +4332,7 @@ const [adminLoggedIn, setAdminLoggedIn] = useState(false);
               toggleView={toggleView}
               COLORS={COLORS}
               goToServiceDetails={goToServiceDetails}
-               handleCompanyProfileClick={handleCompanyProfileClick}
+              handleCompanyProfileClick={handleCompanyProfileClick}
             />
           </PageTransitionWrapper>
         )}
@@ -4013,3 +4340,4 @@ const [adminLoggedIn, setAdminLoggedIn] = useState(false);
     </div>
   );
 }
+
