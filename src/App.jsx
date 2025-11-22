@@ -7,7 +7,8 @@ import {
   Menu, X, Globe, Users, TrendingUp, Shield, Linkedin, MapPin, Mail, Phone,
   Facebook, Twitter, MessageCircle, Factory, Hotel, Truck, Building, HeartPulse,
   ShoppingCart, Mic, ArrowLeft, ArrowRight, Wrench, Zap, Stethoscope, Activity,
-  Hospital, HardHat, Sparkles, Pause, Play, Repeat, ArrowUp, ArrowDown, Check
+  Hospital, HardHat, Sparkles, Pause, Play, Repeat, ArrowUp, ArrowDown, Check,Search,Inbox,Trash2,ListFilter, ChevronLeft,
+  ChevronRight, UseMail, PhonBuilding,ArrowDownUp,User
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -53,6 +54,9 @@ import clientImage22 from './assets/clientimages/qiwaOps.jpeg';
 import clientImage23 from './assets/clientimages/rezyatgroup.jpeg';
 import clientImage24 from './assets/clientimages/samayagroup.jpeg';
 import clientImage25 from './assets/clientimages/saudieleccomp.jpeg';
+import clientImage26 from './assets/clientimages/nahdi.jpg';
+import clientImage27 from './assets/clientimages/ram-marquee.jpg';
+import clientImage28 from './assets/clientimages/halfmillion.jpg';
 import armGroupPhoto from './assets/clientimages/ARM-group-photo.jpeg';
 import arm2GroupPhoto from './assets/clientimages/ARM-2Group.jpeg';
 import MrMujeeb from './assets/clientimages/mujeebullah.jpg';
@@ -363,37 +367,32 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
       }}
     >
       <div className="container mx-auto px-6 lg:px-12 py-3 flex justify-between items-center">
+{/* Logo + Text Wrapper */}
+<motion.div
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6 }}
+  className="flex items-center gap-2 cursor-pointer"
+>
+  {/* Logo */}
+  <motion.img
+    src={ArmGroup}
+    alt="ARM Group Logo"
+    className="w-10 sm:w-12 md:w-20 h-auto object-cover rounded-sm"
+    style={{
+      border: "1px solid rgba(255, 255, 255, 0.9)",
+    }}
+  />
 
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="cursor-pointer inline-block"
-
-        >
-          <motion.img
-            src={ArmGroup}
-            alt="ARM Group Logo"
-            className="h-14 w-14 object-cover rounded-full"
-            style={{
-              border: "1px solid rgba(155,108,255,0.9)",
-            }}
-            animate={{
-              boxShadow: [
-                "0 0 10px rgba(155,108,255,0.4)",   // start (soft)
-                "0 0 22px rgba(155,108,255,0.9)",   // mid (bright)
-                "0 0 10px rgba(155,108,255,0.4)",   // end (same as start → smooth loop)
-              ],
-            }}
-            transition={{
-              duration: 3.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-
-
+  {/* Text */}
+  <motion.span
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.8, delay: 0.3 }}
+    className="text-white font-extrabold tracking-wide text-lg md:text-xl"
+  >
+    ARM Solutions
+  </motion.span>
 
         </motion.div>
 
@@ -458,8 +457,8 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
             </>
           )}
 
-          {/* Right Section: Theme Toggle + Admin + Contact */}
-          <div className="flex items-center space-x-5 ml-6">
+          {/* Right Section: Theme Toggle + Admin button + Contact */}
+          {/* <div className="flex items-center space-x-5 ml-6">
             <motion.button
               onClick={toggleTheme}
               whileHover={{ scale: 1.1 }}
@@ -494,20 +493,8 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
               </span>
             </motion.div>
 
-            {/* <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-5 py-2 font-semibold rounded-full shadow-md transition-all"
-              style={{
-                backgroundColor: COLORS.ACCENT,
-                color: COLORS.BG,
-                boxShadow: COLORS.SHADOW,
-              }}
-            >
-              Contact
-            </motion.a> */}
-          </div>
+       
+          </div> */}
         </nav>
 
         {/* Mobile Menu Toggle */}
@@ -523,115 +510,165 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </motion.button>
       </div>
+{/* Mobile Menu */}
+<AnimatePresence>
+  {isOpen && (
+    <motion.div
+      className="lg:hidden origin-top px-8 py-5 space-y-4"
+      style={{
+        background: COLORS.GRADIENT,
+        color: COLORS.TEXT,
+        borderTop: COLORS.GLASS_BORDER,
+        boxShadow: COLORS.SHADOW,
+      }}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={menuVariants}
+    >
+      {/* HOME */}
+      <motion.a
+        onClick={(e) => {
+          e.preventDefault();
+          toggleView("public");
+          setIsOpen(false);
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className="lg:hidden origin-top px-8 py-5 space-y-4"
-            style={{
-              background: COLORS.GRADIENT,
-              color: COLORS.TEXT,
-              borderTop: COLORS.GLASS_BORDER,
-              boxShadow: COLORS.SHADOW,
-            }}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={menuVariants}
+          window.location.hash = "";
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+        className="block text-lg font-semibold hover:text-blue-400 transition"
+        variants={itemVariants}
+      >
+        Home
+      </motion.a>
+
+      {/* PUBLIC VIEW NAVIGATION */}
+      {isPublicView ? (
+        <>
+          {/* Expertise */}
+          <motion.a
+            href="#services"
+            onClick={() => setIsOpen(false)}
+            className="block text-lg font-medium hover:text-blue-400 transition"
+            variants={itemVariants}
           >
-            <motion.a
-              onClick={() => {
-                toggleView("public");
-                setIsOpen(false);
-                window.location.hash = "";
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="block text-lg font-semibold text-blue-400"
-              variants={itemVariants}
-            >
-              Home
-            </motion.a>
-            {isPublicView && (
-              <>
-                {/* Normal Home Scroll Links */}
-                {["hero", "about", "services", "directors", "contact"].map(
-                  (item) => (
-                    <motion.a
-                      key={item}
-                      href={`#${item}`}
-                      onClick={() => setIsOpen(false)}
-                      className="block text-lg font-medium hover:text-blue-400 transition"
-                      variants={itemVariants}
-                    >
-                      {item.charAt(0).toUpperCase() + item.slice(1)}
-                    </motion.a>
-                  )
-                )}
+            Expertise
+          </motion.a>
 
-                {/* ⭐ NEW — Services Page */}
-                <motion.a
-                  href="#services-page"
-                  onClick={handleServicesPageClick}
-                  className="block text-lg font-medium hover:text-blue-400 transition"
-                  variants={itemVariants}
-                >
-                  Services
-                </motion.a>
+          {/* FULL SERVICES PAGE */}
+          <motion.a
+            href="#services-page"
+            onClick={(e) => {
+              e.preventDefault();
+              handleServicesPageClick(e);
+              setIsOpen(false);
+            }}
+            className="block text-lg font-medium hover:text-blue-400 transition"
+            variants={itemVariants}
+          >
+            Services
+          </motion.a>
 
-                {/* Company Profile */}
-                <motion.a
-                  href="#company-profile"
-                  onClick={handleCompanyProfileClick}
-                  className="block text-lg font-semibold text-blue-400"
-                  variants={itemVariants}
-                >
-                  Company Profile
-                </motion.a>
-              </>
-            )}
+          {/* Contact */}
+          <motion.a
+            href="#contact"
+            onClick={() => setIsOpen(false)}
+            className="block text-lg font-medium hover:text-blue-400 transition"
+            variants={itemVariants}
+          >
+            Contact
+          </motion.a>
 
-            {/* Contact Button */}
-            <motion.a
-              href="#contact"
-              className="inline-flex items-center gap-2 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all"
-              style={{ backgroundColor: COLORS.ACCENT }}
-              variants={itemVariants}
-            >
-              Contact <ArrowRight className="w-4 h-4" />
-            </motion.a>
+          {/* About Us */}
+          <motion.a
+            href="#company-profile"
+            onClick={(e) => {
+              e.preventDefault();
+              handleCompanyProfileClick(e);
+              setIsOpen(false);
+            }}
+            className="block text-lg font-medium hover:text-blue-400 transition"
+            variants={itemVariants}
+          >
+            About Us
+          </motion.a>
+        </>
+      ) : (
+        <>
+          {/* NOT-PUBLIC VIEW — Services */}
+          <motion.a
+            href="#services-page"
+            onClick={(e) => {
+              e.preventDefault();
+              handleServicesPageClick(e);
+              setIsOpen(false);
+            }}
+            className="block text-lg font-medium hover:text-blue-400 transition"
+            variants={itemVariants}
+          >
+            Services
+          </motion.a>
 
-            {/* Theme & Admin */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-              <motion.button
-                onClick={toggleTheme}
-                className="p-2 rounded-full border"
-                style={{
-                  color: COLORS.TEXT,
-                  border: COLORS.GLASS_BORDER,
-                }}
-              >
-                {theme === "light" ? "☀️" : "🌙"}
-              </motion.button>
+          {/* Company Profile */}
+          <motion.a
+            href="#company-profile"
+            onClick={(e) => {
+              e.preventDefault();
+              handleCompanyProfileClick(e);
+              setIsOpen(false);
+            }}
+            className="block text-lg font-medium hover:text-blue-400 transition"
+            variants={itemVariants}
+          >
+            Company Profile
+          </motion.a>
+        </>
+      )}
 
-              <motion.div
-                onClick={() => {
-                  toggleView("admin");
-                  setIsOpen(false);
-                }}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <img
-                  src="https://placehold.co/32x32?text=A"
-                  alt="Admin"
-                  className="w-8 h-8 rounded-full border border-gray-400"
-                />
-                <span className="text-sm font-medium">Admin</span>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Contact Button */}
+      {/* <motion.a
+        href="#contact"
+        onClick={() => setIsOpen(false)}
+        className="inline-flex items-center gap-2 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all"
+        style={{ backgroundColor: COLORS.ACCENT }}
+        variants={itemVariants}
+      >
+        Contact <ArrowRight className="w-4 h-4" />
+      </motion.a> */}
+
+      {/* THEME + ADMIN Button*/}
+      {/* <div className="flex items-center justify-between pt-4 border-t border-white/10">
+        <motion.button
+          onClick={toggleTheme}
+          className="p-2 rounded-full border"
+          style={{
+            color: COLORS.TEXT,
+            border: COLORS.GLASS_BORDER,
+          }}
+        >
+          {theme === "light" ? "☀️" : "🌙"}
+        </motion.button>
+
+        <motion.div
+          onClick={() => {
+            toggleView("admin");
+            setIsOpen(false);
+          }}
+          className="flex items-center gap-2 cursor-pointer"
+        >
+          <img
+            src="https://placehold.co/32x32?text=A"
+            alt="Admin"
+            className="w-8 h-8 rounded-full border border-gray-400"
+          />
+          <span className="text-sm font-medium">Admin</span>
+        </motion.div>
+      </div> */}
+    </motion.div>
+  )}
+</AnimatePresence>
+
+
     </header>
   );
 };
@@ -1256,10 +1293,41 @@ const Services = ({ goToServiceDetails }) => {
       }}
     >
       <div className="container mx-auto px-6 lg:px-12 relative z-10">
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <h2 className="text-white text-4xl font-bold mb-4"> <a href='#services-page'>Our Service Sectors</a></h2>
-          <p className="text-gray-300 text-lg">Skilled manpower across multiple industries.</p>
-        </motion.div>
+      <motion.div
+  initial={{ opacity: 0, y: 24 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6 }}
+  className="max-w-10xl"
+>
+  {/* Heading */}
+  <h2 className="text-white text-4xl font-bold mb-4">
+    <a href="#services-page">Our Service Sectors</a>
+  </h2>
+
+  {/* Description */}
+  <p className="text-gray-300 text-lg leading-relaxed mb-6">
+    We provide highly skilled and certified professionals across a wide range of
+    industries. From technical operations to corporate support departments, our manpower
+    solutions empower businesses to scale efficiently and operate with confidence.
+  </p>
+
+  {/* Additional Highlights */}
+  <ul className="text-gray-300 text-base space-y-2 mb-6">
+    <li>• Trained and verified workforce for all sectors</li>
+    <li>• Flexible staffing models tailored to your business</li>
+    <li>• Nationwide availability with fast deployment</li>
+    <li>• Quality-driven teams with strong work ethics</li>
+  </ul>
+
+  {/* CTA Button */}
+  <a
+    href="#services-page"
+    className="inline-block px-6 py-3 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+  >
+    Explore Services
+  </a>
+</motion.div>
+
 
         {/* Carousel - Responsive Structure */}
         <div className="relative mt-10">
@@ -1568,186 +1636,298 @@ stage assistants, and security staff for events and exhibitions.`,
 // =======================================================
 //New Service Inquiry
 const InquirePage = ({ service, toggleView, COLORS }) => {
-  // Form state and submission logic (simplified for example)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
+    company: '',
     message: service ? `Inquiry about: ${service.title}` : '',
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
+  const [submitStatus, setSubmitStatus] = useState(null);
 
   useEffect(() => {
-    // Pre-populate message if a service is provided
     setFormData(prev => ({
       ...prev,
-      message: service ? `Inquiry about: ${service.title}\n\n[Your detailed message here]` : '[Your detailed message here]',
+      message: service
+        ? `Inquiry about: ${service.title}\n\n[Your detailed message here]`
+        : '[Your detailed message here]',
     }));
   }, [service]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (submitStatus) setSubmitStatus(null); // Clear status on new input
+    if (submitStatus) setSubmitStatus(null);
   };
 
+  // --------------------------------------
+  // 🔥 Updated handleSubmit with Firebase
+  // --------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    // Simulate API submission delay with exponential backoff for a real API call
+    // Retry logic (unchanged)
     const maxRetries = 3;
     let success = false;
+
     for (let i = 0; i < maxRetries; i++) {
-      await new Promise(resolve => setTimeout(resolve, 500 * (i + 1))); // Wait 0.5s, 1s, 1.5s
+      await new Promise(res => setTimeout(res, 500 * (i + 1)));
 
-      // In a real application, replace this with your actual fetch call to a backend endpoint
-      console.log(`Submitting Inquiry: Attempt ${i + 1}`, formData);
-
-      // Simulate success or failure
       if (Math.random() > 0.1) {
         success = true;
         break;
       }
     }
 
-    if (success) {
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: service ? `Inquiry about: ${service.title}` : '' }); // Clear form
-    } else {
-      setSubmitStatus('error');
+    if (!success) {
+      setSubmitStatus("error");
+      setIsSubmitting(false);
+      return;
     }
+
+    // Submit to Firebase
+    try {
+      const enquiryData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || "N/A",
+        company: formData.company || "N/A",
+        message: formData.message,
+        service: service ? service.title : "General Inquiry",
+        dateTime: serverTimestamp(),
+      };
+
+      await addDoc(collection(db, "enquiries"), enquiryData);
+
+      setSubmitStatus("success");
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        message: service
+          ? `Inquiry about: ${service.title}\n\n[Your detailed message here]`
+          : "",
+      });
+    } catch (err) {
+      console.error("Firebase error:", err);
+      setSubmitStatus("error");
+    }
+
     setIsSubmitting(false);
   };
 
-
-  const headerTitle = service ? `Inquire about ${service.title}` : "General Inquiry";
-  const headerSubtitle = service ? `Please fill out the form below for service details related to ${service.title}.` : "Please fill out the form below to get in touch with our team.";
-
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto mt-10" style={{ color: COLORS.TEXT }}>
-      {/* <div className="text-center mb-12">
-        <button
-          onClick={() => toggleView(service ? 'service-details' : 'public')}
-          className="mb-6 flex items-center mx-auto text-sm font-medium transition-colors hover:opacity-80"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          {service ? 'Back to Service Details' : 'Back to Home'}
-        </button>
-        <h1 className="text-4xl sm:text-5xl font-extrabold mb-4" style={{ color: COLORS.ACCENT }}>
-          {headerTitle}
-        </h1>
-        <p className="text-lg" style={{ color: COLORS.SECONDARY_TEXT }}>
-          {headerSubtitle}
-        </p>
-      </div> */}
+    <>
+      {/* Blob Animations */}
+      <style jsx="true">{`
+        @keyframes blob-one { 
+          0%,100%{transform:translate(0,0)scale(1);} 
+          33%{transform:translate(30px,-50px)scale(1.1);} 
+          66%{transform:translate(-20px,40px)scale(0.9);} 
+        }
+        @keyframes blob-two {
+          0%,100%{transform:translate(0,0)scale(1);}
+          40%{transform:translate(-40px,60px)scale(0.95);}
+          80%{transform:translate(50px,-30px)scale(1.05);}
+        }
+        .blob-one { animation: blob-one 22s infinite ease-in-out; }
+        .blob-two { animation: blob-two 26s infinite ease-in-out; }
+      `}</style>
 
-      <motion.form
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        onSubmit={handleSubmit}
-        className="bg-white/10 p-6 sm:p-10 rounded-3xl shadow-2xl backdrop-blur-sm border border-white/20"
+      <section
+        className="relative py-20 md:py-28 overflow-hidden min-h-screen flex items-center w-full"
+        style={{ background: COLORS.GRADIENT }}
       >
-        <div className="space-y-6">
-          {/* Name Field */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-2">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full p-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 transition-all"
-              style={{ color: COLORS.TEXT, outlineColor: COLORS.ACCENT }}
-              placeholder="John Doe"
-            />
-          </div>
+        {/* Blobs */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div 
+            className="absolute w-[300px] h-[300px] md:w-[450px] md:h-[450px] blur-[120px] opacity-40 rounded-full blob-one"
+            style={{ top: "-50px", left: "-50px", background: COLORS.ACCENT }}
+          ></div>
 
-          {/* Email Field */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 transition-all"
-              style={{ color: COLORS.TEXT, outlineColor: COLORS.ACCENT }}
-              placeholder="you@company.com"
-            />
-          </div>
+          <div 
+            className="absolute w-[350px] h-[350px] md:w-[500px] md:h-[500px] blur-[150px] opacity-35 rounded-full blob-two"
+            style={{ bottom: "-50px", right: "-50px", background: COLORS.ACCENT_ALT }}
+          ></div>
 
-          {/* Message Field */}
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium mb-2">
-              Your Message / Details
-            </label>
-            <textarea
-              name="message"
-              id="message"
-              required
-              rows="6"
-              value={formData.message}
-              onChange={handleChange}
-              className="w-full p-3 rounded-xl bg-white/5 border border-white/10 focus:ring-2 transition-all"
-              style={{ color: COLORS.TEXT, outlineColor: COLORS.ACCENT }}
-              placeholder="I am interested in..."
-            ></textarea>
-          </div>
+          <div
+            className="absolute w-64 h-64 blur-[100px] opacity-30 rounded-full"
+            style={{ top: "25%", right: "20%", background: COLORS.ACCENT }}
+          ></div>
         </div>
 
-        {/* Submission Status */}
-        {submitStatus === 'success' && (
-          <div className="mt-6 p-4 rounded-xl flex items-center bg-green-500/20 text-green-300">
-            <Check className="w-5 h-5 mr-3" />
-            Your inquiry has been successfully sent! We will contact you shortly.
-          </div>
-        )}
-        {submitStatus === 'error' && (
-          <div className="mt-6 p-4 rounded-xl flex items-center bg-red-500/20 text-red-300">
-            <X className="w-5 h-5 mr-3" />
-            Something went wrong. Please try again or contact us directly.
-          </div>
-        )}
-
-        {/* Submit Button */}
-        <motion.button
-          type="submit"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.98 }}
-          disabled={isSubmitting}
-          className="mt-8 w-full px-8 py-4 text-xl font-bold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center"
-          style={{
-            background: COLORS.ACCENT,
-            color: COLORS.BG,
-            boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
+        {/* Animated background */}
+        <motion.div
+          className="absolute inset-0 z-0"
+          animate={{
+            background: [
+              `radial-gradient(circle at 20% 30%, ${COLORS.ACCENT}10, transparent 70%), radial-gradient(circle at 80% 70%, ${COLORS.ACCENT_ALT}15, transparent 70%)`,
+              `radial-gradient(circle at 25% 25%, ${COLORS.ACCENT}15, transparent 70%), radial-gradient(circle at 85% 75%, ${COLORS.ACCENT_ALT}20, transparent 70%)`,
+            ]
           }}
-        >
-          {isSubmitting ? (
-            <>
-              <Activity className="w-5 h-5 mr-3 animate-spin" />
-              Sending...
-            </>
-          ) : (
-            <>
-              Submit Inquiry
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </>
-          )}
-        </motion.button>
-      </motion.form>
-    </section>
+          transition={{ duration: 20, repeat: Infinity, repeatType: "mirror" }}
+        ></motion.div>
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="text-center mb-16">
+            <p
+              className="font-semibold uppercase mb-2 tracking-widest"
+              style={{ color: COLORS.ACCENT }}
+            >
+              Service Inquiry
+            </p>
+
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6" style={{ color: COLORS.TEXT }}>
+              {service ? `Inquire About ${service.title}` : "General Inquiry"}
+            </h2>
+
+            <p className="max-w-2xl mx-auto text-lg" style={{ color: COLORS.SUBTEXT }}>
+              Fill out the form below and our team will get back to you shortly.
+            </p>
+          </div>
+
+          {/* 2 Column Layout EXACTLY like original contact page */}
+       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center pt-10">
+
+  {/* LEFT SIDE — Modern Hero Typography */}
+  <div className="relative flex items-center justify-center md:justify-start order-1 md:order-1 py-10 md:py-0">
+
+    {/* BIG Modern Vertical Text */}
+    <h1
+      className="font-extrabold leading-none select-none text-center md:text-left"
+      style={{
+        fontSize: "clamp(3rem, 8vw, 8rem)",
+        color: COLORS.TEXT,
+      }}
+    >
+      Let's<br />
+      <span style={{ color: COLORS.ACCENT }}>Fill This</span><br />
+      Form
+    </h1>
+
+
+   
+  </div>
+
+  {/* RIGHT SIDE — Your Inquiry Form (same UI & logic) */}
+  <motion.form
+    onSubmit={handleSubmit}
+    initial={{ opacity: 0, x: 60 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ duration: 1 }}
+    className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl order-2 md:order-2"
+    style={{
+      background: COLORS.GLASS_BG,
+      border: COLORS.GLASS_BORDER,
+      boxShadow: COLORS.SHADOW,
+    }}
+  >
+    {/* Fields */}
+    <div className="space-y-5">
+
+      <input
+        type="text"
+        name="name"
+        required
+        value={formData.name}
+        onChange={handleChange}
+        placeholder="Your Name"
+        className="w-full p-4 rounded-xl bg-transparent border"
+        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+      />
+
+      <input
+        type="email"
+        name="email"
+        required
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Your Email"
+        className="w-full p-4 rounded-xl bg-transparent border"
+        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+      />
+
+      <input
+        type="text"
+        name="phone"
+        value={formData.phone}
+        onChange={handleChange}
+        placeholder="Phone (Optional)"
+        className="w-full p-4 rounded-xl bg-transparent border"
+        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+      />
+
+      <input
+        type="text"
+        name="company"
+        value={formData.company}
+        onChange={handleChange}
+        placeholder="Company (Optional)"
+        className="w-full p-4 rounded-xl bg-transparent border"
+        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+      />
+
+      <textarea
+        name="message"
+        required
+        rows="5"
+        value={formData.message}
+        onChange={handleChange}
+        className="w-full p-4 rounded-xl bg-transparent border"
+        placeholder="How can we help you?"
+        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+      ></textarea>
+    </div>
+
+    {/* Status */}
+    {submitStatus === "success" && (
+      <p className="mt-6 p-3 text-center rounded-xl" style={{ background: "Green", color: COLORS.TEXT }}>
+        Inquiry sent successfully!
+      </p>
+    )}
+
+    {submitStatus === "error" && (
+      <p className="mt-6 p-3 text-center rounded-xl bg-red-500/30 text-red-200">
+        Something went wrong. Please try again.
+      </p>
+    )}
+
+    {/* Submit Button */}
+<motion.button
+  type="submit"
+  whileHover={{ scale: 1.04 }}
+  whileTap={{ scale: 0.97 }}
+  disabled={isSubmitting}
+  className="w-full mt-6 py-4 font-bold rounded-xl flex items-center justify-center gap-3"
+  style={{ background: COLORS.ACCENT, color: COLORS.BG }}
+>
+  {isSubmitting ? (
+    <div className="flex items-center gap-2">
+      {/* Simple basic loader */}
+      <div
+        className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+      ></div>
+      Sending...
+    </div>
+  ) : (
+    "Submit Inquiry"
+  )}
+</motion.button>
+
+  </motion.form>
+</div>
+        </div>
+      </section>
+    </>
   );
 };
+
+
 // =============================
 
 // PART 3 — SERVICE DETAILS VIEW (Animated, Safe, Enhanced)
@@ -2038,8 +2218,6 @@ const Directors = ({ COLORS, handleCompanyProfileClick }) => {
     { name: "Mujeeb Ullah", title: "CEO", bio: "A decade of experience in sales and workforce client relations.", intro: "Mr. Mujeeb Ullah currently works as the Sales Manager at Investment Company...", imageUrl: MrMujeeb },
     { name: "Abdullah Masoud Ghazi Alotaib", title: "Deputy CEO", bio: "Expert in soft services training and staff development.", intro: "Mr. Abdullah specializes in the training and development of soft services personnel...", imageUrl: MrAbdullah },
     { name: " Mohammed Rizwan Ahmed", title: "Managing Director", bio: "14+ years of leadership experience in manpower operations and strategic management.", intro: "Mr. Mohammed Rizwan Ahmed serves as the Head of Operations Manager at Investment Company...", imageUrl: MrRizwan },
-    { name: "Mohammed Tajammul Ahmed", title: "Administrator", bio: "Expert in soft services training and staff development.", intro: "Mr. Mohammed Tajammul Ahmed specializes in the training and development of soft services personnel...", imageUrl: MrTajammul },
-    { name: "Palesh Rana", title: "Senior Recruiter - Overseas & Local (Bangladesh)", bio: "Expert in soft services training and staff development.", intro: "Mr. Palesh Rana specializes in the training and development of soft services personnel...", imageUrl: MrPaleshRana },
   ];
 
   return (
@@ -2379,107 +2557,124 @@ const Management = ({ COLORS }) => {
           </p>
         </div>
 
-        {/* =============================== */}
-        {/* Board of Directors */}
-        {/* =============================== */}
-        <h3
-          className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-indigo-400/50 pb-2 inline-block px-4"
-          style={{ color: COLORS.ACCENT }}
-        >
-          Board of Directors
-        </h3>
+   {/* =============================== */}
+{/* Board of Directors */}
+{/* =============================== */}
+<h3
+  className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-indigo-400/50 pb-2 inline-block px-4"
+  style={{ color: COLORS.ACCENT }}
+>
+  Board of Directors
+</h3>
 
-        <div className="grid grid-cols-1 max-w-6xl mx-auto mb-20 gap-12">
-          {boardOfDirectors.map((manager, index) => (
-            <motion.div
-              key={`director-${index}`}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ type: "spring", stiffness: 100, damping: 20, delay: index * 0.1 }}
+<div className="grid grid-cols-1 max-w-6xl mx-auto mb-20 gap-12">
+  {boardOfDirectors.map((manager, index) => (
+    <motion.div
+      key={`director-${index}`}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+        delay: index * 0.1,
+      }}
+      className="rounded-3xl p-10 md:p-12 bg-violet-950 shadow-2xl mx-auto relative overflow-hidden"
+      style={{
+        border: `1px solid ${COLORS.ACCENT}30`,
+      }}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-3 items-center">
 
-              className="rounded-3xl p-10 md:p-12 bg-violet-950  shadow-2xl mx-auto relative overflow-hidden"
-              style={{
-                border: `1px solid ${COLORS.ACCENT}30`,
-              }}
+        {/* =============================== */}
+        {/* TEXT BLOCK — Mobile: second | Desktop: first */}
+        {/* =============================== */}
+        <div className="md:col-span-2 text-left space-y-6 order-2 md:order-1">
+
+          {/* NAME + TITLE */}
+          <div>
+            <h2
+              className="text-4xl font-black"
+              style={{ color: COLORS.PRIMARY_HEADER }}
             >
-              <div className="grid grid-cols-1 md:grid-cols-3 items-center">
+              {manager.name}
+            </h2>
 
-                {/* LEFT CONTENT: Name, Title, About */}
-                <div className="md:col-span-2 text-left space-y-6">
+            <p
+              className="text-xl font-semibold mt-1"
+              style={{ color: COLORS.ACCENT }}
+            >
+              {manager.title}
+            </p>
+          </div>
 
-                  {/* NAME AND TITLE */}
-                  <div>
-                    <h2
-                      className="text-4xl font-black"
-                      style={{ color: COLORS.PRIMARY_HEADER }}
-                    >
-                      {manager.name}
-                    </h2>
+          {/* ABOUT */}
+          <div>
+            <h4
+              className="text-lg font-bold mb-2"
+              style={{ color: COLORS.PRIMARY_HEADER }}
+            >
+              About
+            </h4>
 
-                    <p
-                      className="text-xl font-semibold mt-1"
-                      style={{ color: COLORS.ACCENT }}
-                    >
-                      {manager.title}
-                    </p>
-                  </div>
+            <p
+              className="text-base leading-relaxed"
+              style={{ color: COLORS.SUBTEXT }}
+            >
+              {manager.intro || manager.bio}
+            </p>
+          </div>
 
-                  {/* ABOUT */}
-                  <div>
-                    <h4 className="text-lg font-bold mb-2" style={{ color: COLORS.PRIMARY_HEADER }}>
-                      About
-                    </h4>
-                    <p className="text-base leading-relaxed" style={{ color: COLORS.SUBTEXT }}>
-                      {manager.intro || manager.bio}
-                    </p>
-                  </div>
-
-                  {/* SOCIAL ICONS (LinkedIn Only) */}
-                  {manager.linkedinUrl && (
-                    <div className="flex items-center gap-4 mt-4">
-                      <motion.a
-                        href={manager.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.2, rotate: 5 }}
-                        className="p-3 rounded-full bg-black/5 hover:bg-black/20 transition"
-                      >
-                        <Linkedin className="w-6 h-6" style={{ color: COLORS.ACCENT }} />
-                      </motion.a>
-                    </div>
-                  )}
-                </div>
-
-                {/* RIGHT PROFILE IMAGE */}
-                <div className="flex justify-center md:justify-end mt-10 md:mt-0 ">
-                  <div className="relative">
-                    <div
-                      className="absolute inset-0 rounded-full "
-                      style={{
-                        background: "white",
-                        padding: "4px",
-                        borderRadius: "9999px",
-
-
-                      }}
-                    ></div>
-
-                    <img
-                      src={manager.imageUrl}
-                      alt={manager.name}
-                      className="relative rounded-full w-48 h-48 md:w-60 md:h-60 object-contain p-1 border-4 border-white shadow-xl"
-                      style={{ transform: "scale(1.1)" }}
-                      onError={(e) => {
-                        e.target.src = "https://placehold.co/300x300/cccccc/333?text=No+Image";
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          {/* SOCIAL ICONS */}
+          {manager.linkedinUrl && (
+            <div className="flex items-center gap-4 mt-4">
+              <motion.a
+                href={manager.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                className="p-3 rounded-full bg-black/5 hover:bg-black/20 transition"
+              >
+                <Linkedin
+                  className="w-6 h-6"
+                  style={{ color: COLORS.ACCENT }}
+                />
+              </motion.a>
+            </div>
+          )}
         </div>
+
+        {/* =============================== */}
+        {/* IMAGE BLOCK — Mobile: first | Desktop: second */}
+        {/* =============================== */}
+        <div className="flex justify-center md:justify-end mt-6 mb-6 md:mt-0 md:mb-0 order-1 md:order-2">
+          <div className="relative">
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: "white",
+                padding: "4px",
+                borderRadius: "9999px",
+              }}
+            ></div>
+
+            <img
+              src={manager.imageUrl}
+              alt={manager.name}
+              className="relative rounded-full w-48 h-48 md:w-60 md:h-60 object-contain p-1 border-4 border-white shadow-xl"
+              style={{ transform: "scale(1.1)" }}
+              onError={(e) => {
+                e.target.src =
+                  "https://placehold.co/300x300/cccccc/333?text=No+Image";
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  ))}
+</div>
         {/* =============================== */}
         {/* Operational Management */}
         {/* =============================== */}
@@ -3017,17 +3212,16 @@ const FloatingButtons = ({ COLORS }) => {
 // ===================================
 const ClientMarquee = ({ COLORS, theme }) => {
   const clients = [
-    { name: "NCC Group", logo: nccLogo },
-    { name: "Client Partner 1", logo: clientImage1 },
-    { name: "Client Partner 2", logo: clientImage2 },
-    { name: "Client Partner 3", logo: clientImage3 },
-    { name: "Client Partner 4", logo: clientImage4 },
-    { name: "Client Partner 5", logo: clientImage5 },
-    { name: "Client Partner 6", logo: clientImage6 },
-    { name: "Client Partner 7", logo: clientImage7 },
-    { name: "Client Partner 8", logo: clientImage8 },
-    { name: "Client Partner 9", logo: clientImage9 },
-    { name: "Client Partner 10", logo: clientImage10 },
+
+    { name: "Client Partner 1", logo: clientImage26  },
+    { name: "Client Partner 2", logo: clientImage27  },
+    { name: "Client Partner 3", logo: clientImage28  },
+    { name: "Client Partner 4", logo: clientImage2  },
+    { name: "Client Partner 5", logo: clientImage6  },
+    { name: "Client Partner 6", logo: clientImage20  },
+    { name: "Client Partner 7", logo: clientImage17  },
+    { name: "Client Partner 8", logo: clientImage25  },
+
   ];
 
   const duplicatedClients = [...clients, ...clients];
@@ -3335,7 +3529,7 @@ const AdminLogin = ({ COLORS, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+const [isLoading, setIsLoading] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -3346,72 +3540,118 @@ const AdminLogin = ({ COLORS, onLogin }) => {
     } catch (err) {
       setError("Invalid email or password");
     }
+     setIsLoading(false); // stop loader
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-6"
-      style={{ background: COLORS.BG }}
+<div
+  className="min-h-screen flex items-center justify-center px-6 relative"
+  style={{ background: COLORS.BG }}
+>
+
+  {/* Soft Glow Background */}
+  <div 
+    className="absolute inset-0 opacity-20 blur-[120px] pointer-events-none"
+    style={{
+      background: `radial-gradient(circle at 30% 20%, ${COLORS.ACCENT}, transparent 60%)`,
+    }}
+  ></div>
+
+  <div
+    className="w-full max-w-md p-8 rounded-3xl backdrop-blur-xl shadow-2xl border relative z-10"
+    style={{
+      background: COLORS.GLASS_BG,
+      border: COLORS.GLASS_BORDER,
+      boxShadow: COLORS.SHADOW,
+    }}
+  >
+    <h2
+      className="text-3xl font-extrabold mb-6 text-center tracking-wide"
+      style={{ color: COLORS.ACCENT }}
     >
-      <div
-        className="w-full max-w-md p-8 rounded-3xl backdrop-blur-xl shadow-xl border"
+      Admin Login
+    </h2>
+
+    <form onSubmit={handleLogin} className="space-y-5">
+
+      {/* Email */}
+      <input
+        type="text"
+        placeholder="Email"
+        className="w-full p-3 rounded-xl border outline-none transition focus:ring-4"
         style={{
           background: COLORS.GLASS_BG,
           border: COLORS.GLASS_BORDER,
-          boxShadow: COLORS.SHADOW,
+          color: COLORS.TEXT,
+          boxShadow: "inset 0 0 20px rgba(255,255,255,0.03)",
         }}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      {/* Password */}
+      <input
+        type="password"
+        placeholder="Password"
+        className="w-full p-3 rounded-xl border outline-none transition focus:ring-4"
+        style={{
+          background: COLORS.GLASS_BG,
+          border: COLORS.GLASS_BORDER,
+          color: COLORS.TEXT,
+          boxShadow: "inset 0 0 20px rgba(255,255,255,0.03)",
+        }}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-red-400 text-center text-sm">{error}</p>
+      )}
+
+      {/* Submit Button */}
+     <button
+  type="submit"
+  className="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-transform hover:scale-[1.03]"
+  style={{
+    background: COLORS.ACCENT,
+    color: COLORS.BG,
+  }}
+  disabled={isLoading}
+>
+  {!isLoading ? (
+    "Login"
+  ) : (
+    <>
+      <svg
+        className="animate-spin h-5 w-5"
+        style={{ color: COLORS.BG }}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
       >
-        <h2
-          className="text-3xl font-bold mb-6 text-center"
-          style={{ color: COLORS.ACCENT }}
-        >
-          Admin Login
-        </h2>
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        ></path>
+      </svg>
+      Authenticating...
+    </>
+  )}
+</button>
+    </form>
+  </div>
+</div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Email"
-            className="w-full p-3 rounded-xl border outline-none"
-            style={{
-              background: COLORS.GLASS_BG,
-              border: COLORS.GLASS_BORDER,
-              color: COLORS.TEXT,
-            }}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 rounded-xl border outline-none"
-            style={{
-              background: COLORS.GLASS_BG,
-              border: COLORS.GLASS_BORDER,
-              color: COLORS.TEXT,
-            }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          {error && (
-            <p className="text-red-400 text-center text-sm">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            className="w-full py-3 rounded-xl font-bold transition-transform hover:scale-105"
-            style={{
-              background: COLORS.ACCENT,
-              color: COLORS.BG,
-            }}
-          >
-            Login
-          </button>
-        </form>
-      </div>
-    </div>
   );
 };
 
@@ -3507,349 +3747,290 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme, onLogou
   };
 
   return (
-    <motion.div
-      className="min-h-screen flex flex-col relative overflow-hidden"
+  <motion.div
+    className="min-h-screen flex flex-col relative overflow-hidden"
+    style={{
+      background: `linear-gradient(135deg, ${COLORS.BG} 0%, ${COLORS.ACCENT}20 100%)`,
+      color: COLORS.TEXT,
+    }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.6 }}
+  >
+    {/* HEADER */}
+    <header
+      className="w-full flex justify-between items-center px-6 py-4 sticky top-0 z-50 backdrop-blur-lg border-b shadow-xl"
       style={{
-        background: `linear-gradient(135deg, ${COLORS.BG} 0%, ${COLORS.ACCENT}20 100%)`,
-        color: COLORS.TEXT,
+        background: COLORS.GLASS_BG,
+        borderColor: COLORS.GLASS_BORDER,
       }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
     >
-      {/* ========================= */}
-      {/* 🔵 ADMIN DASHBOARD HEADER */}
-      {/* ========================= */}
-      <header
-        className="w-full flex justify-between items-center px-6 py-4 sticky top-0 z-50 backdrop-blur-lg border-b shadow-lg"
-        style={{
-          background: COLORS.GLASS_BG,
-          borderColor: COLORS.GLASS_BORDER,
-          boxShadow: COLORS.SHADOW,
-        }}
-      >
-        <h1
-          className="text-2xl md:text-3xl font-bold tracking-wide"
-          style={{ color: COLORS.ACCENT }}
+      <div className="flex items-center gap-3">
+        <Inbox size={28} color={COLORS.ACCENT} />
+        <h1 className="text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
+      </div>
+
+      <div className="flex items-center gap-4">
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-full border hover:scale-110 transition-all"
+          style={{
+            backgroundColor: COLORS.GLASS_BG,
+            border: COLORS.GLASS_BORDER,
+            color: COLORS.ACCENT,
+          }}
         >
-          Admin Dashboard
-        </h1>
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
 
-        <div className="flex items-center gap-4">
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full border transition duration-300 hover:scale-110"
-            style={{
-              backgroundColor: COLORS.GLASS_BG,
-              border: COLORS.GLASS_BORDER,
-              boxShadow: COLORS.SHADOW,
-              color: COLORS.ACCENT,
-            }}
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? "☀️" : "🌙"}
-          </button>
+        {/* Logout */}
+        <button
+          onClick={onLogout}
+          className="px-4 py-2 font-semibold rounded-full flex items-center gap-2 hover:scale-105 transition"
+          style={{
+            backgroundColor: COLORS.ACCENT,
+            color: COLORS.BG,
+          }}
+        >
+          Logout
+        </button>
+      </div>
+    </header>
 
-          {/* Logout Button (calls onLogout passed from App) */}
-          <button
-            onClick={onLogout}
-            className="px-4 py-2 text-sm font-semibold rounded-full transition-transform hover:scale-105"
-            style={{
-              backgroundColor: COLORS.ACCENT,
-              color: COLORS.BG,
-              border: `2px solid ${COLORS.ACCENT}`,
-            }}
+    {/* MAIN LAYOUT */}
+    <main className="flex-grow container mx-auto px-6 py-10">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        {/* SIDEBAR */}
+        <aside
+          className="rounded-xl p-5 border backdrop-blur-lg shadow-lg"
+          style={{
+            background: COLORS.GLASS_BG,
+            border: COLORS.GLASS_BORDER,
+          }}
+        >
+          <h3
+            className="text-lg font-bold mb-4 pb-2 border-b flex items-center gap-2"
+            style={{ color: COLORS.ACCENT, borderColor: COLORS.ACCENT }}
           >
-            Logout
-          </button>
-        </div>
-      </header>
+            <ListFilter size={18} /> Navigation
+          </h3>
 
-      {/* ========================= */}
-      {/* 📌 MAIN DASHBOARD LAYOUT */}
-      {/* ========================= */}
-      <main className="flex-grow container mx-auto px-6 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* SIDEBAR */}
-          <aside
-            className="rounded-xl p-4 border backdrop-blur-md"
-            style={{
-              background: COLORS.GLASS_BG,
-              border: COLORS.GLASS_BORDER,
-              boxShadow: COLORS.SHADOW,
-            }}
-          >
-            <h3
-              className="text-lg font-bold mb-4 border-b pb-2"
-              style={{ borderColor: COLORS.ACCENT, color: COLORS.ACCENT }}
+          {["enquiries"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`w-full px-4 py-3 mb-3 rounded-lg flex items-center gap-3 transition-all ${
+                activeTab === tab ? "font-bold scale-105" : ""
+              }`}
+              style={{
+                background:
+                  activeTab === tab ? COLORS.ACCENT : COLORS.GLASS_BG,
+                color: activeTab === tab ? COLORS.BG : COLORS.SUBTEXT,
+                border: COLORS.GLASS_BORDER,
+              }}
             >
-              Navigation
-            </h3>
+              <Inbox size={20} />
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </aside>
 
-            {["enquiries"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`w-full text-left px-4 py-2 mb-2 rounded-lg transition-all ${activeTab === tab ? "font-bold scale-105" : ""
-                  }`}
-                style={{
-                  background:
-                    activeTab === tab ? COLORS.ACCENT : COLORS.GLASS_BG,
-                  color: activeTab === tab ? COLORS.BG : COLORS.SUBTEXT,
-                  border: COLORS.GLASS_BORDER,
-                  boxShadow: activeTab === tab ? COLORS.SHADOW : "none",
-                }}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
-          </aside>
+        {/* MAIN PANEL */}
+        <section
+          className="md:col-span-3 rounded-xl border backdrop-blur-lg p-6 shadow-xl"
+          style={{
+            background: COLORS.GLASS_BG,
+            border: COLORS.GLASS_BORDER,
+          }}
+        >
+          {/* HEADER CONTROLS */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <h2 className="text-2xl font-bold flex items-center gap-2" style={{ color: COLORS.ACCENT }}>
+              <Inbox size={24} /> Enquiry List
+            </h2>
 
-          {/* MAIN PANEL */}
-          <section
-            className="md:col-span-3 rounded-xl border backdrop-blur-md p-6"
-            style={{
-              background: COLORS.GLASS_BG,
-              border: COLORS.GLASS_BORDER,
-              boxShadow: COLORS.SHADOW,
-            }}
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-              <h2
-                className="text-2xl font-bold"
-                style={{ color: COLORS.ACCENT }}
-              >
-                Enquiry List
-              </h2>
+            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
 
-              {/* CONTROLS: Search, Sort, Page Size */}
-              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
-                {/* Search */}
-                <div className="relative w-full sm:w-[360px]">
-                  <input
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    placeholder="Search by name, email, phone, company, message..."
-                    className="w-full p-3 rounded-xl border focus:outline-none"
-                    style={{
-                      background: "rgba(255,255,255,0.02)",
-                      borderColor: COLORS.ACCENT + "40",
-                      color: COLORS.TEXT,
-                    }}
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={clearSearch}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 rounded"
-                      style={{ color: COLORS.SUBTEXT }}
-                      aria-label="Clear search"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-
-                {/* Sort */}
-                <select
-                  value={sortOrder}
+              {/* Search */}
+              <div className="relative w-full sm:w-[360px]">
+                <Search
+                  size={20}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60"
+                />
+                <input
+                  value={searchQuery}
                   onChange={(e) => {
-                    setSortOrder(e.target.value);
+                    setSearchQuery(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="p-3 rounded-xl border"
+                  placeholder="Search enquiries..."
+                  className="w-full pl-10 p-3 rounded-xl border focus:outline-none"
                   style={{
+                    background: "rgba(255,255,255,0.04)",
                     borderColor: COLORS.ACCENT + "40",
-                    background: COLORS.BG,
                     color: COLORS.TEXT,
-                  }}
-                >
-                  <option value="newest">Newest first</option>
-                  <option value="oldest">Oldest first</option>
-                </select>
-
-                {/* Page size */}
-                <select
-                  value={pageSize}
-                  onChange={(e) => {
-                    setPageSize(Number(e.target.value));
-                    setCurrentPage(1);
-                  }}
-                  className="p-3 rounded-xl border"
-                  style={{
-                    borderColor: COLORS.ACCENT + "40",
-                    background: COLORS.BG,
-                    color: COLORS.TEXT,
-                  }}
-                >
-                  <option value={5}>5 / page</option>
-                  <option value={8}>8 / page</option>
-                  <option value={12}>12 / page</option>
-                  <option value={20}>20 / page</option>
-                </select>
-              </div>
-            </div>
-
-            {/* LOADER */}
-            {loading ? (
-              <div className="flex justify-center items-center py-20">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 1,
-                    ease: "linear",
-                  }}
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    border: `4px solid ${COLORS.ACCENT + "40"}`,
-                    borderTop: `4px solid ${COLORS.ACCENT}`,
-                    borderRadius: "50%",
                   }}
                 />
               </div>
-            ) : totalItems === 0 ? (
-              <p className="opacity-70">No enquiries found.</p>
-            ) : (
-              <>
-                {/* LIST */}
-                <div className="space-y-4">
-                  {paginated.map((item) => (
-                    <div
-                      key={item.id}
-                      className="p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3"
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                      }}
-                    >
-                      <div className="flex-grow">
-                        <p className="font-semibold">{item.name}</p>
-                        <div className="text-sm opacity-70 flex flex-wrap gap-3 mt-1">
-                          <span>{item.email}</span>
-                          <span>•</span>
-                          <span>{item.phone}</span>
-                          {item.company && <>
-                            <span>•</span>
-                            <span>{item.company}</span>
-                          </>}
-                        </div>
-                        <p className="text-sm opacity-70 mt-3">{item.message}</p>
-                        <p className="text-xs opacity-50 mt-2">
-                          {item.dateTime?.seconds
-                            ? new Date(item.dateTime.seconds * 1000).toLocaleString()
-                            : "No timestamp"}
-                        </p>
+
+              {/* Sort */}
+              <div className="relative">
+                <ArrowDownUp
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60"
+                />
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                  className="p-3 pl-10 rounded-xl border"
+                  style={{
+                    borderColor: COLORS.ACCENT + "40",
+                    background: COLORS.BG,
+                    color: COLORS.TEXT,
+                  }}
+                >
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                </select>
+              </div>
+
+              {/* Page Size */}
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+                className="p-3 rounded-xl border"
+                style={{
+                  borderColor: COLORS.ACCENT + "40",
+                  background: COLORS.BG,
+                  color: COLORS.TEXT,
+                }}
+              >
+                <option value={5}>5 / page</option>
+                <option value={8}>8 / page</option>
+                <option value={12}>12 / page</option>
+                <option value={20}>20 / page</option>
+              </select>
+            </div>
+          </div>
+
+          {/* LOADING SPINNER */}
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                className="rounded-full"
+                style={{
+                  width: 50,
+                  height: 50,
+                  border: `4px solid ${COLORS.ACCENT}40`,
+                  borderTop: `4px solid ${COLORS.ACCENT}`,
+                }}
+              />
+            </div>
+          ) : sorted.length === 0 ? (
+            <p className="opacity-70 text-center py-10">No enquiries found.</p>
+          ) : (
+            <>
+              {/* ENQUIRIES LIST */}
+              <div className="space-y-4">
+                {paginated.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-5 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 backdrop-blur-md"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                    }}
+                  >
+                    <div className="flex-grow space-y-2">
+                      <p className="font-bold text-lg flex items-center gap-2">
+                        <User size={18} /> {item.name}
+                      </p>
+
+                      <div className="text-sm flex flex-wrap gap-4 opacity-80">
+                        <span className="flex items-center gap-1">
+                          <Mail size={16} /> {item.email}
+                        </span>
+
+                        <span className="flex items-center gap-1">
+                          <Phone size={16} /> {item.phone}
+                        </span>
+
+                        {item.company && (
+                          <span className="flex items-center gap-1">
+                            <Building size={16} /> {item.company}
+                          </span>
+                        )}
                       </div>
 
-                      <div className="flex-shrink-0 flex gap-2 items-center">
-                        <button
-                          onClick={() => deleteEnquiry(item.id)}
-                          className="px-3 py-1 rounded-lg text-sm font-semibold bg-red-500 text-white hover:bg-red-600"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                      <p className="text-sm opacity-80">{item.message}</p>
 
-                {/* PAGINATION CONTROLS */}
-                <div className="flex items-center justify-between mt-6 gap-4 flex-col sm:flex-row">
-                  <div className="text-sm opacity-70">
-                    Showing{" "}
-                    <strong>
-                      {(currentPage - 1) * pageSize + 1}
-                    </strong>{" "}
-                    to{" "}
-                    <strong>
-                      {Math.min(currentPage * pageSize, totalItems)}
-                    </strong>{" "}
-                    of <strong>{totalItems}</strong> enquiries
-                  </div>
-
-                  <div className="flex gap-2 items-center">
-                    <button
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      disabled={currentPage === 1}
-                      className="px-3 py-2 rounded-lg border"
-                      style={{
-                        background: COLORS.GLASS_BG,
-                        borderColor: COLORS.GLASS_BORDER,
-                        color: COLORS.TEXT,
-                        opacity: currentPage === 1 ? 0.5 : 1,
-                      }}
-                    >
-                      Prev
-                    </button>
-
-                    {/* Page numbers (compact, show few around current) */}
-                    <div className="flex gap-1">
-                      {Array.from({ length: totalPages }).map((_, idx) => {
-                        const page = idx + 1;
-                        // show if near current page or first/last (compact)
-                        if (
-                          page === 1 ||
-                          page === totalPages ||
-                          (page >= currentPage - 1 && page <= currentPage + 1)
-                        ) {
-                          return (
-                            <button
-                              key={page}
-                              onClick={() => setCurrentPage(page)}
-                              className={`px-3 py-2 rounded-lg border ${page === currentPage ? "font-bold" : ""
-                                }`}
-                              style={{
-                                background:
-                                  page === currentPage ? COLORS.ACCENT : COLORS.GLASS_BG,
-                                color: page === currentPage ? COLORS.BG : COLORS.TEXT,
-                                borderColor: COLORS.GLASS_BORDER,
-                              }}
-                            >
-                              {page}
-                            </button>
-                          );
-                        } else if (
-                          page === currentPage - 2 ||
-                          page === currentPage + 2
-                        ) {
-                          // show ellipsis where appropriate
-                          return (
-                            <span key={page} className="px-2 py-2 text-sm opacity-60">
-                              ...
-                            </span>
-                          );
-                        }
-                        return null;
-                      })}
+                      <p className="text-xs opacity-60">
+                        {item.dateTime?.seconds
+                          ? new Date(item.dateTime.seconds * 1000).toLocaleString()
+                          : "No timestamp"}
+                      </p>
                     </div>
 
+                    {/* DELETE BUTTON */}
                     <button
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={currentPage === totalPages}
-                      className="px-3 py-2 rounded-lg border"
-                      style={{
-                        background: COLORS.GLASS_BG,
-                        borderColor: COLORS.GLASS_BORDER,
-                        color: COLORS.TEXT,
-                        opacity: currentPage === totalPages ? 0.5 : 1,
-                      }}
+                      onClick={() => deleteEnquiry(item.id)}
+                      className="px-3 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold bg-red-500 hover:bg-red-600 text-white"
                     >
-                      Next
+                      <Trash2 size={16} /> Delete
                     </button>
                   </div>
+                ))}
+              </div>
+
+              {/* PAGINATION */}
+              <div className="flex items-center justify-between mt-6 flex-col sm:flex-row gap-4">
+                <p className="text-sm opacity-70">
+                  Showing{" "}
+                  <strong>{(currentPage - 1) * pageSize + 1}</strong> to{" "}
+                  <strong>{Math.min(currentPage * pageSize, sorted.length)}</strong> of{" "}
+                  <strong>{sorted.length}</strong>
+                </p>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="p-2 rounded-lg border disabled:opacity-40"
+                    style={{
+                      background: COLORS.GLASS_BG,
+                      borderColor: COLORS.GLASS_BORDER,
+                    }}
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="p-2 rounded-lg border disabled:opacity-40"
+                    style={{
+                      background: COLORS.GLASS_BG,
+                      borderColor: COLORS.GLASS_BORDER,
+                    }}
+                  >
+                    <ChevronRight size={20} />
+                  </button>
                 </div>
-              </>
-            )}
-          </section>
-        </div>
-      </main>
-    </motion.div>
-  );
+              </div>
+            </>
+          )}
+        </section>
+      </div>
+    </main>
+  </motion.div>
+);
+
 };
 
 // ===================================
@@ -3875,7 +4056,7 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <div className="container mx-auto max-w-5xl pt-24 pb-12 flex-grow relative z-10">
+      <div className="container mx-auto max-w-10xl pt-24 pb-12 flex-grow relative z-10">
 
         {/* ===================================================== */}
         {/* 1. COMPANY OVERVIEW SECTION                           */}
@@ -4171,6 +4352,7 @@ export default function App() {
 
   const toggleTheme = () => setTheme((p) => (p === "light" ? "dark" : "light"));
 
+  
   const handleCompanyProfileClick = (e) => {
     e.preventDefault();
     toggleView("company-profile");
@@ -4229,22 +4411,26 @@ export default function App() {
     }, 500);
   };
 
-  // HASH LISTENER - do not override admin/login flow or logout redirect
-  useEffect(() => {
-    const handler = () => {
-      const newView = getInitialView();
+  // HASH LISTENER - do not override admin/login flow or logout redirect - Manually entering the URL
+useEffect(() => {
+  const handler = () => {
+    const newView = getInitialView();
 
-      // If newView is admin, do not override the current flow here:
-      if (newView === "admin") return;
+    // Always allow admin view when hash matches
+    if (newView === "admin") {
+      setView("admin");
+      return;
+    }
 
-      if (view !== "fading-out") {
-        setView(newView);
-      }
-    };
+    // Normal handling for all other pages
+    if (view !== "fading-out") {
+      setView(newView);
+    }
+  };
 
-    window.addEventListener("hashchange", handler);
-    return () => window.removeEventListener("hashchange", handler);
-  }, [view]);
+  window.addEventListener("hashchange", handler);
+  return () => window.removeEventListener("hashchange", handler);
+}, [view]);
 
   // Listen to Firebase Auth state (keeps adminLoggedIn accurate)
   useEffect(() => {
