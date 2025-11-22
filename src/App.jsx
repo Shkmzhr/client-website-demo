@@ -375,24 +375,51 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
   className="flex items-center gap-2 cursor-pointer"
 >
   {/* Logo */}
-  <motion.img
-    src={ArmGroup}
-    alt="ARM Group Logo"
-    className="w-10 sm:w-12 md:w-20 h-auto object-cover rounded-sm"
+<motion.div
+  className="flex items-center gap-3 cursor-pointer"
+  initial={{ opacity: 0, y: -8 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  {/* Clean Logo Box — NO OUTER BLUR */}
+  <div
+    className="
+      w-12 h-12 md:w-14 md:h-14
+      rounded-lg
+      flex items-center justify-center
+      shadow-md
+      transition-all duration-300
+      hover:scale-105
+    "
     style={{
-      border: "1px solid rgba(255, 255, 255, 0.9)",
+      // background: "rgba(255,255,255,0.10)",      // subtle glass panel
+      border: "1px solid rgba(255,255,255,0.25)", // clean border
+      // backdropFilter: "blur(4px)",                // soft glass effect
     }}
-  />
+  >
+    <img
+      src={ArmGroup}  // your new neon logo
+      alt="ARM group logo"
+      className="
+        w-12 h-12 md:w-[50px] md:h-[60px] 
+        object-contain 
+        drop-shadow-[0_0_6px_rgba(180,150,255,0.6)]
+      "
+    />
+  </div>
 
-  {/* Text */}
-  <motion.span
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.8, delay: 0.3 }}
-    className="text-white font-extrabold tracking-wide text-lg md:text-xl"
+  {/* Brand Text */}
+  <span
+    className="
+      text-white font-extrabold tracking-wide
+      text-xl md:text-2xl
+      drop-shadow-[0_0_6px_rgba(150,120,255,0.4)]
+    "
   >
     ARM Solutions
-  </motion.span>
+  </span>
+</motion.div>
+
 
         </motion.div>
 
@@ -1236,7 +1263,7 @@ const Card = ({ icon: Icon, title, description, onExplore }) => (
 /**
  * Main Services Component (Responsive Carousel Logic)
  */
-const Services = ({ goToServiceDetails }) => {
+const Services = ({ goToServiceDetails,COLORS }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [page, setPage] = useState(0);
 
@@ -1388,6 +1415,7 @@ const Services = ({ goToServiceDetails }) => {
           )}
         </div>
 
+  
       </div>
     </section>
   );
@@ -1464,174 +1492,238 @@ stage assistants, and security staff for events and exhibitions.`,
     },
   ];
 
-  return (
+return (
+  <>
+    <style jsx="true">{`
+      @keyframes float-blob {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(25px, -25px) scale(1.05); }
+        100% { transform: translate(0, 0) scale(1); }
+      }
+      @keyframes float-blob-2 {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(-25px, 25px) scale(0.97); }
+        100% { transform: translate(0, 0) scale(1); }
+      }
+    `}</style>
+
     <section
-      className="min-h-screen pt-28 pb-20"
-      style={{ background: COLORS.BG, color: COLORS.TEXT }}
+      className="relative overflow-hidden min-h-screen pt-28"
+      style={{
+        background: `
+          linear-gradient(
+            140deg,
+            ${COLORS.BG} 0%,
+            rgba(20, 25, 40, 0.92) 40%,
+            rgba(10, 12, 25, 0.92) 100%
+          )
+        `,
+        color: COLORS.TEXT,
+      }}
     >
-      <div className="container mx-auto px-6 lg:px-12">
+      {/* SUBTLE WHITE GLOWING BLOBS */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        
+        {/* lightly visible top-left white glow */}
+        <div
+          className="absolute w-[340px] h-[340px] md:w-[420px] md:h-[420px] rounded-full blur-[110px] opacity-[0.55]"
+          style={{
+            top: "-90px",
+            left: "-70px",
+            background: "rgba(255, 255, 255, 0.55)",
+            animation: "float-blob 25s ease-in-out infinite",
+          }}
+        ></div>
+
+        {/* bottom-right soft glow */}
+        <div
+          className="absolute w-[360px] h-[360px] md:w-[480px] md:h-[480px] rounded-full blur-[120px] opacity-[0.45]"
+          style={{
+            bottom: "-100px",
+            right: "-90px",
+            background: "rgba(255,255,255,0.35)",
+            animation: "float-blob-2 28s ease-in-out infinite",
+          }}
+        ></div>
+
+        {/* Subtle pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#ffffff0f 1px, transparent 1px), linear-gradient(90deg, #ffffff0f 1px, transparent 1px)",
+            backgroundSize: "120px 120px",
+          }}
+        ></div>
+      </div>
+
+      {/* PAGE CONTAINER */}
+      <div className="container mx-auto px-6 lg:px-12 relative z-10">
 
         {/* PAGE HEADER */}
-        <div className="text-center mb-20">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-5xl font-extrabold mb-4"
+        <motion.div
+          className="text-center mb-16 md:mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.7 }}
+        >
+          <p
+            className="text-sm font-semibold tracking-[0.25em] uppercase mb-4"
+            style={{ color: COLORS.SUBTEXT }}
+          >
+            SERVICE PORTFOLIO
+          </p>
+
+          <h1
+            className="text-4xl md:text-5xl font-extrabold mb-4"
             style={{ color: COLORS.ACCENT }}
           >
             Our Service Sectors
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-gray-400 max-w-3xl mx-auto text-lg"
+          <p
+            className="text-base md:text-lg max-w-3xl mx-auto"
+            style={{ color: COLORS.SUBTEXT }}
           >
-            Manpower for oil & gas, construction, hospitality, logistics, healthcare and more.
-          </motion.p>
-        </div>
+            Skilled, reliable manpower delivered across key industries – with consistency, compliance, and professionalism.
+          </p>
+        </motion.div>
 
-
-        <div className="space-y-32">
+        {/* SERVICES LIST */}
+        <div className="space-y-16 md:space-y-24">
           {servicesSections.map((s, index) => {
             const reverse = index % 2 !== 0;
 
             return (
-              <motion.div
+              <motion.article
                 key={s.key}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
                 className="relative"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6 }}
               >
                 <div
-                  className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start`}
+                  className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center`}
                 >
-                  {/* ============= IMAGE SIDE ============= */}
-                  <motion.div
-                    initial={{ scale: 1.1, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    whileHover={{ scale: 1.03 }}
-                    transition={{ duration: 0.9 }}
-                    viewport={{ once: true }}
-                    className={`relative rounded-3xl overflow-hidden shadow-2xl lg:col-span-4 ${reverse ? "lg:order-2" : "lg:order-1"
-                      }`}
-                    style={{ minHeight: "340px" }}
-                  >
 
-                    {/* Background image with smooth reveal + image effects */}
+                  {/* IMAGE SIDE */}
+                  <div
+                    className={`relative rounded-3xl overflow-hidden shadow-xl lg:col-span-4 ${
+                      reverse ? "lg:order-2" : "lg:order-1"
+                    }`}
+                    style={{ minHeight: "320px" }}
+                  >
                     <motion.div
                       className="absolute inset-0 bg-cover bg-center"
                       style={{
                         backgroundImage: `url(${s.image})`,
-                        filter: "brightness(0.9) saturate(1.1)",
-                        transition: "filter 0.4s ease",
+                        filter: "brightness(0.92) saturate(1.08)",
                       }}
                       whileHover={{
-                        filter: "brightness(1.05) saturate(1.25) contrast(1.1)",
+                        scale: 1.03,
+                        filter: "brightness(1.02) saturate(1.15)",
                       }}
+                      transition={{ duration: 0.45 }}
                     />
 
-                    {/* Light Purple Overlay */}
+                    {/* Dark top/bottom fade */}
                     <div
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        background: "rgba(116, 219, 253, 0.25)",
-                        mixBlendMode: "overlay",
-                      }}
-                    />
-
-                    {/* Vignette / Shadow Edges */}
-                    <div
-                      className="absolute inset-0 pointer-events-none"
+                      className="absolute inset-0"
                       style={{
                         background:
-                          "radial-gradient(circle at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.35) 100%)",
+                          "linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.15), transparent)",
                       }}
                     />
 
-                    {/* Existing gradient overlay for readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />
-
-                  </motion.div>
-
-                  {/* ============= TEXT SIDE ============= */}
-                  <motion.div
-                    initial={{ opacity: 0, x: reverse ? -40 : 40 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.7 }}
-                    viewport={{ once: true }}
-                    className={`lg:col-span-8 ${reverse ? "lg:order-1" : "lg:order-2"
-                      }`}
-                  >
+                    {/* Subtitle Glass Label */}
                     <div
-                      className="p-10 rounded-3xl backdrop-blur-xl shadow-2xl"
+                      className="absolute left-4 bottom-4 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-[0.2em]"
                       style={{
-                        background: "rgba(255,255,255,0.08)",
-                        border: "1px solid rgba(255,255,255,0.18)",
+                        background: "rgba(0,0,0,0.55)",
+                        color: "#E9F8FF",
+                        border: "1px solid rgba(255,255,255,0.25)",
+                        backdropFilter: "blur(6px)",
                       }}
                     >
-                      {/* TITLE */}
+                      {s.subtitle}
+                    </div>
+                  </div>
+
+                  {/* TEXT CARD */}
+                  <motion.div
+                    className={`lg:col-span-8 ${reverse ? "lg:order-1" : "lg:order-2"}`}
+                    initial={{ opacity: 0, x: reverse ? -25 : 25 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.55 }}
+                  >
+                    <div
+                      className="p-8 md:p-10 rounded-3xl backdrop-blur-xl shadow-xl cursor-pointer hover:shadow-2xl transition-all duration-300"
+                      onClick={() =>
+                        goToServiceDetails({
+                          title: s.title,
+                          description: s.text,
+                          imageUrl: s.image,
+                          icon: s.icon || null,
+                        })
+                      }
+                      style={{
+                        background: "rgba(255,255,255,0.06)",
+                        border: "1px solid rgba(255,255,255,0.12)",
+                      }}
+                    >
                       <h2
-                        className="text-4xl font-bold mb-3"
-                        style={{ color: COLORS.PRIMARY }}
+                        className="text-2xl md:text-3xl font-bold mb-3"
+                        style={{ color: COLORS.PRIMARY || COLORS.ACCENT }}
                       >
                         {s.title}
                       </h2>
 
-                      {/* SUBTITLE */}
-                      <p className="text-teal-500 text-lg font-medium mb-6">
+                      <p className="text-sm md:text-base font-medium mb-4" style={{ color: COLORS.ACCENT }}>
                         {s.subtitle}
                       </p>
 
-                      {/* TEXT BLOCK – MULTI PARA SUPPORT */}
-                      <div className="text-gray-400 text-lg leading-relaxed space-y-5">
+                      <div
+                        className="text-sm md:text-lg leading-relaxed space-y-4"
+                        style={{ color: COLORS.SUBTEXT }}
+                      >
                         {s.text.split("\n").map((para, i) => (
-                          <p key={i} className="whitespace-pre-line">
-                            {para.trim()}
-                          </p>
+                          <p key={i}>{para.trim()}</p>
                         ))}
                       </div>
 
-                      {/* DIVIDER */}
-                      <div className="w-20 h-1 mt-8 mb-6 rounded-full"
-                        style={{ background: COLORS.ACCENT }}
-                      />
-
-                      {/* CTA */}
-                      <motion.button
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() =>
-                          goToServiceDetails({
-                            title: s.title,
-                            description: s.text,
-                            imageUrl: s.image,
-                            icon: s.icon || null     // optional
-                          })
-                        }
-                        className="px-8 py-4 rounded-full text-lg font-semibold"
-                        style={{
-                          background: COLORS.ACCENT,
-                          color: COLORS.BG,
-                          boxShadow: COLORS.SHADOW,
-                        }}
-                      >
-                        Request Manpower
-                      </motion.button>
+                      <div className="mt-6 flex items-center gap-3">
+                        <div
+                          className="h-[3px] w-20 rounded-full"
+                          style={{ background: COLORS.ACCENT }}
+                        />
+                        {/* <span className="text-xs md:text-sm uppercase tracking-wide" style={{ color: COLORS.SUBTEXT }}>
+                          View sector details
+                        </span> */}
+                      </div>
                     </div>
                   </motion.div>
+
                 </div>
-              </motion.div>
+              </motion.article>
             );
           })}
         </div>
       </div>
+
+      {/* FOOTER + FLOATING */}
+      <div className="mt-20">
+        <Footer COLORS={COLORS} />
+      </div>
+
+      <FloatingButtons COLORS={COLORS} />
     </section>
-  );
+  </>
+);
+
+
 };
 // =======================================================
 //New Service Inquiry
@@ -1982,7 +2074,7 @@ const ServiceDetailsView = ({ service, toggleView, COLORS, goToInquire }) => {
           className="flex items-center gap-6 mb-10"
         >
           <div
-            className="p-5 rounded-2xl shadow-lg"
+            className="p-2 rounded-2xl shadow-lg"
             style={{
               background: "rgba(0,150,255,0.12)",
               border: "1px solid rgba(255,255,255,0.15)",
@@ -1994,7 +2086,7 @@ const ServiceDetailsView = ({ service, toggleView, COLORS, goToInquire }) => {
             ) : (
               <img
                 src={imageToUse}
-                className="w-16 h-16 object-cover rounded-xl"
+                className="w-[7rem] h-[8rem] md:w-[9rem] md:h-[10rem] object-cover rounded-xl"
                 alt={service.title}
               />
             )}
@@ -2075,19 +2167,25 @@ const ServiceDetailsView = ({ service, toggleView, COLORS, goToInquire }) => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.35, duration: 0.5 }}
         >
-          <motion.button
-            whileHover={{ scale: 1.07, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => goToInquire(service)} // <-- New redirection
-            className="px-12 py-4 text-xl font-bold rounded-full shadow-xl"
-            style={{
-              background: COLORS.ACCENT,
-              color: COLORS.BG,
-              boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
-            }}
-          >
-            Inquire About {service.title}
-          </motion.button>
+      <motion.button
+  whileHover={{ scale: 1.07, y: -2 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() => goToInquire(service)}
+  className="
+    px-8 py-3 text-lg
+    sm:px-10 sm:py-3.5 sm:text-lg
+    md:px-12 md:py-4 md:text-xl
+    font-bold rounded-full shadow-xl
+  "
+  style={{
+    background: COLORS.ACCENT,
+    color: COLORS.BG,
+    boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
+  }}
+>
+  Inquire About {service.title}
+</motion.button>
+
         </motion.div>
 
       </div>
@@ -3131,7 +3229,8 @@ const Footer = ({ COLORS }) => {
   );
 };
 
-//
+//Floating Buttons
+
 const FloatingButtons = ({ COLORS }) => {
   const [visible, setVisible] = useState(true);
 
@@ -3876,42 +3975,62 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme, onLogou
               </div>
 
               {/* Sort */}
-              <div className="relative">
-                <ArrowDownUp
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60"
-                />
-                <select
-                  value={sortOrder}
-                  onChange={(e) => setSortOrder(e.target.value)}
-                  className="p-3 pl-10 rounded-xl border"
-                  style={{
-                    borderColor: COLORS.ACCENT + "40",
-                    background: COLORS.BG,
-                    color: COLORS.TEXT,
-                  }}
-                >
-                  <option value="newest">Newest</option>
-                  <option value="oldest">Oldest</option>
-                </select>
-              </div>
+        <div className="relative">
+  <ArrowDownUp
+    size={16}
+    className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60 pointer-events-none"
+    style={{ color: COLORS.ACCENT }}
+  />
+
+  <select
+    value={sortOrder}
+    onChange={(e) => setSortOrder(e.target.value)}
+    className="
+      pl-10 pr-8 py-2.5
+      rounded-xl
+      shadow-lg
+      text-sm md:text-base
+      transition-all duration-300
+      focus:ring-2 focus:ring-opacity-40
+    "
+    style={{
+      background: "rgba(255,255,255,0.05)",
+      border: `1px solid ${COLORS.ACCENT}40`,
+      color: COLORS.TEXT,
+      backdropFilter: "blur(6px)",
+      boxShadow: `0px 0px 12px ${COLORS.ACCENT}20`,
+    }}
+  >
+    <option value="newest">Newest</option>
+    <option value="oldest">Oldest</option>
+  </select>
+</div>
 
               {/* Page Size */}
               <select
-                value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}
-                className="p-3 rounded-xl border"
-                style={{
-                  borderColor: COLORS.ACCENT + "40",
-                  background: COLORS.BG,
-                  color: COLORS.TEXT,
-                }}
-              >
-                <option value={5}>5 / page</option>
-                <option value={8}>8 / page</option>
-                <option value={12}>12 / page</option>
-                <option value={20}>20 / page</option>
-              </select>
+  value={pageSize}
+  onChange={(e) => setPageSize(Number(e.target.value))}
+  className="
+    px-4 py-2.5
+    rounded-xl
+    shadow-lg
+    text-sm md:text-base
+    transition-all duration-300
+    focus:ring-2 focus:ring-opacity-40
+  "
+  style={{
+    background: "rgba(255,255,255,0.05)",
+    border: `1px solid ${COLORS.ACCENT}40`,
+    color: COLORS.TEXT,
+    backdropFilter: "blur(6px)",
+    boxShadow: `0px 0px 12px ${COLORS.ACCENT}20`,
+  }}
+>
+  <option value={5}>5 / page</option>
+  <option value={8}>8 / page</option>
+  <option value={12}>12 / page</option>
+  <option value={20}>20 / page</option>
+</select>
             </div>
           </div>
 
@@ -4351,6 +4470,21 @@ export default function App() {
   const COLORS = THEMES[theme];
 
   const toggleTheme = () => setTheme((p) => (p === "light" ? "dark" : "light"));
+
+  ////////// Manually updating the URLs for service-page //////////////////
+  useEffect(() => {
+  const hash = window.location.hash;
+
+  if (hash === "#services-page") {
+    // Open full services page automatically
+    toggleView("services");
+
+    // Ensure page scrolls to top
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 100);
+  }
+}, []);
 
   
   const handleCompanyProfileClick = (e) => {
