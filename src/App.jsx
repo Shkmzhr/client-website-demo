@@ -7,8 +7,8 @@ import {
   Menu, X, Globe, Users, TrendingUp, Shield, Linkedin, MapPin, Mail, Phone,
   Facebook, Twitter, MessageCircle, Factory, Hotel, Truck, Building, HeartPulse,
   ShoppingCart, Mic, ArrowLeft, ArrowRight, Wrench, Zap, Stethoscope, Activity,
-  Hospital, HardHat, Sparkles, Pause, Play, Repeat, ArrowUp, ArrowDown, Check,Search,Inbox,Trash2,ListFilter, ChevronLeft,
-  ChevronRight, UseMail, PhonBuilding,ArrowDownUp,User
+  Hospital, HardHat, Sparkles, Pause, Play, Repeat, ArrowUp, ArrowDown, Check, Search, Inbox, Trash2, ListFilter, ChevronLeft,
+  ChevronRight, UseMail, PhonBuilding, ArrowDownUp, User
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -28,7 +28,7 @@ import { motion, useScroll, useTransform, useSpring, AnimatePresence, useInView 
 // IMAGE IMPORTS (UPDATED PATHS and all client images)
 // ===================================
 import nccLogo from './assets/clientimages/NCC.jpeg';
-import ArmGroup from './assets/clientimages/ARM-Group-screenshot.jpg';
+import ArmGroup from './assets/clientimages/ARM-Group-screenshot.jpeg';
 import clientImage1 from './assets/clientimages/alalkaif.jpeg';
 import clientImage2 from './assets/clientimages/aldawaa.jpeg';
 import clientImage3 from './assets/clientimages/accesspartners.jpeg';
@@ -367,58 +367,37 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
       }}
     >
       <div className="container mx-auto px-6 lg:px-12 py-3 flex justify-between items-center">
-{/* Logo + Text Wrapper */}
-<motion.div
-  initial={{ opacity: 0, y: -10 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
-  className="flex items-center gap-2 cursor-pointer"
->
-  {/* Logo */}
-<motion.div
-  className="flex items-center gap-3 cursor-pointer"
-  initial={{ opacity: 0, y: -8 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
->
-  {/* Clean Logo Box — NO OUTER BLUR */}
-  <div
-    className="
-      w-12 h-12 md:w-14 md:h-14
-      rounded-lg
-      flex items-center justify-center
-      shadow-md
-      transition-all duration-300
-      hover:scale-105
-    "
-    style={{
-      // background: "rgba(255,255,255,0.10)",      // subtle glass panel
-      border: "1px solid rgba(255,255,255,0.25)", // clean border
-      // backdropFilter: "blur(4px)",                // soft glass effect
-    }}
-  >
-    <img
-      src={ArmGroup}  // your new neon logo
-      alt="ARM group logo"
-      className="
-        w-12 h-12 md:w-[50px] md:h-[60px] 
-        object-contain 
-        drop-shadow-[0_0_6px_rgba(180,150,255,0.6)]
-      "
-    />
-  </div>
+        {/* Logo + Text Wrapper */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center gap-2 cursor-pointer"
+        >
+          {/* Logo */}
+          <motion.div
+            className="flex items-center gap-3 cursor-pointer"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Clean Logo Box — NO OUTER BLUR */}
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center shadow-md transition-all duration-300
+                hover:scale-105">
+              <img src={ArmGroup} alt="ARM group logo" className="w-12 h-12 md:w-[50px] md:h-[60px] object-contain" />
+            </div>
 
-  {/* Brand Text */}
-  <span
-    className="
+            {/* Brand Text */}
+            <span
+              className="
       text-white font-extrabold tracking-wide
       text-xl md:text-2xl
       drop-shadow-[0_0_6px_rgba(150,120,255,0.4)]
     "
-  >
-    ARM Solutions
-  </span>
-</motion.div>
+            >
+              ARM Solutions
+            </span>
+          </motion.div>
 
 
         </motion.div>
@@ -537,123 +516,123 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </motion.button>
       </div>
-{/* Mobile Menu */}
-<AnimatePresence>
-  {isOpen && (
-    <motion.div
-      className="lg:hidden origin-top px-8 py-5 space-y-4"
-      style={{
-        background: COLORS.GRADIENT,
-        color: COLORS.TEXT,
-        borderTop: COLORS.GLASS_BORDER,
-        boxShadow: COLORS.SHADOW,
-      }}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      variants={menuVariants}
-    >
-      {/* HOME */}
-      <motion.a
-        onClick={(e) => {
-          e.preventDefault();
-          toggleView("public");
-          setIsOpen(false);
-
-          window.location.hash = "";
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-        className="block text-lg font-semibold hover:text-blue-400 transition"
-        variants={itemVariants}
-      >
-        Home
-      </motion.a>
-
-      {/* PUBLIC VIEW NAVIGATION */}
-      {isPublicView ? (
-        <>
-          {/* Expertise */}
-          <motion.a
-            href="#services"
-            onClick={() => setIsOpen(false)}
-            className="block text-lg font-medium hover:text-blue-400 transition"
-            variants={itemVariants}
-          >
-            Expertise
-          </motion.a>
-
-          {/* FULL SERVICES PAGE */}
-          <motion.a
-            href="#services-page"
-            onClick={(e) => {
-              e.preventDefault();
-              handleServicesPageClick(e);
-              setIsOpen(false);
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="lg:hidden origin-top px-8 py-5 space-y-4"
+            style={{
+              background: COLORS.GRADIENT,
+              color: COLORS.TEXT,
+              borderTop: COLORS.GLASS_BORDER,
+              boxShadow: COLORS.SHADOW,
             }}
-            className="block text-lg font-medium hover:text-blue-400 transition"
-            variants={itemVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={menuVariants}
           >
-            Services
-          </motion.a>
+            {/* HOME */}
+            <motion.a
+              onClick={(e) => {
+                e.preventDefault();
+                toggleView("public");
+                setIsOpen(false);
 
-          {/* Contact */}
-          <motion.a
-            href="#contact"
-            onClick={() => setIsOpen(false)}
-            className="block text-lg font-medium hover:text-blue-400 transition"
-            variants={itemVariants}
-          >
-            Contact
-          </motion.a>
+                window.location.hash = "";
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="block text-lg font-semibold hover:text-blue-400 transition"
+              variants={itemVariants}
+            >
+              Home
+            </motion.a>
 
-          {/* About Us */}
-          <motion.a
-            href="#company-profile"
-            onClick={(e) => {
-              e.preventDefault();
-              handleCompanyProfileClick(e);
-              setIsOpen(false);
-            }}
-            className="block text-lg font-medium hover:text-blue-400 transition"
-            variants={itemVariants}
-          >
-            About Us
-          </motion.a>
-        </>
-      ) : (
-        <>
-          {/* NOT-PUBLIC VIEW — Services */}
-          <motion.a
-            href="#services-page"
-            onClick={(e) => {
-              e.preventDefault();
-              handleServicesPageClick(e);
-              setIsOpen(false);
-            }}
-            className="block text-lg font-medium hover:text-blue-400 transition"
-            variants={itemVariants}
-          >
-            Services
-          </motion.a>
+            {/* PUBLIC VIEW NAVIGATION */}
+            {isPublicView ? (
+              <>
+                {/* Expertise */}
+                <motion.a
+                  href="#services"
+                  onClick={() => setIsOpen(false)}
+                  className="block text-lg font-medium hover:text-blue-400 transition"
+                  variants={itemVariants}
+                >
+                  Expertise
+                </motion.a>
 
-          {/* Company Profile */}
-          <motion.a
-            href="#company-profile"
-            onClick={(e) => {
-              e.preventDefault();
-              handleCompanyProfileClick(e);
-              setIsOpen(false);
-            }}
-            className="block text-lg font-medium hover:text-blue-400 transition"
-            variants={itemVariants}
-          >
-            Company Profile
-          </motion.a>
-        </>
-      )}
+                {/* FULL SERVICES PAGE */}
+                <motion.a
+                  href="#services-page"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleServicesPageClick(e);
+                    setIsOpen(false);
+                  }}
+                  className="block text-lg font-medium hover:text-blue-400 transition"
+                  variants={itemVariants}
+                >
+                  Services
+                </motion.a>
 
-      {/* Contact Button */}
-      {/* <motion.a
+                {/* Contact */}
+                <motion.a
+                  href="#contact"
+                  onClick={() => setIsOpen(false)}
+                  className="block text-lg font-medium hover:text-blue-400 transition"
+                  variants={itemVariants}
+                >
+                  Contact
+                </motion.a>
+
+                {/* About Us */}
+                <motion.a
+                  href="#company-profile"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCompanyProfileClick(e);
+                    setIsOpen(false);
+                  }}
+                  className="block text-lg font-medium hover:text-blue-400 transition"
+                  variants={itemVariants}
+                >
+                  About Us
+                </motion.a>
+              </>
+            ) : (
+              <>
+                {/* NOT-PUBLIC VIEW — Services */}
+                <motion.a
+                  href="#services-page"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleServicesPageClick(e);
+                    setIsOpen(false);
+                  }}
+                  className="block text-lg font-medium hover:text-blue-400 transition"
+                  variants={itemVariants}
+                >
+                  Services
+                </motion.a>
+
+                {/* Company Profile */}
+                <motion.a
+                  href="#company-profile"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCompanyProfileClick(e);
+                    setIsOpen(false);
+                  }}
+                  className="block text-lg font-medium hover:text-blue-400 transition"
+                  variants={itemVariants}
+                >
+                  Company Profile
+                </motion.a>
+              </>
+            )}
+
+            {/* Contact Button */}
+            {/* <motion.a
         href="#contact"
         onClick={() => setIsOpen(false)}
         className="inline-flex items-center gap-2 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition-all"
@@ -663,8 +642,8 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
         Contact <ArrowRight className="w-4 h-4" />
       </motion.a> */}
 
-      {/* THEME + ADMIN Button*/}
-      {/* <div className="flex items-center justify-between pt-4 border-t border-white/10">
+            {/* THEME + ADMIN Button*/}
+            {/* <div className="flex items-center justify-between pt-4 border-t border-white/10">
         <motion.button
           onClick={toggleTheme}
           className="p-2 rounded-full border"
@@ -691,9 +670,9 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
           <span className="text-sm font-medium">Admin</span>
         </motion.div>
       </div> */}
-    </motion.div>
-  )}
-</AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
 
     </header>
@@ -713,15 +692,15 @@ const Hero = () => {
     {
       id: 1,
       image: kafdBg,
-      subtitle: "FOR A VIBRANT SOCIETY",
-      title: "Award-Winning Facility Management Services",
+      subtitle: "CREATING SMARTER SPACES",
+      title: "Redefining the Future of Facility Management",
       button: "Explore Solutions",
     },
     {
       id: 2,
       image: kafd2Bg,
-      subtitle: "EXCELLENCE IN EVERY DETAIL",
-      title: "Delivering Quality Across All Sectors",
+      subtitle: "WHERE QUALITY MEETS CARE",
+      title: "Building the Future of Facility Services",
       button: "Discover Expertise",
 
     },
@@ -1263,7 +1242,7 @@ const Card = ({ icon: Icon, title, description, onExplore }) => (
 /**
  * Main Services Component (Responsive Carousel Logic)
  */
-const Services = ({ goToServiceDetails,COLORS }) => {
+const Services = ({ goToServiceDetails, COLORS }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [page, setPage] = useState(0);
 
@@ -1320,40 +1299,40 @@ const Services = ({ goToServiceDetails,COLORS }) => {
       }}
     >
       <div className="container mx-auto px-6 lg:px-12 relative z-10">
-      <motion.div
-  initial={{ opacity: 0, y: 24 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
-  className="max-w-10xl"
->
-  {/* Heading */}
-  <h2 className="text-white text-4xl font-bold mb-4">
-    <a href="#services-page">Our Service Sectors</a>
-  </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-10xl"
+        >
+          {/* Heading */}
+          <h2 className="text-white text-4xl font-bold mb-4">
+            <a href="#services-page">Our Service Sectors</a>
+          </h2>
 
-  {/* Description */}
-  <p className="text-gray-300 text-lg leading-relaxed mb-6">
-    We provide highly skilled and certified professionals across a wide range of
-    industries. From technical operations to corporate support departments, our manpower
-    solutions empower businesses to scale efficiently and operate with confidence.
-  </p>
+          {/* Description */}
+          <p className="text-gray-300 text-lg leading-relaxed mb-6">
+            We provide highly skilled and certified professionals across a wide range of
+            industries. From technical operations to corporate support departments, our manpower
+            solutions empower businesses to scale efficiently and operate with confidence.
+          </p>
 
-  {/* Additional Highlights */}
-  <ul className="text-gray-300 text-base space-y-2 mb-6">
-    <li>• Trained and verified workforce for all sectors</li>
-    <li>• Flexible staffing models tailored to your business</li>
-    <li>• Nationwide availability with fast deployment</li>
-    <li>• Quality-driven teams with strong work ethics</li>
-  </ul>
+          {/* Additional Highlights */}
+          <ul className="text-gray-300 text-base space-y-2 mb-6">
+            <li>• Trained and verified workforce for all sectors</li>
+            <li>• Flexible staffing models tailored to your business</li>
+            <li>• Nationwide availability with fast deployment</li>
+            <li>• Quality-driven teams with strong work ethics</li>
+          </ul>
 
-  {/* CTA Button */}
-  <a
-    href="#services-page"
-    className="inline-block px-6 py-3 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-  >
-    Explore Services
-  </a>
-</motion.div>
+          {/* CTA Button */}
+          <a
+            href="#services-page"
+            className="inline-block px-6 py-3 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+          >
+            Explore Services
+          </a>
+        </motion.div>
 
 
         {/* Carousel - Responsive Structure */}
@@ -1415,7 +1394,7 @@ const Services = ({ goToServiceDetails,COLORS }) => {
           )}
         </div>
 
-  
+
       </div>
     </section>
   );
@@ -1492,9 +1471,9 @@ stage assistants, and security staff for events and exhibitions.`,
     },
   ];
 
-return (
-  <>
-    <style jsx="true">{`
+  return (
+    <>
+      <style jsx="true">{`
       @keyframes float-blob {
         0% { transform: translate(0, 0) scale(1); }
         50% { transform: translate(25px, -25px) scale(1.05); }
@@ -1507,10 +1486,10 @@ return (
       }
     `}</style>
 
-    <section
-      className="relative overflow-hidden min-h-screen pt-28"
-      style={{
-        background: `
+      <section
+        className="relative overflow-hidden min-h-screen pt-28"
+        style={{
+          background: `
           linear-gradient(
             140deg,
             ${COLORS.BG} 0%,
@@ -1518,210 +1497,209 @@ return (
             rgba(10, 12, 25, 0.92) 100%
           )
         `,
-        color: COLORS.TEXT,
-      }}
-    >
-      {/* SUBTLE WHITE GLOWING BLOBS */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        
-        {/* lightly visible top-left white glow */}
-        <div
-          className="absolute w-[340px] h-[340px] md:w-[420px] md:h-[420px] rounded-full blur-[110px] opacity-[0.55]"
-          style={{
-            top: "-90px",
-            left: "-70px",
-            background: "rgba(255, 255, 255, 0.55)",
-            animation: "float-blob 25s ease-in-out infinite",
-          }}
-        ></div>
+          color: COLORS.TEXT,
+        }}
+      >
+        {/* SUBTLE WHITE GLOWING BLOBS */}
+        <div className="absolute inset-0 -z-10 pointer-events-none">
 
-        {/* bottom-right soft glow */}
-        <div
-          className="absolute w-[360px] h-[360px] md:w-[480px] md:h-[480px] rounded-full blur-[120px] opacity-[0.45]"
-          style={{
-            bottom: "-100px",
-            right: "-90px",
-            background: "rgba(255,255,255,0.35)",
-            animation: "float-blob-2 28s ease-in-out infinite",
-          }}
-        ></div>
+          {/* lightly visible top-left white glow */}
+          <div
+            className="absolute w-[340px] h-[340px] md:w-[420px] md:h-[420px] rounded-full blur-[110px] opacity-[0.55]"
+            style={{
+              top: "-90px",
+              left: "-70px",
+              background: "rgba(255, 255, 255, 0.55)",
+              animation: "float-blob 25s ease-in-out infinite",
+            }}
+          ></div>
 
-        {/* Subtle pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#ffffff0f 1px, transparent 1px), linear-gradient(90deg, #ffffff0f 1px, transparent 1px)",
-            backgroundSize: "120px 120px",
-          }}
-        ></div>
-      </div>
+          {/* bottom-right soft glow */}
+          <div
+            className="absolute w-[360px] h-[360px] md:w-[480px] md:h-[480px] rounded-full blur-[120px] opacity-[0.45]"
+            style={{
+              bottom: "-100px",
+              right: "-90px",
+              background: "rgba(255,255,255,0.35)",
+              animation: "float-blob-2 28s ease-in-out infinite",
+            }}
+          ></div>
 
-      {/* PAGE CONTAINER */}
-      <div className="container mx-auto px-6 lg:px-12 relative z-10">
+          {/* Subtle pattern */}
+          <div
+            className="absolute inset-0 opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "linear-gradient(#ffffff0f 1px, transparent 1px), linear-gradient(90deg, #ffffff0f 1px, transparent 1px)",
+              backgroundSize: "120px 120px",
+            }}
+          ></div>
+        </div>
 
-        {/* PAGE HEADER */}
-        <motion.div
-          className="text-center mb-16 md:mb-20"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7 }}
-        >
-          <p
-            className="text-sm font-semibold tracking-[0.25em] uppercase mb-4"
-            style={{ color: COLORS.SUBTEXT }}
+        {/* PAGE CONTAINER */}
+        <div className="container mx-auto px-6 lg:px-12 relative z-10">
+
+          {/* PAGE HEADER */}
+          <motion.div
+            className="text-center mb-16 md:mb-20"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7 }}
           >
-            SERVICE PORTFOLIO
-          </p>
+            <p
+              className="text-sm font-semibold tracking-[0.25em] uppercase mb-4"
+              style={{ color: COLORS.SUBTEXT }}
+            >
+              SERVICE PORTFOLIO
+            </p>
 
-          <h1
-            className="text-4xl md:text-5xl font-extrabold mb-4"
-            style={{ color: COLORS.ACCENT }}
-          >
-            Our Service Sectors
-          </h1>
+            <h1
+              className="text-4xl md:text-5xl font-extrabold mb-4"
+              style={{ color: COLORS.ACCENT }}
+            >
+              Our Service Sectors
+            </h1>
 
-          <p
-            className="text-base md:text-lg max-w-3xl mx-auto"
-            style={{ color: COLORS.SUBTEXT }}
-          >
-            Skilled, reliable manpower delivered across key industries – with consistency, compliance, and professionalism.
-          </p>
-        </motion.div>
+            <p
+              className="text-base md:text-lg max-w-3xl mx-auto"
+              style={{ color: COLORS.SUBTEXT }}
+            >
+              Skilled, reliable manpower delivered across key industries – with consistency, compliance, and professionalism.
+            </p>
+          </motion.div>
 
-        {/* SERVICES LIST */}
-        <div className="space-y-16 md:space-y-24">
-          {servicesSections.map((s, index) => {
-            const reverse = index % 2 !== 0;
+          {/* SERVICES LIST */}
+          <div className="space-y-16 md:space-y-24">
+            {servicesSections.map((s, index) => {
+              const reverse = index % 2 !== 0;
 
-            return (
-              <motion.article
-                key={s.key}
-                className="relative"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6 }}
-              >
-                <div
-                  className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center`}
+              return (
+                <motion.article
+                  key={s.key}
+                  className="relative"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.6 }}
                 >
-
-                  {/* IMAGE SIDE */}
                   <div
-                    className={`relative rounded-3xl overflow-hidden shadow-xl lg:col-span-4 ${
-                      reverse ? "lg:order-2" : "lg:order-1"
-                    }`}
-                    style={{ minHeight: "320px" }}
+                    className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center`}
                   >
-                    <motion.div
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{
-                        backgroundImage: `url(${s.image})`,
-                        filter: "brightness(0.92) saturate(1.08)",
-                      }}
-                      whileHover={{
-                        scale: 1.03,
-                        filter: "brightness(1.02) saturate(1.15)",
-                      }}
-                      transition={{ duration: 0.45 }}
-                    />
 
-                    {/* Dark top/bottom fade */}
+                    {/* IMAGE SIDE */}
                     <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.15), transparent)",
-                      }}
-                    />
-
-                    {/* Subtitle Glass Label */}
-                    <div
-                      className="absolute left-4 bottom-4 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-[0.2em]"
-                      style={{
-                        background: "rgba(0,0,0,0.55)",
-                        color: "#E9F8FF",
-                        border: "1px solid rgba(255,255,255,0.25)",
-                        backdropFilter: "blur(6px)",
-                      }}
+                      className={`relative rounded-3xl overflow-hidden shadow-xl lg:col-span-4 ${reverse ? "lg:order-2" : "lg:order-1"
+                        }`}
+                      style={{ minHeight: "320px" }}
                     >
-                      {s.subtitle}
-                    </div>
-                  </div>
+                      <motion.div
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{
+                          backgroundImage: `url(${s.image})`,
+                          filter: "brightness(0.92) saturate(1.08)",
+                        }}
+                        whileHover={{
+                          scale: 1.03,
+                          filter: "brightness(1.02) saturate(1.15)",
+                        }}
+                        transition={{ duration: 0.45 }}
+                      />
 
-                  {/* TEXT CARD */}
-                  <motion.div
-                    className={`lg:col-span-8 ${reverse ? "lg:order-1" : "lg:order-2"}`}
-                    initial={{ opacity: 0, x: reverse ? -25 : 25 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 0.55 }}
-                  >
-                    <div
-                      className="p-8 md:p-10 rounded-3xl backdrop-blur-xl shadow-xl cursor-pointer hover:shadow-2xl transition-all duration-300"
-                      onClick={() =>
-                        goToServiceDetails({
-                          title: s.title,
-                          description: s.text,
-                          imageUrl: s.image,
-                          icon: s.icon || null,
-                        })
-                      }
-                      style={{
-                        background: "rgba(255,255,255,0.06)",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                      }}
-                    >
-                      <h2
-                        className="text-2xl md:text-3xl font-bold mb-3"
-                        style={{ color: COLORS.PRIMARY || COLORS.ACCENT }}
-                      >
-                        {s.title}
-                      </h2>
-
-                      <p className="text-sm md:text-base font-medium mb-4" style={{ color: COLORS.ACCENT }}>
-                        {s.subtitle}
-                      </p>
-
+                      {/* Dark top/bottom fade */}
                       <div
-                        className="text-sm md:text-lg leading-relaxed space-y-4"
-                        style={{ color: COLORS.SUBTEXT }}
-                      >
-                        {s.text.split("\n").map((para, i) => (
-                          <p key={i}>{para.trim()}</p>
-                        ))}
-                      </div>
+                        className="absolute inset-0"
+                        style={{
+                          background:
+                            "linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.15), transparent)",
+                        }}
+                      />
 
-                      <div className="mt-6 flex items-center gap-3">
+                      {/* Subtitle Glass Label */}
+                      <div
+                        className="absolute left-4 bottom-4 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-[0.2em]"
+                        style={{
+                          background: "rgba(0,0,0,0.55)",
+                          color: "#E9F8FF",
+                          border: "1px solid rgba(255,255,255,0.25)",
+                          backdropFilter: "blur(6px)",
+                        }}
+                      >
+                        {s.subtitle}
+                      </div>
+                    </div>
+
+                    {/* TEXT CARD */}
+                    <motion.div
+                      className={`lg:col-span-8 ${reverse ? "lg:order-1" : "lg:order-2"}`}
+                      initial={{ opacity: 0, x: reverse ? -25 : 25 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{ duration: 0.55 }}
+                    >
+                      <div
+                        className="p-8 md:p-10 rounded-3xl backdrop-blur-xl shadow-xl cursor-pointer hover:shadow-2xl transition-all duration-300"
+                        onClick={() =>
+                          goToServiceDetails({
+                            title: s.title,
+                            description: s.text,
+                            imageUrl: s.image,
+                            icon: s.icon || null,
+                          })
+                        }
+                        style={{
+                          background: "rgba(255,255,255,0.06)",
+                          border: "1px solid rgba(255,255,255,0.12)",
+                        }}
+                      >
+                        <h2
+                          className="text-2xl md:text-3xl font-bold mb-3"
+                          style={{ color: COLORS.PRIMARY || COLORS.ACCENT }}
+                        >
+                          {s.title}
+                        </h2>
+
+                        <p className="text-sm md:text-base font-medium mb-4" style={{ color: COLORS.ACCENT }}>
+                          {s.subtitle}
+                        </p>
+
                         <div
-                          className="h-[3px] w-20 rounded-full"
-                          style={{ background: COLORS.ACCENT }}
-                        />
-                        {/* <span className="text-xs md:text-sm uppercase tracking-wide" style={{ color: COLORS.SUBTEXT }}>
+                          className="text-sm md:text-lg leading-relaxed space-y-4"
+                          style={{ color: COLORS.SUBTEXT }}
+                        >
+                          {s.text.split("\n").map((para, i) => (
+                            <p key={i}>{para.trim()}</p>
+                          ))}
+                        </div>
+
+                        <div className="mt-6 flex items-center gap-3">
+                          <div
+                            className="h-[3px] w-20 rounded-full"
+                            style={{ background: COLORS.ACCENT }}
+                          />
+                          {/* <span className="text-xs md:text-sm uppercase tracking-wide" style={{ color: COLORS.SUBTEXT }}>
                           View sector details
                         </span> */}
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
 
-                </div>
-              </motion.article>
-            );
-          })}
+                  </div>
+                </motion.article>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      {/* FOOTER + FLOATING */}
-      <div className="mt-20">
-        <Footer COLORS={COLORS} />
-      </div>
+        {/* FOOTER + FLOATING */}
+        <div className="mt-20">
+          <Footer COLORS={COLORS} />
+        </div>
 
-      <FloatingButtons COLORS={COLORS} />
-    </section>
-  </>
-);
+        <FloatingButtons COLORS={COLORS} />
+      </section>
+    </>
+  );
 
 
 };
@@ -1837,12 +1815,12 @@ const InquirePage = ({ service, toggleView, COLORS }) => {
       >
         {/* Blobs */}
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div 
+          <div
             className="absolute w-[300px] h-[300px] md:w-[450px] md:h-[450px] blur-[120px] opacity-40 rounded-full blob-one"
             style={{ top: "-50px", left: "-50px", background: COLORS.ACCENT }}
           ></div>
 
-          <div 
+          <div
             className="absolute w-[350px] h-[350px] md:w-[500px] md:h-[500px] blur-[150px] opacity-35 rounded-full blob-two"
             style={{ bottom: "-50px", right: "-50px", background: COLORS.ACCENT_ALT }}
           ></div>
@@ -1884,135 +1862,135 @@ const InquirePage = ({ service, toggleView, COLORS }) => {
           </div>
 
           {/* 2 Column Layout EXACTLY like original contact page */}
-       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center pt-10">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center pt-10">
 
-  {/* LEFT SIDE — Modern Hero Typography */}
-  <div className="relative flex items-center justify-center md:justify-start order-1 md:order-1 py-10 md:py-0">
+            {/* LEFT SIDE — Modern Hero Typography */}
+            <div className="relative flex items-center justify-center md:justify-start order-1 md:order-1 py-10 md:py-0">
 
-    {/* BIG Modern Vertical Text */}
-    <h1
-      className="font-extrabold leading-none select-none text-center md:text-left"
-      style={{
-        fontSize: "clamp(3rem, 8vw, 8rem)",
-        color: COLORS.TEXT,
-      }}
-    >
-      Let's<br />
-      <span style={{ color: COLORS.ACCENT }}>Fill This</span><br />
-      Form
-    </h1>
+              {/* BIG Modern Vertical Text */}
+              <h1
+                className="font-extrabold leading-none select-none text-center md:text-left"
+                style={{
+                  fontSize: "clamp(3rem, 8vw, 8rem)",
+                  color: COLORS.TEXT,
+                }}
+              >
+                Let's<br />
+                <span style={{ color: COLORS.ACCENT }}>Fill This</span><br />
+                Form
+              </h1>
 
 
-   
-  </div>
 
-  {/* RIGHT SIDE — Your Inquiry Form (same UI & logic) */}
-  <motion.form
-    onSubmit={handleSubmit}
-    initial={{ opacity: 0, x: 60 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    transition={{ duration: 1 }}
-    className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl order-2 md:order-2"
-    style={{
-      background: COLORS.GLASS_BG,
-      border: COLORS.GLASS_BORDER,
-      boxShadow: COLORS.SHADOW,
-    }}
-  >
-    {/* Fields */}
-    <div className="space-y-5">
+            </div>
 
-      <input
-        type="text"
-        name="name"
-        required
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Your Name"
-        className="w-full p-4 rounded-xl bg-transparent border"
-        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
-      />
+            {/* RIGHT SIDE — Your Inquiry Form (same UI & logic) */}
+            <motion.form
+              onSubmit={handleSubmit}
+              initial={{ opacity: 0, x: 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+              className="p-8 lg:p-10 rounded-3xl backdrop-blur-xl border shadow-2xl order-2 md:order-2"
+              style={{
+                background: COLORS.GLASS_BG,
+                border: COLORS.GLASS_BORDER,
+                boxShadow: COLORS.SHADOW,
+              }}
+            >
+              {/* Fields */}
+              <div className="space-y-5">
 
-      <input
-        type="email"
-        name="email"
-        required
-        value={formData.email}
-        onChange={handleChange}
-        placeholder="Your Email"
-        className="w-full p-4 rounded-xl bg-transparent border"
-        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
-      />
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your Name"
+                  className="w-full p-4 rounded-xl bg-transparent border"
+                  style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+                />
 
-      <input
-        type="text"
-        name="phone"
-        value={formData.phone}
-        onChange={handleChange}
-        placeholder="Phone (Optional)"
-        className="w-full p-4 rounded-xl bg-transparent border"
-        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
-      />
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Your Email"
+                  className="w-full p-4 rounded-xl bg-transparent border"
+                  style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+                />
 
-      <input
-        type="text"
-        name="company"
-        value={formData.company}
-        onChange={handleChange}
-        placeholder="Company (Optional)"
-        className="w-full p-4 rounded-xl bg-transparent border"
-        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
-      />
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Phone (Optional)"
+                  className="w-full p-4 rounded-xl bg-transparent border"
+                  style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+                />
 
-      <textarea
-        name="message"
-        required
-        rows="5"
-        value={formData.message}
-        onChange={handleChange}
-        className="w-full p-4 rounded-xl bg-transparent border"
-        placeholder="How can we help you?"
-        style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
-      ></textarea>
-    </div>
+                <input
+                  type="text"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  placeholder="Company (Optional)"
+                  className="w-full p-4 rounded-xl bg-transparent border"
+                  style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+                />
 
-    {/* Status */}
-    {submitStatus === "success" && (
-      <p className="mt-6 p-3 text-center rounded-xl" style={{ background: "Green", color: COLORS.TEXT }}>
-        Inquiry sent successfully!
-      </p>
-    )}
+                <textarea
+                  name="message"
+                  required
+                  rows="5"
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl bg-transparent border"
+                  placeholder="How can we help you?"
+                  style={{ borderColor: COLORS.ACCENT, color: COLORS.TEXT }}
+                ></textarea>
+              </div>
 
-    {submitStatus === "error" && (
-      <p className="mt-6 p-3 text-center rounded-xl bg-red-500/30 text-red-200">
-        Something went wrong. Please try again.
-      </p>
-    )}
+              {/* Status */}
+              {submitStatus === "success" && (
+                <p className="mt-6 p-3 text-center rounded-xl" style={{ background: "Green", color: COLORS.TEXT }}>
+                  Inquiry sent successfully!
+                </p>
+              )}
 
-    {/* Submit Button */}
-<motion.button
-  type="submit"
-  whileHover={{ scale: 1.04 }}
-  whileTap={{ scale: 0.97 }}
-  disabled={isSubmitting}
-  className="w-full mt-6 py-4 font-bold rounded-xl flex items-center justify-center gap-3"
-  style={{ background: COLORS.ACCENT, color: COLORS.BG }}
->
-  {isSubmitting ? (
-    <div className="flex items-center gap-2">
-      {/* Simple basic loader */}
-      <div
-        className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
-      ></div>
-      Sending...
-    </div>
-  ) : (
-    "Submit Inquiry"
-  )}
-</motion.button>
+              {submitStatus === "error" && (
+                <p className="mt-6 p-3 text-center rounded-xl bg-red-500/30 text-red-200">
+                  Something went wrong. Please try again.
+                </p>
+              )}
 
-  </motion.form>
-</div>
+              {/* Submit Button */}
+              <motion.button
+                type="submit"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                disabled={isSubmitting}
+                className="w-full mt-6 py-4 font-bold rounded-xl flex items-center justify-center gap-3"
+                style={{ background: COLORS.ACCENT, color: COLORS.BG }}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    {/* Simple basic loader */}
+                    <div
+                      className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                    ></div>
+                    Sending...
+                  </div>
+                ) : (
+                  "Submit Inquiry"
+                )}
+              </motion.button>
+
+            </motion.form>
+          </div>
         </div>
       </section>
     </>
@@ -2167,24 +2145,24 @@ const ServiceDetailsView = ({ service, toggleView, COLORS, goToInquire }) => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.35, duration: 0.5 }}
         >
-      <motion.button
-  whileHover={{ scale: 1.07, y: -2 }}
-  whileTap={{ scale: 0.95 }}
-  onClick={() => goToInquire(service)}
-  className="
+          <motion.button
+            whileHover={{ scale: 1.07, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => goToInquire(service)}
+            className="
     px-8 py-3 text-lg
     sm:px-10 sm:py-3.5 sm:text-lg
     md:px-12 md:py-4 md:text-xl
     font-bold rounded-full shadow-xl
   "
-  style={{
-    background: COLORS.ACCENT,
-    color: COLORS.BG,
-    boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
-  }}
->
-  Inquire About {service.title}
-</motion.button>
+            style={{
+              background: COLORS.ACCENT,
+              color: COLORS.BG,
+              boxShadow: `${COLORS.ACCENT}55 0px 10px 30px`,
+            }}
+          >
+            Inquire About {service.title}
+          </motion.button>
 
         </motion.div>
 
@@ -2655,124 +2633,124 @@ const Management = ({ COLORS }) => {
           </p>
         </div>
 
-   {/* =============================== */}
-{/* Board of Directors */}
-{/* =============================== */}
-<h3
-  className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-indigo-400/50 pb-2 inline-block px-4"
-  style={{ color: COLORS.ACCENT }}
->
-  Board of Directors
-</h3>
-
-<div className="grid grid-cols-1 max-w-6xl mx-auto mb-20 gap-12">
-  {boardOfDirectors.map((manager, index) => (
-    <motion.div
-      key={`director-${index}`}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{
-        type: "spring",
-        stiffness: 100,
-        damping: 20,
-        delay: index * 0.1,
-      }}
-      className="rounded-3xl p-10 md:p-12 bg-violet-950 shadow-2xl mx-auto relative overflow-hidden"
-      style={{
-        border: `1px solid ${COLORS.ACCENT}30`,
-      }}
-    >
-      <div className="grid grid-cols-1 md:grid-cols-3 items-center">
-
         {/* =============================== */}
-        {/* TEXT BLOCK — Mobile: second | Desktop: first */}
+        {/* Board of Directors */}
         {/* =============================== */}
-        <div className="md:col-span-2 text-left space-y-6 order-2 md:order-1">
+        <h3
+          className="text-3xl font-bold mb-8 md:mb-12 border-b-4 border-indigo-400/50 pb-2 inline-block px-4"
+          style={{ color: COLORS.ACCENT }}
+        >
+          Board of Directors
+        </h3>
 
-          {/* NAME + TITLE */}
-          <div>
-            <h2
-              className="text-4xl font-black"
-              style={{ color: COLORS.PRIMARY_HEADER }}
-            >
-              {manager.name}
-            </h2>
-
-            <p
-              className="text-xl font-semibold mt-1"
-              style={{ color: COLORS.ACCENT }}
-            >
-              {manager.title}
-            </p>
-          </div>
-
-          {/* ABOUT */}
-          <div>
-            <h4
-              className="text-lg font-bold mb-2"
-              style={{ color: COLORS.PRIMARY_HEADER }}
-            >
-              About
-            </h4>
-
-            <p
-              className="text-base leading-relaxed"
-              style={{ color: COLORS.SUBTEXT }}
-            >
-              {manager.intro || manager.bio}
-            </p>
-          </div>
-
-          {/* SOCIAL ICONS */}
-          {manager.linkedinUrl && (
-            <div className="flex items-center gap-4 mt-4">
-              <motion.a
-                href={manager.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.2, rotate: 5 }}
-                className="p-3 rounded-full bg-black/5 hover:bg-black/20 transition"
-              >
-                <Linkedin
-                  className="w-6 h-6"
-                  style={{ color: COLORS.ACCENT }}
-                />
-              </motion.a>
-            </div>
-          )}
-        </div>
-
-        {/* =============================== */}
-        {/* IMAGE BLOCK — Mobile: first | Desktop: second */}
-        {/* =============================== */}
-        <div className="flex justify-center md:justify-end mt-6 mb-6 md:mt-0 md:mb-0 order-1 md:order-2">
-          <div className="relative">
-            <div
-              className="absolute inset-0 rounded-full"
+        <div className="grid grid-cols-1 max-w-6xl mx-auto mb-20 gap-12">
+          {boardOfDirectors.map((manager, index) => (
+            <motion.div
+              key={`director-${index}`}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+                delay: index * 0.1,
+              }}
+              className="rounded-3xl p-10 md:p-12 bg-violet-950 shadow-2xl mx-auto relative overflow-hidden"
               style={{
-                background: "white",
-                padding: "4px",
-                borderRadius: "9999px",
+                border: `1px solid ${COLORS.ACCENT}30`,
               }}
-            ></div>
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 items-center">
 
-            <img
-              src={manager.imageUrl}
-              alt={manager.name}
-              className="relative rounded-full w-48 h-48 md:w-60 md:h-60 object-contain p-1 border-4 border-white shadow-xl"
-              style={{ transform: "scale(1.1)" }}
-              onError={(e) => {
-                e.target.src =
-                  "https://placehold.co/300x300/cccccc/333?text=No+Image";
-              }}
-            />
-          </div>
+                {/* =============================== */}
+                {/* TEXT BLOCK — Mobile: second | Desktop: first */}
+                {/* =============================== */}
+                <div className="md:col-span-2 text-left space-y-6 order-2 md:order-1">
+
+                  {/* NAME + TITLE */}
+                  <div>
+                    <h2
+                      className="text-4xl font-black"
+                      style={{ color: COLORS.PRIMARY_HEADER }}
+                    >
+                      {manager.name}
+                    </h2>
+
+                    <p
+                      className="text-xl font-semibold mt-1"
+                      style={{ color: COLORS.ACCENT }}
+                    >
+                      {manager.title}
+                    </p>
+                  </div>
+
+                  {/* ABOUT */}
+                  <div>
+                    <h4
+                      className="text-lg font-bold mb-2"
+                      style={{ color: COLORS.PRIMARY_HEADER }}
+                    >
+                      About
+                    </h4>
+
+                    <p
+                      className="text-base leading-relaxed"
+                      style={{ color: COLORS.SUBTEXT }}
+                    >
+                      {manager.intro || manager.bio}
+                    </p>
+                  </div>
+
+                  {/* SOCIAL ICONS */}
+                  {manager.linkedinUrl && (
+                    <div className="flex items-center gap-4 mt-4">
+                      <motion.a
+                        href={manager.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.2, rotate: 5 }}
+                        className="p-3 rounded-full bg-black/5 hover:bg-black/20 transition"
+                      >
+                        <Linkedin
+                          className="w-6 h-6"
+                          style={{ color: COLORS.ACCENT }}
+                        />
+                      </motion.a>
+                    </div>
+                  )}
+                </div>
+
+                {/* =============================== */}
+                {/* IMAGE BLOCK — Mobile: first | Desktop: second */}
+                {/* =============================== */}
+                <div className="flex justify-center md:justify-end mt-6 mb-6 md:mt-0 md:mb-0 order-1 md:order-2">
+                  <div className="relative">
+                    <div
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: "white",
+                        padding: "4px",
+                        borderRadius: "9999px",
+                      }}
+                    ></div>
+
+                    <img
+                      src={manager.imageUrl}
+                      alt={manager.name}
+                      className="relative rounded-full w-48 h-48 md:w-60 md:h-60 object-contain p-1 border-4 border-white shadow-xl"
+                      style={{ transform: "scale(1.1)" }}
+                      onError={(e) => {
+                        e.target.src =
+                          "https://placehold.co/300x300/cccccc/333?text=No+Image";
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </div>
-    </motion.div>
-  ))}
-</div>
         {/* =============================== */}
         {/* Operational Management */}
         {/* =============================== */}
@@ -3180,14 +3158,21 @@ const Footer = ({ COLORS }) => {
               >
                 Quick Links
               </h4>
-              {["About", "Services", "Careers", "Privacy Policy"].map((text) => (
-                <p
-                  key={text}
-                  className="mb-2 hover:underline"
+
+              {[
+                { text: "About", href: "#company-profile" },
+                { text: "Services", href: "#services-page" },
+                { text: "Careers", href: "/careers" },
+                { text: "Privacy Policy", href: "/privacy-policy" },
+              ].map((link) => (
+                <a
+                  key={link.text}
+                  href={link.href}
+                  className="mb-2 block hover:underline"
                   style={{ color: COLORS.SUBTEXT }}
                 >
-                  {text}
-                </p>
+                  {link.text}
+                </a>
               ))}
             </div>
 
@@ -3312,14 +3297,14 @@ const FloatingButtons = ({ COLORS }) => {
 const ClientMarquee = ({ COLORS, theme }) => {
   const clients = [
 
-    { name: "Client Partner 1", logo: clientImage26  },
-    { name: "Client Partner 2", logo: clientImage27  },
-    { name: "Client Partner 3", logo: clientImage28  },
-    { name: "Client Partner 4", logo: clientImage2  },
-    { name: "Client Partner 5", logo: clientImage6  },
-    { name: "Client Partner 6", logo: clientImage20  },
-    { name: "Client Partner 7", logo: clientImage17  },
-    { name: "Client Partner 8", logo: clientImage25  },
+    { name: "Client Partner 1", logo: clientImage26 },
+    { name: "Client Partner 2", logo: clientImage27 },
+    { name: "Client Partner 3", logo: clientImage28 },
+    { name: "Client Partner 4", logo: clientImage2 },
+    { name: "Client Partner 5", logo: clientImage6 },
+    { name: "Client Partner 6", logo: clientImage20 },
+    { name: "Client Partner 7", logo: clientImage17 },
+    { name: "Client Partner 8", logo: clientImage25 },
 
   ];
 
@@ -3628,7 +3613,7 @@ const AdminLogin = ({ COLORS, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -3639,117 +3624,117 @@ const [isLoading, setIsLoading] = useState(false);
     } catch (err) {
       setError("Invalid email or password");
     }
-     setIsLoading(false); // stop loader
+    setIsLoading(false); // stop loader
   };
 
   return (
-<div
-  className="min-h-screen flex items-center justify-center px-6 relative"
-  style={{ background: COLORS.BG }}
->
-
-  {/* Soft Glow Background */}
-  <div 
-    className="absolute inset-0 opacity-20 blur-[120px] pointer-events-none"
-    style={{
-      background: `radial-gradient(circle at 30% 20%, ${COLORS.ACCENT}, transparent 60%)`,
-    }}
-  ></div>
-
-  <div
-    className="w-full max-w-md p-8 rounded-3xl backdrop-blur-xl shadow-2xl border relative z-10"
-    style={{
-      background: COLORS.GLASS_BG,
-      border: COLORS.GLASS_BORDER,
-      boxShadow: COLORS.SHADOW,
-    }}
-  >
-    <h2
-      className="text-3xl font-extrabold mb-6 text-center tracking-wide"
-      style={{ color: COLORS.ACCENT }}
+    <div
+      className="min-h-screen flex items-center justify-center px-6 relative"
+      style={{ background: COLORS.BG }}
     >
-      Admin Login
-    </h2>
 
-    <form onSubmit={handleLogin} className="space-y-5">
+      {/* Soft Glow Background */}
+      <div
+        className="absolute inset-0 opacity-20 blur-[120px] pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at 30% 20%, ${COLORS.ACCENT}, transparent 60%)`,
+        }}
+      ></div>
 
-      {/* Email */}
-      <input
-        type="text"
-        placeholder="Email"
-        className="w-full p-3 rounded-xl border outline-none transition focus:ring-4"
+      <div
+        className="w-full max-w-md p-8 rounded-3xl backdrop-blur-xl shadow-2xl border relative z-10"
         style={{
           background: COLORS.GLASS_BG,
           border: COLORS.GLASS_BORDER,
-          color: COLORS.TEXT,
-          boxShadow: "inset 0 0 20px rgba(255,255,255,0.03)",
+          boxShadow: COLORS.SHADOW,
         }}
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      {/* Password */}
-      <input
-        type="password"
-        placeholder="Password"
-        className="w-full p-3 rounded-xl border outline-none transition focus:ring-4"
-        style={{
-          background: COLORS.GLASS_BG,
-          border: COLORS.GLASS_BORDER,
-          color: COLORS.TEXT,
-          boxShadow: "inset 0 0 20px rgba(255,255,255,0.03)",
-        }}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      {/* Error Message */}
-      {error && (
-        <p className="text-red-400 text-center text-sm">{error}</p>
-      )}
-
-      {/* Submit Button */}
-     <button
-  type="submit"
-  className="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-transform hover:scale-[1.03]"
-  style={{
-    background: COLORS.ACCENT,
-    color: COLORS.BG,
-  }}
-  disabled={isLoading}
->
-  {!isLoading ? (
-    "Login"
-  ) : (
-    <>
-      <svg
-        className="animate-spin h-5 w-5"
-        style={{ color: COLORS.BG }}
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
       >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-        ></path>
-      </svg>
-      Authenticating...
-    </>
-  )}
-</button>
-    </form>
-  </div>
-</div>
+        <h2
+          className="text-3xl font-extrabold mb-6 text-center tracking-wide"
+          style={{ color: COLORS.ACCENT }}
+        >
+          Admin Login
+        </h2>
+
+        <form onSubmit={handleLogin} className="space-y-5">
+
+          {/* Email */}
+          <input
+            type="text"
+            placeholder="Email"
+            className="w-full p-3 rounded-xl border outline-none transition focus:ring-4"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              color: COLORS.TEXT,
+              boxShadow: "inset 0 0 20px rgba(255,255,255,0.03)",
+            }}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          {/* Password */}
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-3 rounded-xl border outline-none transition focus:ring-4"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              color: COLORS.TEXT,
+              boxShadow: "inset 0 0 20px rgba(255,255,255,0.03)",
+            }}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {/* Error Message */}
+          {error && (
+            <p className="text-red-400 text-center text-sm">{error}</p>
+          )}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-transform hover:scale-[1.03]"
+            style={{
+              background: COLORS.ACCENT,
+              color: COLORS.BG,
+            }}
+            disabled={isLoading}
+          >
+            {!isLoading ? (
+              "Login"
+            ) : (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5"
+                  style={{ color: COLORS.BG }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+                Authenticating...
+              </>
+            )}
+          </button>
+        </form>
+      </div>
+    </div>
 
   );
 };
@@ -3846,146 +3831,145 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme, onLogou
   };
 
   return (
-  <motion.div
-    className="min-h-screen flex flex-col relative overflow-hidden"
-    style={{
-      background: `linear-gradient(135deg, ${COLORS.BG} 0%, ${COLORS.ACCENT}20 100%)`,
-      color: COLORS.TEXT,
-    }}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.6 }}
-  >
-    {/* HEADER */}
-    <header
-      className="w-full flex justify-between items-center px-6 py-4 sticky top-0 z-50 backdrop-blur-lg border-b shadow-xl"
+    <motion.div
+      className="min-h-screen flex flex-col relative overflow-hidden"
       style={{
-        background: COLORS.GLASS_BG,
-        borderColor: COLORS.GLASS_BORDER,
+        background: `linear-gradient(135deg, ${COLORS.BG} 0%, ${COLORS.ACCENT}20 100%)`,
+        color: COLORS.TEXT,
       }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
     >
-      <div className="flex items-center gap-3">
-        <Inbox size={28} color={COLORS.ACCENT} />
-        <h1 className="text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
-      </div>
+      {/* HEADER */}
+      <header
+        className="w-full flex justify-between items-center px-6 py-4 sticky top-0 z-50 backdrop-blur-lg border-b shadow-xl"
+        style={{
+          background: COLORS.GLASS_BG,
+          borderColor: COLORS.GLASS_BORDER,
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <Inbox size={28} color={COLORS.ACCENT} />
+          <h1 className="text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
+        </div>
 
-      <div className="flex items-center gap-4">
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-full border hover:scale-110 transition-all"
-          style={{
-            backgroundColor: COLORS.GLASS_BG,
-            border: COLORS.GLASS_BORDER,
-            color: COLORS.ACCENT,
-          }}
-        >
-          {theme === "dark" ? "☀️" : "🌙"}
-        </button>
-
-        {/* Logout */}
-        <button
-          onClick={onLogout}
-          className="px-4 py-2 font-semibold rounded-full flex items-center gap-2 hover:scale-105 transition"
-          style={{
-            backgroundColor: COLORS.ACCENT,
-            color: COLORS.BG,
-          }}
-        >
-          Logout
-        </button>
-      </div>
-    </header>
-
-    {/* MAIN LAYOUT */}
-    <main className="flex-grow container mx-auto px-6 py-10">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        
-        {/* SIDEBAR */}
-        <aside
-          className="rounded-xl p-5 border backdrop-blur-lg shadow-lg"
-          style={{
-            background: COLORS.GLASS_BG,
-            border: COLORS.GLASS_BORDER,
-          }}
-        >
-          <h3
-            className="text-lg font-bold mb-4 pb-2 border-b flex items-center gap-2"
-            style={{ color: COLORS.ACCENT, borderColor: COLORS.ACCENT }}
+        <div className="flex items-center gap-4">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full border hover:scale-110 transition-all"
+            style={{
+              backgroundColor: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+              color: COLORS.ACCENT,
+            }}
           >
-            <ListFilter size={18} /> Navigation
-          </h3>
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
 
-          {["enquiries"].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`w-full px-4 py-3 mb-3 rounded-lg flex items-center gap-3 transition-all ${
-                activeTab === tab ? "font-bold scale-105" : ""
-              }`}
-              style={{
-                background:
-                  activeTab === tab ? COLORS.ACCENT : COLORS.GLASS_BG,
-                color: activeTab === tab ? COLORS.BG : COLORS.SUBTEXT,
-                border: COLORS.GLASS_BORDER,
-              }}
+          {/* Logout */}
+          <button
+            onClick={onLogout}
+            className="px-4 py-2 font-semibold rounded-full flex items-center gap-2 hover:scale-105 transition"
+            style={{
+              backgroundColor: COLORS.ACCENT,
+              color: COLORS.BG,
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* MAIN LAYOUT */}
+      <main className="flex-grow container mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+          {/* SIDEBAR */}
+          <aside
+            className="rounded-xl p-5 border backdrop-blur-lg shadow-lg"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+            }}
+          >
+            <h3
+              className="text-lg font-bold mb-4 pb-2 border-b flex items-center gap-2"
+              style={{ color: COLORS.ACCENT, borderColor: COLORS.ACCENT }}
             >
-              <Inbox size={20} />
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </button>
-          ))}
-        </aside>
+              <ListFilter size={18} /> Navigation
+            </h3>
 
-        {/* MAIN PANEL */}
-        <section
-          className="md:col-span-3 rounded-xl border backdrop-blur-lg p-6 shadow-xl"
-          style={{
-            background: COLORS.GLASS_BG,
-            border: COLORS.GLASS_BORDER,
-          }}
-        >
-          {/* HEADER CONTROLS */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-            <h2 className="text-2xl font-bold flex items-center gap-2" style={{ color: COLORS.ACCENT }}>
-              <Inbox size={24} /> Enquiry List
-            </h2>
+            {["enquiries"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`w-full px-4 py-3 mb-3 rounded-lg flex items-center gap-3 transition-all ${activeTab === tab ? "font-bold scale-105" : ""
+                  }`}
+                style={{
+                  background:
+                    activeTab === tab ? COLORS.ACCENT : COLORS.GLASS_BG,
+                  color: activeTab === tab ? COLORS.BG : COLORS.SUBTEXT,
+                  border: COLORS.GLASS_BORDER,
+                }}
+              >
+                <Inbox size={20} />
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </aside>
 
-            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
+          {/* MAIN PANEL */}
+          <section
+            className="md:col-span-3 rounded-xl border backdrop-blur-lg p-6 shadow-xl"
+            style={{
+              background: COLORS.GLASS_BG,
+              border: COLORS.GLASS_BORDER,
+            }}
+          >
+            {/* HEADER CONTROLS */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <h2 className="text-2xl font-bold flex items-center gap-2" style={{ color: COLORS.ACCENT }}>
+                <Inbox size={24} /> Enquiry List
+              </h2>
 
-              {/* Search */}
-              <div className="relative w-full sm:w-[360px]">
-                <Search
-                  size={20}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60"
-                />
-                <input
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  placeholder="Search enquiries..."
-                  className="w-full pl-10 p-3 rounded-xl border focus:outline-none"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    borderColor: COLORS.ACCENT + "40",
-                    color: COLORS.TEXT,
-                  }}
-                />
-              </div>
+              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full sm:w-auto">
 
-              {/* Sort */}
-        <div className="relative">
-  <ArrowDownUp
-    size={16}
-    className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60 pointer-events-none"
-    style={{ color: COLORS.ACCENT }}
-  />
+                {/* Search */}
+                <div className="relative w-full sm:w-[360px]">
+                  <Search
+                    size={20}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60"
+                  />
+                  <input
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Search enquiries..."
+                    className="w-full pl-10 p-3 rounded-xl border focus:outline-none"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      borderColor: COLORS.ACCENT + "40",
+                      color: COLORS.TEXT,
+                    }}
+                  />
+                </div>
 
-  <select
-    value={sortOrder}
-    onChange={(e) => setSortOrder(e.target.value)}
-    className="
+                {/* Sort */}
+                <div className="relative">
+                  <ArrowDownUp
+                    size={16}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60 pointer-events-none"
+                    style={{ color: COLORS.ACCENT }}
+                  />
+
+                  <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    className="
       pl-10 pr-8 py-2.5
       rounded-xl
       shadow-lg
@@ -3993,24 +3977,24 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme, onLogou
       transition-all duration-300
       focus:ring-2 focus:ring-opacity-40
     "
-    style={{
-      background: "rgba(255,255,255,0.05)",
-      border: `1px solid ${COLORS.ACCENT}40`,
-      color: COLORS.TEXT,
-      backdropFilter: "blur(6px)",
-      boxShadow: `0px 0px 12px ${COLORS.ACCENT}20`,
-    }}
-  >
-    <option value="newest">Newest</option>
-    <option value="oldest">Oldest</option>
-  </select>
-</div>
+                    style={{
+                      background: "rgba(255,255,255,0.05)",
+                      border: `1px solid ${COLORS.ACCENT}40`,
+                      color: COLORS.TEXT,
+                      backdropFilter: "blur(6px)",
+                      boxShadow: `0px 0px 12px ${COLORS.ACCENT}20`,
+                    }}
+                  >
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                  </select>
+                </div>
 
-              {/* Page Size */}
-              <select
-  value={pageSize}
-  onChange={(e) => setPageSize(Number(e.target.value))}
-  className="
+                {/* Page Size */}
+                <select
+                  value={pageSize}
+                  onChange={(e) => setPageSize(Number(e.target.value))}
+                  className="
     px-4 py-2.5
     rounded-xl
     shadow-lg
@@ -4018,137 +4002,137 @@ export const AdminDashboard = ({ toggleView, COLORS, theme, toggleTheme, onLogou
     transition-all duration-300
     focus:ring-2 focus:ring-opacity-40
   "
-  style={{
-    background: "rgba(255,255,255,0.05)",
-    border: `1px solid ${COLORS.ACCENT}40`,
-    color: COLORS.TEXT,
-    backdropFilter: "blur(6px)",
-    boxShadow: `0px 0px 12px ${COLORS.ACCENT}20`,
-  }}
->
-  <option value={5}>5 / page</option>
-  <option value={8}>8 / page</option>
-  <option value={12}>12 / page</option>
-  <option value={20}>20 / page</option>
-</select>
+                  style={{
+                    background: "rgba(255,255,255,0.05)",
+                    border: `1px solid ${COLORS.ACCENT}40`,
+                    color: COLORS.TEXT,
+                    backdropFilter: "blur(6px)",
+                    boxShadow: `0px 0px 12px ${COLORS.ACCENT}20`,
+                  }}
+                >
+                  <option value={5}>5 / page</option>
+                  <option value={8}>8 / page</option>
+                  <option value={12}>12 / page</option>
+                  <option value={20}>20 / page</option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          {/* LOADING SPINNER */}
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                className="rounded-full"
-                style={{
-                  width: 50,
-                  height: 50,
-                  border: `4px solid ${COLORS.ACCENT}40`,
-                  borderTop: `4px solid ${COLORS.ACCENT}`,
-                }}
-              />
-            </div>
-          ) : sorted.length === 0 ? (
-            <p className="opacity-70 text-center py-10">No enquiries found.</p>
-          ) : (
-            <>
-              {/* ENQUIRIES LIST */}
-              <div className="space-y-4">
-                {paginated.map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-5 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 backdrop-blur-md"
-                    style={{
-                      background: "rgba(255,255,255,0.06)",
-                      border: "1px solid rgba(255,255,255,0.15)",
-                    }}
-                  >
-                    <div className="flex-grow space-y-2">
-                      <p className="font-bold text-lg flex items-center gap-2">
-                        <User size={18} /> {item.name}
-                      </p>
+            {/* LOADING SPINNER */}
+            {loading ? (
+              <div className="flex justify-center py-20">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                  className="rounded-full"
+                  style={{
+                    width: 50,
+                    height: 50,
+                    border: `4px solid ${COLORS.ACCENT}40`,
+                    borderTop: `4px solid ${COLORS.ACCENT}`,
+                  }}
+                />
+              </div>
+            ) : sorted.length === 0 ? (
+              <p className="opacity-70 text-center py-10">No enquiries found.</p>
+            ) : (
+              <>
+                {/* ENQUIRIES LIST */}
+                <div className="space-y-4">
+                  {paginated.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-5 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 backdrop-blur-md"
+                      style={{
+                        background: "rgba(255,255,255,0.06)",
+                        border: "1px solid rgba(255,255,255,0.15)",
+                      }}
+                    >
+                      <div className="flex-grow space-y-2">
+                        <p className="font-bold text-lg flex items-center gap-2">
+                          <User size={18} /> {item.name}
+                        </p>
 
-                      <div className="text-sm flex flex-wrap gap-4 opacity-80">
-                        <span className="flex items-center gap-1">
-                          <Mail size={16} /> {item.email}
-                        </span>
-
-                        <span className="flex items-center gap-1">
-                          <Phone size={16} /> {item.phone}
-                        </span>
-
-                        {item.company && (
+                        <div className="text-sm flex flex-wrap gap-4 opacity-80">
                           <span className="flex items-center gap-1">
-                            <Building size={16} /> {item.company}
+                            <Mail size={16} /> {item.email}
                           </span>
-                        )}
+
+                          <span className="flex items-center gap-1">
+                            <Phone size={16} /> {item.phone}
+                          </span>
+
+                          {item.company && (
+                            <span className="flex items-center gap-1">
+                              <Building size={16} /> {item.company}
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="text-sm opacity-80">{item.message}</p>
+
+                        <p className="text-xs opacity-60">
+                          {item.dateTime?.seconds
+                            ? new Date(item.dateTime.seconds * 1000).toLocaleString()
+                            : "No timestamp"}
+                        </p>
                       </div>
 
-                      <p className="text-sm opacity-80">{item.message}</p>
-
-                      <p className="text-xs opacity-60">
-                        {item.dateTime?.seconds
-                          ? new Date(item.dateTime.seconds * 1000).toLocaleString()
-                          : "No timestamp"}
-                      </p>
+                      {/* DELETE BUTTON */}
+                      <button
+                        onClick={() => deleteEnquiry(item.id)}
+                        className="px-3 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold bg-red-500 hover:bg-red-600 text-white"
+                      >
+                        <Trash2 size={16} /> Delete
+                      </button>
                     </div>
+                  ))}
+                </div>
 
-                    {/* DELETE BUTTON */}
+                {/* PAGINATION */}
+                <div className="flex items-center justify-between mt-6 flex-col sm:flex-row gap-4">
+                  <p className="text-sm opacity-70">
+                    Showing{" "}
+                    <strong>{(currentPage - 1) * pageSize + 1}</strong> to{" "}
+                    <strong>{Math.min(currentPage * pageSize, sorted.length)}</strong> of{" "}
+                    <strong>{sorted.length}</strong>
+                  </p>
+
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={() => deleteEnquiry(item.id)}
-                      className="px-3 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold bg-red-500 hover:bg-red-600 text-white"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="p-2 rounded-lg border disabled:opacity-40"
+                      style={{
+                        background: COLORS.GLASS_BG,
+                        borderColor: COLORS.GLASS_BORDER,
+                      }}
                     >
-                      <Trash2 size={16} /> Delete
+                      <ChevronLeft size={20} />
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        setCurrentPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      disabled={currentPage === totalPages}
+                      className="p-2 rounded-lg border disabled:opacity-40"
+                      style={{
+                        background: COLORS.GLASS_BG,
+                        borderColor: COLORS.GLASS_BORDER,
+                      }}
+                    >
+                      <ChevronRight size={20} />
                     </button>
                   </div>
-                ))}
-              </div>
-
-              {/* PAGINATION */}
-              <div className="flex items-center justify-between mt-6 flex-col sm:flex-row gap-4">
-                <p className="text-sm opacity-70">
-                  Showing{" "}
-                  <strong>{(currentPage - 1) * pageSize + 1}</strong> to{" "}
-                  <strong>{Math.min(currentPage * pageSize, sorted.length)}</strong> of{" "}
-                  <strong>{sorted.length}</strong>
-                </p>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="p-2 rounded-lg border disabled:opacity-40"
-                    style={{
-                      background: COLORS.GLASS_BG,
-                      borderColor: COLORS.GLASS_BORDER,
-                    }}
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(totalPages, p + 1))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="p-2 rounded-lg border disabled:opacity-40"
-                    style={{
-                      background: COLORS.GLASS_BG,
-                      borderColor: COLORS.GLASS_BORDER,
-                    }}
-                  >
-                    <ChevronRight size={20} />
-                  </button>
                 </div>
-              </div>
-            </>
-          )}
-        </section>
-      </div>
-    </main>
-  </motion.div>
-);
+              </>
+            )}
+          </section>
+        </div>
+      </main>
+    </motion.div>
+  );
 
 };
 
@@ -4473,20 +4457,20 @@ export default function App() {
 
   ////////// Manually updating the URLs for service-page //////////////////
   useEffect(() => {
-  const hash = window.location.hash;
+    const hash = window.location.hash;
 
-  if (hash === "#services-page") {
-    // Open full services page automatically
-    toggleView("services");
+    if (hash === "#services-page") {
+      // Open full services page automatically
+      toggleView("services");
 
-    // Ensure page scrolls to top
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 100);
-  }
-}, []);
+      // Ensure page scrolls to top
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 100);
+    }
+  }, []);
 
-  
+
   const handleCompanyProfileClick = (e) => {
     e.preventDefault();
     toggleView("company-profile");
@@ -4546,25 +4530,25 @@ export default function App() {
   };
 
   // HASH LISTENER - do not override admin/login flow or logout redirect - Manually entering the URL
-useEffect(() => {
-  const handler = () => {
-    const newView = getInitialView();
+  useEffect(() => {
+    const handler = () => {
+      const newView = getInitialView();
 
-    // Always allow admin view when hash matches
-    if (newView === "admin") {
-      setView("admin");
-      return;
-    }
+      // Always allow admin view when hash matches
+      if (newView === "admin") {
+        setView("admin");
+        return;
+      }
 
-    // Normal handling for all other pages
-    if (view !== "fading-out") {
-      setView(newView);
-    }
-  };
+      // Normal handling for all other pages
+      if (view !== "fading-out") {
+        setView(newView);
+      }
+    };
 
-  window.addEventListener("hashchange", handler);
-  return () => window.removeEventListener("hashchange", handler);
-}, [view]);
+    window.addEventListener("hashchange", handler);
+    return () => window.removeEventListener("hashchange", handler);
+  }, [view]);
 
   // Listen to Firebase Auth state (keeps adminLoggedIn accurate)
   useEffect(() => {
