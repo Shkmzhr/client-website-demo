@@ -2482,7 +2482,7 @@ const Management = ({ COLORS }) => {
       name: "Mohammad Hamid Ansari",
       title: "Founder & Group Vice Chairman",
       bio: "Over 12 years of experience in the GCC and GCC markets, specializing in strategic planning and long-term project management.",
-      intro: "Mr. Mohammad Hamid Ansari stands as the distinguished Founder and Chairman of ARM Solutions, guiding the organization with a clear and unwavering strategic direction. His leadership is not merely administrative; it is the driving force and the very foundation upon which ARM Solutions' continuous expansion and notable success have been built. Possessing a profound and comprehensive level of expertise, Mr. Ansari's professional journey spans over twelve years of intensive and highly successful engagement within the competitive and dynamic GCC (Gulf Cooperation Council) markets.",
+      intro: "Mr. Mohammad Hamid Ansari stands as the distinguished Founder and Chairman of ARM Solutions, guiding the organization with a clear and unwavering strategic direction. His leadership is not merely administrative; it is the driving force and the very foundation upon which ARM Solutions' continuous expansion and notable success have been built. Possessing a profound and comprehensive level of expertise, Mr. Ansari's professional journey spans over twelve years of intensive and highly successful engagement within the competitive and dynamic GCC markets.",
       imageUrl: MohammedHamid
       // linkedinUrl:
     },
@@ -2535,10 +2535,10 @@ const Management = ({ COLORS }) => {
       // linkedinUrl: 
     },
     {
-      name: "Mohammed Abdul Mannan",
+      name: "Mohammed Abdul Mannan Ahmed",
       title: "Payroll Officer",
       bio: "Manages all payroll operations and workforce compensation compliance.",
-      intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.",
+      intro: "Mr. Mohammed Abdul Mannan Ahmed, the Payroll Officer, offers essential expertise in precise and compliant employee payment administration. He specializes in accurate compensation calculations, strict adherence to tax and labor regulations, and meticulous documentation management. His specialized focus guarantees consistent compliance, fosters employee confidence, and ensures the absolute financial accuracy of the organization",
       imageUrl: MrMannan
       // linkedinUrl: 
     },
@@ -2960,8 +2960,8 @@ const Contact = ({ COLORS }) => {
                     <Mail className="h-6 w-6 flex-shrink-0" style={{ color: COLORS.ACCENT }} />
                     <div>
                       <p className="font-semibold text-lg" style={{ color: COLORS.TEXT }}>Email Us</p>
-                      <a href="mailto:info@armsolutions.sa" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
-                        info@armsolutions.sa
+                      <a href="mailto:info@armgroups.org" className="text-base hover:text-white transition-colors" style={{ color: COLORS.SUBTEXT }}>
+                        info@armgroups.org
                       </a>
                     </div>
                   </div>
