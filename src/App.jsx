@@ -367,40 +367,52 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
       }}
     >
       <div className="container mx-auto px-6 lg:px-12 py-3 flex justify-between items-center">
-        {/* Logo + Text Wrapper */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          {/* Logo */}
-          <motion.div
-            className="flex items-center gap-3 cursor-pointer"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Clean Logo Box — NO OUTER BLUR */}
-            <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center shadow-md transition-all duration-300
-                hover:scale-105">
-              <img src={ArmGroup} alt="ARM group logo" className="w-12 h-12 md:w-[50px] md:h-[60px] object-contain" />
-            </div>
 
-            {/* Brand Text */}
-            <span
-              className="
-      text-white font-extrabold tracking-wide
-      text-xl md:text-2xl
-      drop-shadow-[0_0_6px_rgba(150,120,255,0.4)]
-    "
-            >
-              ARM Solutions
-            </span>
-          </motion.div>
+  {/* Logo + Text Wrapper */}
+  <motion.div
+    initial={{ opacity: 0, y: -10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6 }}
+    className="flex items-center gap-2 cursor-pointer"
+    onClick={() => {
+      toggleView("public");
+      window.location.hash = "";
+      window.scrollTo(0, 0);
+    }}
+  >
+
+    {/* Logo + Text */}
+    <motion.div
+      className="flex items-center gap-3 cursor-pointer"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+
+      {/* Logo */}
+      <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center">
+        <img
+          src={ArmGroup}
+          alt="ARM group logo"
+          className="nav-logo w-12 h-12 md:w-[50px] md:h-[60px] object-contain mix-blend-lighten"
+        />
+      </div>
+
+      {/* Brand Text */}
+      <span
+        className="
+        text-white font-extrabold tracking-wide
+        text-xl md:text-2xl
+        drop-shadow-[0_0_6px_rgba(150,120,255,0.4)]
+      "
+      >
+        ARM Solutions
+      </span>
+
+    </motion.div>
+  </motion.div>
 
 
-        </motion.div>
 
 
         {/* Desktop Menu */}
@@ -2573,7 +2585,7 @@ const Management = ({ COLORS }) => {
   return (
     <section
       id="management"
-      className="relative py-24 md:py-36 overflow-hidden"
+      className="relative py-4 md:py-3 overflow-hidden"
       style={{ background: COLORS.GRADIENT }}
     >
       {/* Parallax glow */}
@@ -4239,64 +4251,68 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
         {/* ===================================================== */}
         {/* 3. VISION + MISSION + BOTH GROUP PHOTOS              */}
         {/* ===================================================== */}
+<motion.div
+  className="flex flex-col md:flex-row md:gap-10 gap-6 mb-12 md:mb-20"
+  initial={{ opacity: 0.7 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.6 }}
+>
+  {/* Vision & Mission */}
+  <div
+    className="flex-1 p-8 rounded-2xl backdrop-blur-md border shadow-xl"
+    style={{
+      background: COLORS.GLASS_BG,
+      borderColor: COLORS.ACCENT,
+      boxShadow: COLORS.SHADOW,
+    }}
+  >
+    <h2
+      className="text-8xl font-bold mb-4 p-2"
+      style={{ color: COLORS.ACCENT }}
+    >
+      Vision & Mission
+    </h2>
 
-        <motion.div
-          className="grid md:grid-cols-2 gap-10 mb-20"
-          initial={{ opacity: 0.7 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Vision & Mission */}
-          <div
-            className="p-8 rounded-2xl backdrop-blur-md border shadow-xl"
-            style={{
-              background: COLORS.GLASS_BG,
+    <ul style={{ color: COLORS.SUBTEXT }} className="space-y-4">
+      <li>
+        <span className="font-bold text-3xl" style={{ color: COLORS.TEXT }}>
+          Vision:
+        </span>{" "}
+        <br />
+        <p className="leading-loose py-2">
+           To become the most trusted and sought-after manpower solutions provider, recognized not only for excellence, reliability, and innovation, but also for our ability to transform workforce management across industries. We aspire to set new benchmarks in quality, safety, and operational efficiency by continuously elevating the standards of manpower supply—locally and internationally. Our vision is to empower organizations with a highly skilled and motivated workforce while contributing to regional development, sustainable business growth, and long-term industry leadership. .
+          </p>
+  
+      </li>
 
-              borderColor: COLORS.ACCENT,
-              boxShadow: COLORS.SHADOW,
-            }}
-          >
-            <h2
-              className="text-2xl font-bold mb-4"
-              style={{ color: COLORS.ACCENT }}
-            >
-              Vision & Mission
-            </h2>
+      <li>
+        <span className="font-bold text-3xl" style={{ color: COLORS.TEXT }}>
+          Mission:
+        </span>{" "}
+        <br />
+<p className="leading-loose py-2">
 
-            <ul style={{ color: COLORS.SUBTEXT }} className="space-y-4">
-              <li>
-                <span className="font-bold" style={{ color: COLORS.TEXT }}>
-                  Vision:
-                </span>
-                {" "}
-                To become the most trusted and sought-after manpower solutions provider, recognized not only for excellence, reliability, and innovation, but also for our ability to transform workforce management across industries. We aspire to set new benchmarks in quality, safety, and operational efficiency by continuously elevating the standards of manpower supply—locally and internationally. Our vision is to empower organizations with a highly skilled and motivated workforce while contributing to regional development, sustainable business growth, and long-term industry leadership.
-                .
-              </li>
+ To deliver qualified, trained, and motivated manpower that strengthens our clients’ operational success while fostering the professional growth and well-being of our workforce. We are committed to supplying industry-ready personnel equipped with international safety standards, strong work ethics, and specialized technical skills. Our mission is to create a seamless and efficient manpower ecosystem—bridging talent with opportunity—while upholding excellence, transparency, safety, and continuous improvement
+</p>
+      </li>
+    </ul>
+  </div>
 
-              <li>
-                <span className="font-bold" style={{ color: COLORS.TEXT }}>
-                  Mission:
-                </span>{" "}
-                To deliver qualified, trained, and motivated manpower that strengthens our clients’ operational success while fostering the professional growth and well-being of our workforce. We are committed to supplying industry-ready personnel equipped with international safety standards, strong work ethics, and specialized technical skills.
-                Our mission is to create a seamless and efficient manpower ecosystem—bridging talent with opportunity—while upholding excellence, transparency, safety, and continuous improvement
-              </li>
-            </ul>
-          </div>
+  {/* Photos */}
+  <div className="flex-1 flex flex-col gap-4 md:gap-6 justify-between">
+    <img
+      src={arm2GroupPhoto}
+      alt="ARM Team"
+      className="w-full h-full object-cover rounded-xl shadow-xl flex-1"
+    />
+    <img
+      src={armGroupPhoto}
+      alt="ARM Group"
+      className="w-full h-full object-cover rounded-xl shadow-xl flex-1"
+    />
+  </div>
+</motion.div>
 
-          {/* Combined Photos */}
-          <div className="flex flex-col gap-6 items-center justify-center">
-            <img
-              src={arm2GroupPhoto}
-              alt="ARM Team"
-              className="w-full h-auto rounded-xl shadow-xl object-cover"
-            />
-            <img
-              src={armGroupPhoto}
-              alt="ARM Group"
-              className="w-4/5 h-auto rounded-xl shadow-xl object-cover"
-            />
-          </div>
-        </motion.div>
 
         {/* ===================================================== */}
         {/* 4. OUR CLIENTS (kept untouched but moved here)       */}
@@ -4457,11 +4473,18 @@ export default function App() {
 
   ////////// Manually updating the URLs for service-page //////////////////
   useEffect(() => {
-    const hash = window.location.hash;
+    const hash = window.location.hash.replace("#", "");
+
+  if (hash === "company-profile") {
+    toggleView("company-profile");
+    window.scrollTo(0, 0);
+  }
 
     if (hash === "#services-page") {
       // Open full services page automatically
       toggleView("services");
+          window.scrollTo(0, 0);
+
 
       // Ensure page scrolls to top
       setTimeout(() => {

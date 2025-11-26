@@ -61,3 +61,7 @@ select, option {
   background-color: #1a1530 !important; /* or your COLORS.BG */
   color: #ffffff !important;           /* or COLORS.TEXT */
 }
+
+.nav-logo {
+  background: transparent !important;
+}
