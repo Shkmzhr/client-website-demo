@@ -917,7 +917,7 @@ const About = ({ COLORS, theme }) => {
     // Main wrapper with dark background
     <section
       id="about"
-      className="relative overflow-hidden min-h-screen font-inter"
+      className="relative overflow-hidden min-h-[60vh] md:min-h-[75vh] font-inter"
       style={{ backgroundColor: COLORS.BG, color: COLORS.TEXT }}
     >
 
@@ -4259,7 +4259,7 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
 >
   {/* Vision & Mission */}
   <div
-    className="flex-1 p-8 rounded-2xl backdrop-blur-md border shadow-xl"
+    className="flex-1 p-4 sm:p-6 md:p-8 rounded-2xl backdrop-blur-md border shadow-xl"
     style={{
       background: COLORS.GLASS_BG,
       borderColor: COLORS.ACCENT,
@@ -4267,7 +4267,7 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
     }}
   >
     <h2
-      className="text-8xl font-bold mb-4 p-2"
+      className="text-3xl sm:text-4xl md:text-8xl font-bold mb-4 p-1 md:p-2 leading-tight"
       style={{ color: COLORS.ACCENT }}
     >
       Vision & Mission
@@ -4275,22 +4275,22 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
 
     <ul style={{ color: COLORS.SUBTEXT }} className="space-y-4">
       <li>
-        <span className="font-bold text-3xl" style={{ color: COLORS.TEXT }}>
+        <span className="font-bold text-xl sm:text-2xl md:text-3xl" style={{ color: COLORS.TEXT }}>
           Vision:
         </span>{" "}
         <br />
-        <p className="leading-loose py-2">
+        <p className="leading-relaxed sm:leading-loose py-2 text-sm sm:text-base md:text-lg">
            To become the most trusted and sought-after manpower solutions provider, recognized not only for excellence, reliability, and innovation, but also for our ability to transform workforce management across industries. We aspire to set new benchmarks in quality, safety, and operational efficiency by continuously elevating the standards of manpower supply—locally and internationally. Our vision is to empower organizations with a highly skilled and motivated workforce while contributing to regional development, sustainable business growth, and long-term industry leadership. .
           </p>
   
       </li>
 
       <li>
-        <span className="font-bold text-3xl" style={{ color: COLORS.TEXT }}>
+        <span className="font-bold text-xl sm:text-2xl md:text-3xl" style={{ color: COLORS.TEXT }}>
           Mission:
         </span>{" "}
         <br />
-<p className="leading-loose py-2">
+<p className="leading-relaxed sm:leading-loose py-2 text-sm sm:text-base md:text-lg">
 
  To deliver qualified, trained, and motivated manpower that strengthens our clients’ operational success while fostering the professional growth and well-being of our workforce. We are committed to supplying industry-ready personnel equipped with international safety standards, strong work ethics, and specialized technical skills. Our mission is to create a seamless and efficient manpower ecosystem—bridging talent with opportunity—while upholding excellence, transparency, safety, and continuous improvement
 </p>
@@ -4303,12 +4303,12 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
     <img
       src={arm2GroupPhoto}
       alt="ARM Team"
-      className="w-full h-full object-cover rounded-xl shadow-xl flex-1"
+      className="w-full h-auto md:h-full object-cover"
     />
     <img
       src={armGroupPhoto}
       alt="ARM Group"
-      className="w-full h-full object-cover rounded-xl shadow-xl flex-1"
+      className="w-full h-auto md:h-full object-cover"
     />
   </div>
 </motion.div>
