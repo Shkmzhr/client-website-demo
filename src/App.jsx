@@ -412,9 +412,6 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
     </motion.div>
   </motion.div>
 
-
-
-
         {/* Desktop Menu */}
         <nav className="hidden lg:flex items-center space-x-10 font-medium">
           <button
@@ -2530,14 +2527,14 @@ const Management = ({ COLORS }) => {
   const operationalManagement = [
 
 
-    {
-      name: "Zafar Imam",
-      title: "Procurement manager ",
-      bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.",
-      intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.",
-      imageUrl: MrZafar
-      // linkedinUrl:
-    },
+    // {
+    //   name: "Zafar Imam",
+    //   title: "Procurement manager ",
+    //   bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.",
+    //   intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.",
+    //   imageUrl: MrZafar
+    //   // linkedinUrl:
+    // },
     {
       name: "Mohammed Tajammul Ahmed",
       title: "Administrator",
@@ -2545,15 +2542,15 @@ const Management = ({ COLORS }) => {
       intro: "We proudly introduce Mr. Mohammed Tajammul Ahmed, an expert in the training and development of soft services personnel for housekeeping, hospitality, and facility management. He ensures teams deliver service excellence in diverse environments. Highly skilled in building strong client relationships, he tailors solutions based on operational needs, consistently enhancing efficiency, performance, and long-term client trust.",
       imageUrl: MrTajammul
       // linkedinUrl: 
-    },
-    {
-      name: "Mohammed Abdul Mannan Ahmed",
-      title: "Payroll Officer",
-      bio: "Manages all payroll operations and workforce compensation compliance.",
-      intro: "Mr. Mohammed Abdul Mannan Ahmed, the Payroll Officer, offers essential expertise in precise and compliant employee payment administration. He specializes in accurate compensation calculations, strict adherence to tax and labor regulations, and meticulous documentation management. His specialized focus guarantees consistent compliance, fosters employee confidence, and ensures the absolute financial accuracy of the organization",
-      imageUrl: MrMannan
-      // linkedinUrl: 
-    },
+    },  
+    // {
+    //   name: "Mohammed Abdul Mannan Ahmed",
+    //   title: "Payroll Officer",
+    //   bio: "Manages all payroll operations and workforce compensation compliance.",
+    //   intro: "Mr. Mohammed Abdul Mannan Ahmed, the Payroll Officer, offers essential expertise in precise and compliant employee payment administration. He specializes in accurate compensation calculations, strict adherence to tax and labor regulations, and meticulous documentation management. His specialized focus guarantees consistent compliance, fosters employee confidence, and ensures the absolute financial accuracy of the organization",
+    //   imageUrl: MrMannan
+    //   // linkedinUrl: 
+    // },
     {
       name: "Palesh Rana",
       title: "Senior Recruiter - Overseas & Local (Bangladesh)",
@@ -2562,15 +2559,14 @@ const Management = ({ COLORS }) => {
       imageUrl: MrPaleshRana
       // linkedinUrl:
     },
-
-    {
-      name: "Farooq Nawaz",
-      title: "Operations Supervisor",
-      bio: "ensuring smooth workflow, high productivity, and consistent achievement of organizational goals..",
-      intro: "Mr. Farooq Nawaz, the Operations Supervisor, possesses extensive experience in the comprehensive management of daily operations and diligent workforce performance. He is crucial for ensuring a smooth workflow and maintaining consistently high productivity. His dedicated efforts directly contribute to the consistent achievement of all organizational goals and operational efficiency.",
-      imageUrl: MrFarooq
-      // linkedinUrl:
-    },
+    // {
+    //   name: "Farooq Nawaz",
+    //   title: "Operations Supervisor",
+    //   bio: "ensuring smooth workflow, high productivity, and consistent achievement of organizational goals..",
+    //   intro: "Mr. Farooq Nawaz, the Operations Supervisor, possesses extensive experience in the comprehensive management of daily operations and diligent workforce performance. He is crucial for ensuring a smooth workflow and maintaining consistently high productivity. His dedicated efforts directly contribute to the consistent achievement of all organizational goals and operational efficiency.",
+    //   imageUrl: MrFarooq
+    //   // linkedinUrl:
+    // },
 
     {
       name: "Imtiyaz Alam",
