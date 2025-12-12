@@ -65,6 +65,8 @@ import MohammedHamid from './assets/clientimages/mohammedhamidansari.jpg';
 import MrTajammul from './assets/clientimages/Tajammul.jpeg';
 import MrAbdullah from './assets/clientimages/Abdullah.jpg';
 import MrPaleshRana from './assets/clientimages/Palash.jpg';
+import MrIsmail from './assets/clientimages/MrIsmail.jpeg';
+import MrA from './assets/clientimages/MrA.jpeg';
 // import MrPaleshRana from './assets/clientimages/dummyProfile.png';
 import MrMannan from './assets/clientimages/Mannan.jpeg';
 import MrFarooq from './assets/clientimages/farooqi.jpeg';
@@ -368,52 +370,49 @@ const Navbar = ({ toggleView, currentView, theme, toggleTheme, COLORS }) => {
     >
       <div className="container mx-auto px-6 lg:px-12 py-3 flex justify-between items-center">
 
-  {/* Logo + Text Wrapper */}
-  <motion.div
-    initial={{ opacity: 0, y: -10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6 }}
-    className="flex items-center gap-2 cursor-pointer"
-    onClick={() => {
-      toggleView("public");
-      window.location.hash = "";
-      window.scrollTo(0, 0);
-    }}
-  >
+        {/* Logo + Text Wrapper */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => {
+            toggleView("public");
+            window.location.hash = "";
+            window.scrollTo(0, 0);
+          }}
+        >
 
-    {/* Logo + Text */}
-    <motion.div
-      className="flex items-center gap-3 cursor-pointer"
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
+          {/* Logo + Text */}
+          <motion.div
+            className="flex items-center gap-3 cursor-pointer"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
 
-      {/* Logo */}
-      <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center">
-        <img
-          src={ArmGroup}
-          alt="ARM group logo"
-          className="nav-logo w-12 h-12 md:w-[50px] md:h-[60px] object-contain mix-blend-lighten"
-        />
-      </div>
+            {/* Logo */}
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center">
+              <img
+                src={ArmGroup}
+                alt="ARM group logo"
+                className="nav-logo w-12 h-12 md:w-[50px] md:h-[60px] object-contain mix-blend-lighten"
+              />
+            </div>
 
-      {/* Brand Text */}
-      <span
-        className="
+            {/* Brand Text */}
+            <span
+              className="
         text-white font-extrabold tracking-wide
         text-xl md:text-2xl
         drop-shadow-[0_0_6px_rgba(150,120,255,0.4)]
       "
-      >
-        ARM Solutions
-      </span>
+            >
+              ARM Solutions
+            </span>
 
-    </motion.div>
-  </motion.div>
-
-
-
+          </motion.div>
+        </motion.div>
 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex items-center space-x-10 font-medium">
@@ -2530,14 +2529,14 @@ const Management = ({ COLORS }) => {
   const operationalManagement = [
 
 
-    {
-      name: "Zafar Imam",
-      title: "Procurement manager ",
-      bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.",
-      intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.",
-      imageUrl: MrZafar
-      // linkedinUrl:
-    },
+    // {
+    //   name: "Zafar Imam",
+    //   title: "Procurement manager ",
+    //   bio: "Experienced procurement specialist with 12+ years in strategic sourcing, vendor management, and cost-efficient procurement operations.",
+    //   intro: "Mr. Zafar Imam, the Procurement Manager, offers over 12 years of hands-on expertise in crucial procurement and supply chain operations. He specializes in strategic sourcing, skillful vendor negotiations, and meticulous contract management. His specialized focus ensures optimized resource acquisition, cost efficiency, and robust supply chain integrity for the organization.",
+    //   imageUrl: MrZafar
+    //   // linkedinUrl:
+    // },
     {
       name: "Mohammed Tajammul Ahmed",
       title: "Administrator",
@@ -2546,14 +2545,14 @@ const Management = ({ COLORS }) => {
       imageUrl: MrTajammul
       // linkedinUrl: 
     },
-    {
-      name: "Mohammed Abdul Mannan Ahmed",
-      title: "Payroll Officer",
-      bio: "Manages all payroll operations and workforce compensation compliance.",
-      intro: "Mr. Mohammed Abdul Mannan Ahmed, the Payroll Officer, offers essential expertise in precise and compliant employee payment administration. He specializes in accurate compensation calculations, strict adherence to tax and labor regulations, and meticulous documentation management. His specialized focus guarantees consistent compliance, fosters employee confidence, and ensures the absolute financial accuracy of the organization",
-      imageUrl: MrMannan
-      // linkedinUrl: 
-    },
+    // {
+    //   name: "Mohammed Abdul Mannan Ahmed",
+    //   title: "Payroll Officer",
+    //   bio: "Manages all payroll operations and workforce compensation compliance.",
+    //   intro: "Mr. Mohammed Abdul Mannan Ahmed, the Payroll Officer, offers essential expertise in precise and compliant employee payment administration. He specializes in accurate compensation calculations, strict adherence to tax and labor regulations, and meticulous documentation management. His specialized focus guarantees consistent compliance, fosters employee confidence, and ensures the absolute financial accuracy of the organization",
+    //   imageUrl: MrMannan
+    //   // linkedinUrl: 
+    // },
     {
       name: "Palesh Rana",
       title: "Senior Recruiter - Overseas & Local (Bangladesh)",
@@ -2562,15 +2561,14 @@ const Management = ({ COLORS }) => {
       imageUrl: MrPaleshRana
       // linkedinUrl:
     },
-
-    {
-      name: "Farooq Nawaz",
-      title: "Operations Supervisor",
-      bio: "ensuring smooth workflow, high productivity, and consistent achievement of organizational goals..",
-      intro: "Mr. Farooq Nawaz, the Operations Supervisor, possesses extensive experience in the comprehensive management of daily operations and diligent workforce performance. He is crucial for ensuring a smooth workflow and maintaining consistently high productivity. His dedicated efforts directly contribute to the consistent achievement of all organizational goals and operational efficiency.",
-      imageUrl: MrFarooq
-      // linkedinUrl:
-    },
+    // {
+    //   name: "Farooq Nawaz",
+    //   title: "Operations Supervisor",
+    //   bio: "ensuring smooth workflow, high productivity, and consistent achievement of organizational goals..",
+    //   intro: "Mr. Farooq Nawaz, the Operations Supervisor, possesses extensive experience in the comprehensive management of daily operations and diligent workforce performance. He is crucial for ensuring a smooth workflow and maintaining consistently high productivity. His dedicated efforts directly contribute to the consistent achievement of all organizational goals and operational efficiency.",
+    //   imageUrl: MrFarooq
+    //   // linkedinUrl:
+    // },
 
     {
       name: "Imtiyaz Alam",
@@ -2580,6 +2578,24 @@ const Management = ({ COLORS }) => {
       imageUrl: MrImtiyaz
       // linkedinUrl:
     },
+
+    {
+      name: "Md Nur Alam Buyan Nayan",
+      title: "Senior Sales Executive",
+      bio: "A highly experienced Sales Executive with 10+ years driving market growth, securing key accounts, and leading high-performance sales teams.",
+      intro: "Mr. Nayan, Senior Sales Executive with over a decade of experience specializing in strategic account management and complex B2B sales. He possesses a proven ability to lead sales initiatives, expand market share, and consistently surpass challenging revenue goals. Mr. A leverages deep industry knowledge to forge long-term partnerships and deliver maximum commercial value.",
+      imageUrl: MrA
+    },
+
+    {
+      name: "Mohammad Ismail",
+      title: "Sales Executive",
+      bio: "Expert in sales strategy, client relations, and market penetration, with a proven track record of exceeding targets.",
+      intro: "Mr. Ismail is a highly accomplished Sales Executive bringing over seven years of extensive experience in driving revenue growth and exceeding sales targets. His proven expertise lies in developing successful market penetration strategies, building robust client relationships, and managing complex sales cycles. Mr. Ismail is adept at identifying opportunities and closing high-value deals to consistently deliver exceptional commercial results.",
+      imageUrl: MrIsmail
+      // linkedinUrl:
+    },
+
   ];
 
   return (
@@ -4251,67 +4267,67 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
         {/* ===================================================== */}
         {/* 3. VISION + MISSION + BOTH GROUP PHOTOS              */}
         {/* ===================================================== */}
-<motion.div
-  className="flex flex-col md:flex-row md:gap-10 gap-6 mb-12 md:mb-20"
-  initial={{ opacity: 0.7 }}
-  animate={{ opacity: 1 }}
-  transition={{ duration: 0.6 }}
->
-  {/* Vision & Mission */}
-  <div
-    className="flex-1 p-4 sm:p-6 md:p-8 rounded-2xl backdrop-blur-md border shadow-xl"
-    style={{
-      background: COLORS.GLASS_BG,
-      borderColor: COLORS.ACCENT,
-      boxShadow: COLORS.SHADOW,
-    }}
-  >
-    <h2
-      className="text-3xl sm:text-4xl md:text-8xl font-bold mb-4 p-1 md:p-2 leading-tight"
-      style={{ color: COLORS.ACCENT }}
-    >
-      Vision & Mission
-    </h2>
+        <motion.div
+          className="flex flex-col md:flex-row md:gap-10 gap-6 mb-12 md:mb-20"
+          initial={{ opacity: 0.7 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Vision & Mission */}
+          <div
+            className="flex-1 p-4 sm:p-6 md:p-8 rounded-2xl backdrop-blur-md border shadow-xl"
+            style={{
+              background: COLORS.GLASS_BG,
+              borderColor: COLORS.ACCENT,
+              boxShadow: COLORS.SHADOW,
+            }}
+          >
+            <h2
+              className="text-3xl sm:text-4xl md:text-8xl font-bold mb-4 p-1 md:p-2 leading-tight"
+              style={{ color: COLORS.ACCENT }}
+            >
+              Vision & Mission
+            </h2>
 
-    <ul style={{ color: COLORS.SUBTEXT }} className="space-y-4">
-      <li>
-        <span className="font-bold text-xl sm:text-2xl md:text-3xl" style={{ color: COLORS.TEXT }}>
-          Vision:
-        </span>{" "}
-        <br />
-        <p className="leading-relaxed sm:leading-loose py-2 text-sm sm:text-base md:text-lg">
-           To become the most trusted and sought-after manpower solutions provider, recognized not only for excellence, reliability, and innovation, but also for our ability to transform workforce management across industries. We aspire to set new benchmarks in quality, safety, and operational efficiency by continuously elevating the standards of manpower supply—locally and internationally. Our vision is to empower organizations with a highly skilled and motivated workforce while contributing to regional development, sustainable business growth, and long-term industry leadership. .
-          </p>
-  
-      </li>
+            <ul style={{ color: COLORS.SUBTEXT }} className="space-y-4">
+              <li>
+                <span className="font-bold text-xl sm:text-2xl md:text-3xl" style={{ color: COLORS.TEXT }}>
+                  Vision:
+                </span>{" "}
+                <br />
+                <p className="leading-relaxed sm:leading-loose py-2 text-sm sm:text-base md:text-lg">
+                  To become the most trusted and sought-after manpower solutions provider, recognized not only for excellence, reliability, and innovation, but also for our ability to transform workforce management across industries. We aspire to set new benchmarks in quality, safety, and operational efficiency by continuously elevating the standards of manpower supply—locally and internationally. Our vision is to empower organizations with a highly skilled and motivated workforce while contributing to regional development, sustainable business growth, and long-term industry leadership. .
+                </p>
 
-      <li>
-        <span className="font-bold text-xl sm:text-2xl md:text-3xl" style={{ color: COLORS.TEXT }}>
-          Mission:
-        </span>{" "}
-        <br />
-<p className="leading-relaxed sm:leading-loose py-2 text-sm sm:text-base md:text-lg">
+              </li>
 
- To deliver qualified, trained, and motivated manpower that strengthens our clients’ operational success while fostering the professional growth and well-being of our workforce. We are committed to supplying industry-ready personnel equipped with international safety standards, strong work ethics, and specialized technical skills. Our mission is to create a seamless and efficient manpower ecosystem—bridging talent with opportunity—while upholding excellence, transparency, safety, and continuous improvement
-</p>
-      </li>
-    </ul>
-  </div>
+              <li>
+                <span className="font-bold text-xl sm:text-2xl md:text-3xl" style={{ color: COLORS.TEXT }}>
+                  Mission:
+                </span>{" "}
+                <br />
+                <p className="leading-relaxed sm:leading-loose py-2 text-sm sm:text-base md:text-lg">
 
-  {/* Photos */}
-  <div className="flex-1 flex flex-col gap-4 md:gap-6 justify-between">
-    <img
-      src={arm2GroupPhoto}
-      alt="ARM Team"
-      className="w-full h-auto md:h-full object-cover rounded-xl"
-    />
-    <img
-      src={armGroupPhoto}
-      alt="ARM Group"
-      className="w-full h-auto md:h-full object-cover rounded-xl"
-    />
-  </div>
-</motion.div>
+                  To deliver qualified, trained, and motivated manpower that strengthens our clients’ operational success while fostering the professional growth and well-being of our workforce. We are committed to supplying industry-ready personnel equipped with international safety standards, strong work ethics, and specialized technical skills. Our mission is to create a seamless and efficient manpower ecosystem—bridging talent with opportunity—while upholding excellence, transparency, safety, and continuous improvement
+                </p>
+              </li>
+            </ul>
+          </div>
+
+          {/* Photos */}
+          <div className="flex-1 flex flex-col gap-4 md:gap-6 justify-between">
+            <img
+              src={arm2GroupPhoto}
+              alt="ARM Team"
+              className="w-full h-auto md:h-full object-cover"
+            />
+            <img
+              src={armGroupPhoto}
+              alt="ARM Group"
+              className="w-full h-auto md:h-full object-cover"
+            />
+          </div>
+        </motion.div>
 
 
         {/* ===================================================== */}
@@ -4475,15 +4491,15 @@ export default function App() {
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
 
-  if (hash === "company-profile") {
-    toggleView("company-profile");
-    window.scrollTo(0, 0);
-  }
+    if (hash === "company-profile") {
+      toggleView("company-profile");
+      window.scrollTo(0, 0);
+    }
 
     if (hash === "#services-page") {
       // Open full services page automatically
       toggleView("services");
-          window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
 
 
       // Ensure page scrolls to top
