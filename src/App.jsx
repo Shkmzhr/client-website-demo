@@ -4303,12 +4303,12 @@ const CompanyProfile = ({ toggleView, COLORS }) => {
     <img
       src={arm2GroupPhoto}
       alt="ARM Team"
-      className="w-full h-auto md:h-full object-cover"
+      className="w-full h-auto md:h-full object-cover rounded-xl"
     />
     <img
       src={armGroupPhoto}
       alt="ARM Group"
-      className="w-full h-auto md:h-full object-cover"
+      className="w-full h-auto md:h-full object-cover rounded-xl"
     />
   </div>
 </motion.div>
